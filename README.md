@@ -52,7 +52,7 @@ Bu servisler, ekosisteme dahil olan tüm iş modüllerine merkezi hizmet sağlar
 Projeyi klonlamak ve tüm altyapıyı ayağa kaldırmak için aşağıdaki komutları tek seferde kopyalayıp terminalinizde çalıştırabilirsiniz:
 
 ```bash
-git clone [https://github.com/dogukanderici/HealthCare-Microservices-Architecture.git](https://github.com/dogukanderici/HealthCare-Microservices-Architecture.git)
+git clone https://github.com/dogukanderici/HealthCare-Microservices-Architecture.git
 cd HealthCare-Microservices-Architecture
 docker-compose up -d --build
 ```
