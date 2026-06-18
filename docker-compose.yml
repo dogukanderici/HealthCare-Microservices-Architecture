@@ -1,0 +1,176 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: RabbitMQ
+    hostname: RabbitMQ
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    restart: always
+    networks:
+      - HealthCare_Network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 5s
+      timeout: 5s
+      retries: 5 
+   
+  # İlk Olarak Veritabanları Ayağa Kaldırılır.
+  core_workflowEngine_db:
+    image: postgres:16
+    container_name: Core_WorkflowEngine_Db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456Aa*
+      POSTGRES_DB: HealthCare_WorkflowEngine_Db
+      POSTGRES_INITDB_ARGS: "--locale-provider=icu --icu-locale=tr-TR --encoding=UTF8"
+    ports:
+      - "5438:5432"
+    volumes:
+      - workflowEngine_db_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - HealthCare_Network
+  
+  core_identityserver_db:
+    image: postgres:16
+    container_name: Core_IdentityServer_Db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456Aa*
+      POSTGRES_DB: HealthCare_IdentityServer_Db
+    ports:
+      - "5434:5432"
+    volumes:
+      - identity_db_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - HealthCare_Network
+    
+  healthcare_descriptions_db:
+    image: postgres:16
+    container_name: HealthCare_Descriptions_Db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456Aa*
+      POSTGRES_DB: healthcare_descriptions_db
+    ports:
+      - "5435:5432"
+    volumes:
+      - descriptions_db_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - HealthCare_Network
+    
+  healthcare_operations_db:
+    image: postgres:16
+    container_name: HealthCare_Operations_Db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456Aa*
+      POSTGRES_DB: HealthCare_Operations_Db
+    ports:
+      - "5436:5432"
+    volumes:
+      - operations_db_data:/var/lib/postgresql/data
+    restart: always
+    networks:
+      - HealthCare_Network
+
+  # Servisler Ayağa Kaldırılır.
+  identity-server:
+    image: core_identityserver_api
+    build:
+      context: ./Core.IdentityServer
+      dockerfile: Core.IdentityServer/Dockerfile
+    ports:
+      - "5001:8080"
+    container_name: Core_IdentityServer_API
+    restart: always
+    networks:
+      - HealthCare_Network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      core_identityserver_db:
+        condition: service_started # DB başlayınca tetiklenir
+      rabbitmq:
+        condition: service_healthy # RabbitMQ tamamen hazır olunca tetiklenir
+    volumes:
+      # Bilgisayarım (Host) | Konteyner içi (Container)
+      - E:\Logs\IdentityServer:/app/logs/identityserver
+  
+  workflow-engine-api:
+    image: core_workflowengine_api
+    build:
+      context: ./Core.WorkflowEngine
+      dockerfile: Presentation/Core.WorkflowEngine.WebAPI/Dockerfile
+    ports:
+      - "5002:8080"
+    container_name: Core_WorkflowEngine_API
+    restart: always
+    networks:
+      - HealthCare_Network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      core_workflowEngine_db:
+        condition: service_started # DB başlayınca tetiklenir
+      rabbitmq:
+        condition: service_healthy # RabbitMQ tamamen hazır olunca tetiklenir
+    volumes:
+      # Bilgisayarım (Host) | Konteyner içi (Container)
+      - E:\Logs\WorkflowEngine:/app/logs/workflowengine
+    tty: true
+
+  descriptions-api:
+    image: healthcare_descriptions_api
+    build:
+      context: ./HealthCare.Descriptions
+      dockerfile: Presentation/HealthCare.Descriptions.WebAPI/Dockerfile
+    ports:
+      - "5200:8080"
+    container_name: HealthCare_Descriptions_API
+    restart: always
+    networks:
+      - HealthCare_Network
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    depends_on:
+      healthcare_descriptions_db:
+        condition: service_started # DB başlayınca tetiklenir
+      rabbitmq:
+        condition: service_healthy # RabbitMQ tamamen hazır olunca tetiklenir
+    volumes:
+      - E:\Logs\Descriptions:/app/logs/descriptions
+
+  operations-api:
+    image: healthcare_operations_api
+    build:
+      context: ./HealthCare.Operations
+      dockerfile: Presentation/HealthCare.Operations.WebAPI/Dockerfile
+    ports:
+      - "5201:8080"
+    container_name: HealthCare_Operations_API
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    restart: always
+    networks:
+      - HealthCare_Network
+    depends_on:
+      healthcare_operations_db:
+        condition: service_started # DB başlayınca tetiklenir
+      rabbitmq:
+        condition: service_healthy # RabbitMQ tamamen hazır olunca tetiklenir    
+    volumes:
+      - E:\Logs\Operations:/app/logs/operations
+
+volumes:
+  workflowEngine_db_data:
+  identity_db_data:
+  descriptions_db_data:
+  operations_db_data:
+  
+networks:
+  HealthCare_Network:
+    external: true

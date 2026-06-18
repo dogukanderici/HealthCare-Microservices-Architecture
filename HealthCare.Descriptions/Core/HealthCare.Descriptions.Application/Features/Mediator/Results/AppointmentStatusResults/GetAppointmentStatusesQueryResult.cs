@@ -1,0 +1,16 @@
+﻿using HealthCare.Descriptions.Application.Features.Mediator.Results.GenericResults;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace HealthCare.Descriptions.Application.Features.Mediator.Results.AppointmentStatusResults
+{
+    public class GetAppointmentStatusesQueryResult : GenericAuditResult
+    {
+        public Guid Id { get; set; }
+        public string StatusName { get; set; }
+        public bool IsAvailable { get; set; }
+    }
+}

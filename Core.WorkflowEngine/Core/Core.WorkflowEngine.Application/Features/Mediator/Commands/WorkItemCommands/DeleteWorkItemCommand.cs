@@ -1,0 +1,21 @@
+﻿using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using MediatR;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands
+{
+    public class DeleteWorkItemCommand : IRequest<InternalCommandResponse<bool>>
+    {
+        public Guid Id { get; set; }
+
+        public DeleteWorkItemCommand(Guid id)
+        {
+            Id = id;
+        }
+
+    }
+}

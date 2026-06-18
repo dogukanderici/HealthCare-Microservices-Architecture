@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="Core/Core.WorkflowEngine.Application/Core.WorkflowEngine.Application.csproj" />
+    <Project Path="Core/Core.WorkflowEngine.Configuration/Core.WorkflowEngine.Configuration.csproj" />
+    <Project Path="Core/Core.WorkflowEngine.Domain/Core.WorkflowEngine.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/Core.WorkflowEngine.Persistence/Core.WorkflowEngine.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Presentation/Core.WorkflowEngine.WebAPI/Core.WorkflowEngine.WebAPI.csproj" />
+  </Folder>
+</Solution>
