@@ -18,12 +18,12 @@ Sistem, yeni servislerin minimum eforla ekosisteme dahil edilebilmesi ve yüksek
 
 ## 💻 Teknoloji Yığını (Tech Stack)
 
-* **Backend:** .NET (C#)
+* **Backend:** .NET 9.0 (C#)
 * **Merkezi Kimlik Yönetimi:** Duende Identity Server
-* **Gerçek Zamanlı İletişim:** SignalR
+* **Gerçek Zamanlı İletişim:** SignalR (Planlanıyor)
 * **Mesajlaşma (Event Bus):** RabbitMQ
-* **Konteynerleştirme:** Docker & Docker Compose
-* **Veritabanları:** [Kullandığın DB'leri Buraya Yazabilirsin, örn: PostgreSQL / SQL Server]
+* **Container:** Docker & Docker Compose
+* **Veritabanları:** PostgreSQL
 
 ---
 
