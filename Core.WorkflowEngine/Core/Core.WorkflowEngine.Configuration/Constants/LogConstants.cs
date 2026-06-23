@@ -15,6 +15,7 @@ namespace Core.WorkflowEngine.Configuration.Constants
         public static class SuccessMessages
         {
             public const string ProcessSuccessed = "Process Successed.";
+            public const string TransactionSuccessed = "Transaction Successed.";
             public const string DataCreatedSuccessfully = "Data Created Successfully.";
             public const string DataUpdatedSuccessfully = "Data Updated Successfully.";
             public const string DataDeletedSuccessfully = "Data Deleted Successfully.";
@@ -24,6 +25,7 @@ namespace Core.WorkflowEngine.Configuration.Constants
         public static class ErrorMessages
         {
             public const string ProcessFailed = "Process Failed.";
+            public const string TransactionFailed = "Transaction Failed.";
             public const string DataCreationFailed = "Data Creation Failed.";
             public const string DataUpdateFailed = "Data Update Failed.";
             public const string DataDeletionFailed = "Data Deletion Failed.";

@@ -10,5 +10,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQuer
 {
     public class GetWorkItemsQuery : IRequest<List<GetWorkItemsQueryResult>>
     {
+        public Guid InstanceId { get; set; }
+
+        public GetWorkItemsQuery(Guid instanceId)
+        {
+            InstanceId = instanceId;
+        }
     }
 }

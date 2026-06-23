@@ -24,50 +24,38 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
         private readonly IMapper _mapper;
         private readonly ILogger<DeleteWorkItemCommandHandler> _logger;
 
-        public DeleteWorkItemCommandHandler(IRepository<WorkItem> wiRepository, IMapper mapper, ILogger<DeleteWorkItemCommandHandler> logger, IUnitOfWork unitOfWork)
+        public DeleteWorkItemCommandHandler(IRepository<WorkItem> repository, IMapper mapper, ILogger<DeleteWorkItemCommandHandler> logger)
         {
-            _repository = wiRepository;
+            _repository = repository;
             _mapper = mapper;
             _logger = logger;
         }
 
         public async Task<InternalCommandResponse<bool>> Handle(DeleteWorkItemCommand request, CancellationToken cancellationToken)
         {
-            try
+            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+
+            Expression<Func<WorkItem, bool>> filter = x => x.Id == request.Id;
+            dBQueryOptions.filter = filter;
+
+            WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
+
+            if (result != null)
             {
-                DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+                await _repository.DeleteDataAsync(result);
 
-                Expression<Func<WorkItem, bool>> filter = x => x.Id == request.Id;
-                dBQueryOptions.filter = filter;
-
-                WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
-
-                if (result != null)
-                {
-                    await _repository.DeleteDataAsync(result);
-
-                    _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(DeleteWorkItemCommandHandler),
-                        LogConstants.SuccessMessages.DataDeletedSuccessfully);
-
-                    return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessWorkItemDeleting);
-                }
-
-                _logger.LogError(LogConstants.LogMessageTemplate,
-                        nameof(DeleteWorkItemCommandHandler),
-                        LogConstants.SuccessMessages.DataDeletedSuccessfully);
-
-                return InternalCommandResponse<bool>.Failure(InternalCommandConstants.WorkItemNotFound);
-
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(LogConstants.LogMessageTemplate,
+                _logger.LogInformation(LogConstants.LogMessageTemplate,
                     nameof(DeleteWorkItemCommandHandler),
-                    ex);
+                    LogConstants.SuccessMessages.DataDeletedSuccessfully);
 
-                return InternalCommandResponse<bool>.Failure(InternalCommandConstants.ErrorWorkItemDeleting);
+                return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessWorkItemDeleting);
             }
+
+            _logger.LogError(LogConstants.LogMessageTemplate,
+                    nameof(DeleteWorkItemCommandHandler),
+                    LogConstants.SuccessMessages.DataDeletedSuccessfully);
+
+            return InternalCommandResponse<bool>.Failure(InternalCommandConstants.WorkItemNotFound);
         }
     }
 }

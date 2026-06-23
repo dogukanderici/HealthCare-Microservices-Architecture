@@ -7,6 +7,7 @@ using Core.WorkflowEngine.Configuration.Constants;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,38 +21,31 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
         private readonly IRepository<ProcessDefinition> _repository;
         private readonly ILogger<CreateProcessDefinitionCommandHandler> _logger;
         private readonly IMapper _mapper;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public CreateProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, ILogger<CreateProcessDefinitionCommandHandler> logger, IMapper mapper, IUnitOfWork unitOfWork)
+        public CreateProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, ILogger<CreateProcessDefinitionCommandHandler> logger, IMapper mapper)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<InternalCommandResponse<Guid>> Handle(CreateProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
+            ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
 
-                dataFromDto.Id = Guid.NewGuid();
+            dataFromDto.Id = Guid.NewGuid();
 
-                Guid result = await _repository.CreateDataAsync(dataFromDto);
-
-                await _unitOfWork.CommitAsync(cancellationToken);
-
-                return InternalCommandResponse<Guid>.Success(result, InternalCommandConstants.SuccessProcessDefinitionCreating);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(LogConstants.LogMessageTemplate,
+            _logger.LogInformation(LogConstants.LogMessageTemplate,
                     nameof(CreateProcessDefinitionCommandHandler),
-                    ex);
+                  JsonConvert.SerializeObject(dataFromDto));
 
-                return InternalCommandResponse<Guid>.Failure(InternalCommandConstants.ErrorProcessDefinitionCreating);
-            }
+            Guid result = await _repository.CreateDataAsync(dataFromDto);
+
+            _logger.LogInformation(LogConstants.LogMessageTemplate,
+                nameof(CreateProcessDefinitionCommandHandler),
+                $"{LogConstants.SuccessMessages.DataCreatedSuccessfully} Created Id: {result}");
+
+            return InternalCommandResponse<Guid>.Success(result, InternalCommandConstants.SuccessProcessDefinitionCreating);
         }
     }
 }

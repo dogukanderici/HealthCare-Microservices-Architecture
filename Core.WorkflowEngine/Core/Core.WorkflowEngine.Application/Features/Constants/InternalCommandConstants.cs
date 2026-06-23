@@ -34,10 +34,27 @@ namespace Core.WorkflowEngine.Application.Features.Constants
         public const string ErrorProcessDefinitionUpdating = "An error occured while new process definition is updating.";
         public const string ErrorProcessDefinitionDeleting = "An error occured while new process definition is deleting.";
 
+
+        public const string SuccessProcessTaskCreating = "New process task added successfully.";
+        public const string SuccessProcessTaskUpdating = "New process task updated successfully.";
+        public const string SuccessProcessTaskDeleting = "New process task deleted successfully.";
+
+        public const string ErrorProcessTaskCreating = "An error occured while new process task is adding.";
+        public const string ErrorProcessTaskUpdating = "An error occured while new process task is updating.";
+        public const string ErrorProcessTaskDeleting = "An error occured while new process task is deleting.";
+
+
+        public const string SuccessProcessTaskActionCreating = "New process task action added successfully.";
+        public const string SuccessProcessTaskActionUpdating = "New process task action updated successfully.";
+        public const string SuccessProcessTaskActionDeleting = "New process task action deleted successfully.";
+
+        public const string ErrorProcessTaskActionCreating = "An error occured while new process task action is adding.";
+        public const string ErrorProcessTaskActionUpdating = "An error occured while new process task action is updating.";
+        public const string ErrorProcessTaskActionDeleting = "An error occured while new process task action is deleting.";
+
         public const string WorkItemNotFound = "Specified workitem id is not found.";
-
-
         public const string AlreadyExistData = "Added instance is already exist.";
         public const string NotFoundData = "Updated instance is not found.";
+        public const string InvalidBusinessRule = "Business rule is invalid.";
     }
 }

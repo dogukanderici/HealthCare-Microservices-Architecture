@@ -1,9 +1,14 @@
+using Core.WorkflowEngine.Application.Features.Commons;
+using Core.WorkflowEngine.Application.Features.Commons.Behaviors;
 using Core.WorkflowEngine.Application.Features.Configurations;
 using Core.WorkflowEngine.Application.Features.Mappings.Configurations;
+using Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Services;
 using Core.WorkflowEngine.Persistence.Context;
 using Core.WorkflowEngine.Persistence.Repositories;
 using Core.WorkflowEngine.Persistence.UnitOfWork;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -48,6 +53,14 @@ builder.Services.AddAutoMapperServiceRegistration();
 
 // MediatR Registration
 builder.Services.AddMediatorServiceRegistration();
+
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+
+// Business Rule Configuration
+builder.Services.AddBusinessRulesRegistration();
+
+// Service ( used in handler classes ) Configuration
+builder.Services.AddServiceRegistartion();
 
 var app = builder.Build();
 

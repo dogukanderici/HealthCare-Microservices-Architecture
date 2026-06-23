@@ -23,12 +23,12 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetWorkItems()
+        [HttpGet("instance/{id}")]
+        public async Task<IActionResult> GetWorkItemByIntanceId(Guid id)
         {
             try
             {
-                List<GetWorkItemsQueryResult> result = await _mediator.Send(new GetWorkItemsQuery());
+                List<GetWorkItemsQueryResult> result = await _mediator.Send(new GetWorkItemsQuery(id));
 
                 _logger.LogInformation(LogConstants.LogMessageTemplate,
                     nameof(WorkItemsController),
@@ -36,6 +36,31 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
                     LogConstants.SuccessMessage.CallingSuccess);
 
                 return Ok(GenericAPIResponse<List<GetWorkItemsQueryResult>>.SuccessAPIResponse(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(LogConstants.LogMessageTemplate,
+                    nameof(WorkItemsController),
+                    nameof(GetWorkItems),
+                    ex);
+
+                return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetWorkItems(Guid id)
+        {
+            try
+            {
+                GetWorkItemByIdQueryResult result = await _mediator.Send(new GetWorkItemByIdQuery(id));
+
+                _logger.LogInformation(LogConstants.LogMessageTemplate,
+                    nameof(WorkItemsController),
+                    nameof(GetWorkItems),
+                    LogConstants.SuccessMessage.CallingSuccess);
+
+                return Ok(GenericAPIResponse<GetWorkItemByIdQueryResult>.SuccessAPIResponse(result));
             }
             catch (Exception ex)
             {

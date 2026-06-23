@@ -63,29 +63,27 @@ namespace Core.WorkflowEngine.Persistence.UnitOfWork
         {
             if (!_disposed)
             {
-                _dbContext.Dispose();
                 _currentTransaction?.Dispose();
                 _disposed = true;
-            }
 
-            GC.SuppressFinalize(this);
+                GC.SuppressFinalize(this);
+            }
         }
 
         public async ValueTask DisposeAsync()
         {
             if (!_disposed)
             {
-                await _dbContext.DisposeAsync();
-
                 if (_currentTransaction != null)
                 {
                     await _currentTransaction.DisposeAsync();
                 }
 
                 _disposed = true;
+
+                GC.SuppressFinalize(this);
             }
 
-            GC.SuppressFinalize(this);
         }
     }
 }

@@ -55,14 +55,14 @@ namespace Core.WorkflowEngine.Persistence.Extensions
 
                 }
 
-                if (dBQueryOptions.DataTakeNumber != -1)
-                {
-                    query = query.Take(dBQueryOptions.DataTakeNumber);
-                }
-
                 if (dBQueryOptions.DataSkipNumber != -1)
                 {
                     query = query.Skip(dBQueryOptions.DataSkipNumber);
+                }
+
+                if (dBQueryOptions.DataTakeNumber != -1)
+                {
+                    query = query.Take(dBQueryOptions.DataTakeNumber);
                 }
             }
 

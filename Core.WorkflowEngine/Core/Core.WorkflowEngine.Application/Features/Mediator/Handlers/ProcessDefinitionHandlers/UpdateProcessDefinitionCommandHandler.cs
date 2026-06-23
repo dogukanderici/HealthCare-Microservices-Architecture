@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
+using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessDefinitionBusinessRules;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
@@ -20,54 +21,48 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
     public class UpdateProcessDefinitionCommandHandler : IRequestHandler<UpdateProcessDefinitionCommand, InternalCommandResponse<DateTimeOffset>>
     {
         private readonly IRepository<ProcessDefinition> _repository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<UpdateProcessDefinitionCommandHandler> _logger;
         private readonly IMapper _mapper;
+        private readonly IProcessDefinitionBusinessRule _businessRule;
 
-        public UpdateProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, ILogger<UpdateProcessDefinitionCommandHandler> logger, IMapper mapper)
+        public UpdateProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, IUnitOfWork unitOfWork, ILogger<UpdateProcessDefinitionCommandHandler> logger, IMapper mapper, IProcessDefinitionBusinessRule businessRule)
         {
             _repository = repository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _businessRule = businessRule;
         }
 
         public async Task<InternalCommandResponse<DateTimeOffset>> Handle(UpdateProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
+            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
-                Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == request.Id;
-                dBQueryOptions.filter = filter;
+            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == request.Id;
+            dBQueryOptions.filter = filter;
 
-                ProcessDefinition existingData = await _repository.GetDataAsync(dBQueryOptions);
+            // Veri yoksa true döner;
+            bool checkExistData = await _businessRule.ExistingProcessDefinitionDataAsync(dBQueryOptions);
 
-                if (existingData == null)
-                {
-                    _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(DeleteProcessDefinitionCommandHandler),
-                    $"{LogConstants.ErrorMessages.DataUpdateFailed} Not Found Id: {request.Id}");
-
-                    return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
-                }
-
-                ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
-
-                DateTimeOffset result = await _repository.UpdateDataAsync(dataFromDto);
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(DeleteProcessDefinitionCommandHandler),
-                    $"{LogConstants.SuccessMessages.DataDeletedSuccessfully} Updated Id: {request.Id}");
-
-                return InternalCommandResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessDefinitionUpdating);
-            }
-            catch (Exception ex)
+            if (checkExistData)
             {
                 _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(UpdateProcessDefinitionCommandHandler),
-                    ex);
+                nameof(UpdateProcessDefinitionCommandHandler),
+                $"{LogConstants.ErrorMessages.DataUpdateFailed} Not Found Id: {request.Id}");
 
-                return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorProcessDefinitionUpdating);
+                return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
             }
+
+            ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
+
+            DateTimeOffset result = await _repository.UpdateDataAsync(dataFromDto);
+
+            _logger.LogInformation(LogConstants.LogMessageTemplate,
+                nameof(UpdateProcessDefinitionCommandHandler),
+                $"{LogConstants.SuccessMessages.DataDeletedSuccessfully} Updated Id: {request.Id}");
+
+            return InternalCommandResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessDefinitionUpdating);
         }
     }
 }

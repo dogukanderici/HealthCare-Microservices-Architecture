@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.WorkflowEngine.Application.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Wrappers.Responses
 {
-    public class InternalCommandResponse<T>
+    public class InternalCommandResponse<T> : IInternalCommandResponse
     {
-        public bool IsSuccess { get; private set; }
-        public string InternalMessage { get; private set; }
+        public bool IsSuccess { get; set; }
+        public string InternalMessage { get; set; }
         public T Data { get; private set; }
 
         public static InternalCommandResponse<T> Success(T data, string internalMessage = "Success")

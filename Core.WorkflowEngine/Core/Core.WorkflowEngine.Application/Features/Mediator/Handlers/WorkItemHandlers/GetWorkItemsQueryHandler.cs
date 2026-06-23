@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,6 +31,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
         public async Task<List<GetWorkItemsQueryResult>> Handle(GetWorkItemsQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+
+            Expression<Func<WorkItem, bool>> filter = x => x.InstanceId == request.InstanceId;
+            dBQueryOptions.filter = filter;
 
             List<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
 

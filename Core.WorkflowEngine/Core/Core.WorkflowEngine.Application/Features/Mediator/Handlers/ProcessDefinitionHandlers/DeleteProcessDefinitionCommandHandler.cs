@@ -21,50 +21,38 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
     {
         private readonly IRepository<ProcessDefinition> _repository;
         private readonly ILogger<DeleteProcessDefinitionCommandHandler> _logger;
-        private readonly IMapper _mapper;
 
-        public DeleteProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, ILogger<DeleteProcessDefinitionCommandHandler> logger, IMapper mapper)
+        public DeleteProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, ILogger<DeleteProcessDefinitionCommandHandler> logger)
         {
             _repository = repository;
             _logger = logger;
-            _mapper = mapper;
         }
+
         public async Task<InternalCommandResponse<bool>> Handle(DeleteProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
+            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
-                Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == request.Id;
-                dBQueryOptions.filter = filter;
+            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == request.Id;
+            dBQueryOptions.filter = filter;
 
-                ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);
+            ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);
 
-                if (result == null)
-                {
-                    _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(DeleteProcessDefinitionCommandHandler),
-                    $"{LogConstants.ErrorMessages.DataUpdateFailed} Not Found Id: {request.Id}");
-
-                    return InternalCommandResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
-                }
-
-                await _repository.DeleteDataAsync(result);
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(DeleteProcessDefinitionCommandHandler),
-                    $"{LogConstants.SuccessMessages.DataDeletedSuccessfully} Deleted Id: {request.Id}");
-
-                return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessDefinitionDeleting);
-            }
-            catch (Exception ex)
+            if (result == null)
             {
                 _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(DeleteProcessDefinitionCommandHandler),
-                    ex);
+                nameof(DeleteProcessDefinitionCommandHandler),
+                $"{LogConstants.ErrorMessages.DataUpdateFailed} Not Found Id: {request.Id}");
 
-                return InternalCommandResponse<bool>.Failure(InternalCommandConstants.ErrorProcessDefinitionDeleting);
+                return InternalCommandResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
             }
+
+            await _repository.DeleteDataAsync(result);
+
+            _logger.LogInformation(LogConstants.LogMessageTemplate,
+                nameof(DeleteProcessDefinitionCommandHandler),
+                $"{LogConstants.SuccessMessages.DataDeletedSuccessfully} Deleted Id: {request.Id}");
+
+            return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessDefinitionDeleting);
         }
     }
 }
