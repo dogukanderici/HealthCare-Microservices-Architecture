@@ -1,4 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands
 {
-    public class DeleteProcessDefinitionCommand : IRequest<InternalCommandResponse<bool>>
+    public class DeleteProcessDefinitionCommand : IRequest<InternalCommandResponse<bool>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
 

@@ -1,12 +1,8 @@
-﻿using AutoMapper;
-using Core.WorkflowEngine.Application.Features.Constants;
+﻿using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
-using Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
-using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration;
-using Core.WorkflowEngine.Configuration.Constants;
-using Core.WorkflowEngine.Domain.Entities;
+using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using System;
@@ -20,42 +16,23 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 {
     public class DeleteWorkItemCommandHandler : IRequestHandler<DeleteWorkItemCommand, InternalCommandResponse<bool>>
     {
-        private readonly IRepository<WorkItem> _repository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<DeleteWorkItemCommandHandler> _logger;
+        private readonly IWorkItemService _workItemService;
 
-        public DeleteWorkItemCommandHandler(IRepository<WorkItem> repository, IMapper mapper, ILogger<DeleteWorkItemCommandHandler> logger)
+        public DeleteWorkItemCommandHandler(IWorkItemService workItemService)
         {
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
+            _workItemService = workItemService;
         }
 
         public async Task<InternalCommandResponse<bool>> Handle(DeleteWorkItemCommand request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+            InternalServiceResponse<bool> result = await _workItemService.DeleteAsync(request.Id, cancellationToken);
 
-            Expression<Func<WorkItem, bool>> filter = x => x.Id == request.Id;
-            dBQueryOptions.filter = filter;
-
-            WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
-
-            if (result != null)
+            if (result.IsSuccess)
             {
-                await _repository.DeleteDataAsync(result);
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(DeleteWorkItemCommandHandler),
-                    LogConstants.SuccessMessages.DataDeletedSuccessfully);
-
-                return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessWorkItemDeleting);
+                return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.WorkItemNotFound);
             }
 
-            _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(DeleteWorkItemCommandHandler),
-                    LogConstants.SuccessMessages.DataDeletedSuccessfully);
-
-            return InternalCommandResponse<bool>.Failure(InternalCommandConstants.WorkItemNotFound);
+            return InternalCommandResponse<bool>.Failure(InternalCommandConstants.ErrorWorkItemDeleting);
         }
     }
 }

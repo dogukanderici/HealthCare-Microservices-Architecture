@@ -2,38 +2,36 @@
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
-using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration.Constants;
+using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
     public class CreateWorkItemCommandHandler : IRequestHandler<CreateWorkItemCommand, InternalCommandResponse<Guid>>
     {
-        private readonly IRepository<WorkItem> _repository;
-        private readonly ILogger<CreateWorkItemCommandHandler> _logger;
         private readonly IMapper _mapper;
+        private readonly IWorkItemService _workItemService;
 
-        public CreateWorkItemCommandHandler(IRepository<WorkItem> repository, ILogger<CreateWorkItemCommandHandler> logger, IMapper mapper)
+        public CreateWorkItemCommandHandler(IMapper mapper, IWorkItemService workItemService)
         {
-            _repository = repository;
-            _logger = logger;
             _mapper = mapper;
+            _workItemService = workItemService;
         }
 
         public async Task<InternalCommandResponse<Guid>> Handle(CreateWorkItemCommand request, CancellationToken cancellationToken)
         {
             WorkItem dataFromDto = _mapper.Map<WorkItem>(request);
 
-            Guid workitemId = await _repository.CreateDataAsync(dataFromDto);
+            InternalServiceResponse<Guid> result = await _workItemService.CreateAsync(dataFromDto, cancellationToken);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(CreateWorkItemCommandHandler),
-                    LogConstants.SuccessMessages.DataCreatedSuccessfully);
+            if (result.IsSuccess)
+            {
+                return InternalCommandResponse<Guid>.Success(result.Data, InternalCommandConstants.SuccessWorkItemCreating);
+            }
 
-            return InternalCommandResponse<Guid>.Success(workitemId, InternalCommandConstants.SuccessWorkItemCreating);
+            return InternalCommandResponse<Guid>.Failure(InternalCommandConstants.ErrorWorkItemCreating);
         }
     }
 }

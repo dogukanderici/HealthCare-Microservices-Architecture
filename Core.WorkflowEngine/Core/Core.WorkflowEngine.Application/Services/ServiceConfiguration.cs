@@ -13,6 +13,8 @@ namespace Core.WorkflowEngine.Application.Services
         public static IServiceCollection AddServiceRegistartion(this IServiceCollection services)
         {
             services.AddScoped(typeof(IInstanceService), typeof(InstanceService));
+            services.AddScoped(typeof(IWorkItemService), typeof(WorkItemService));
+            services.AddScoped(typeof(ITaskTransitionService), typeof(TaskTransitionService));
 
             return services;
         }

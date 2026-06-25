@@ -26,5 +26,12 @@ namespace Core.WorkflowEngine.Application.Features.Commons
 
             return existingDataCount;
         }
+
+        public async Task<TEntity> ExistingDataAsync(TQueryData queryData)
+        {
+            TEntity existingData = await _repository.GetDataAsync(queryData);
+
+            return existingData;
+        }
     }
 }

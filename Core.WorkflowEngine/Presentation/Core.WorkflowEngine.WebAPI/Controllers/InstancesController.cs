@@ -73,6 +73,33 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
             }
         }
 
+        [HttpPost("filtered")]
+        public async Task<IActionResult> GetInstancesByFilter(GetInstanceByFilterQuery query)
+        {
+            try
+            {
+                GetInstanceByFilterQuery filter = GetInstanceByFilterQuery.Filter(query.Number, query.InitiatorWorkItemId, query.Status);
+
+                List<GetInstancesByFilterQueryResult> result = await _mediator.Send(filter);
+
+                _logger.LogInformation(LogConstants.LogMessageTemplate,
+                    nameof(InstancesController),
+                    nameof(GetInstancesByFilter),
+                    LogConstants.SuccessMessage.CallingSuccess);
+
+                return Ok(GenericAPIResponse<List<GetInstancesByFilterQueryResult>>.SuccessAPIResponse(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(LogConstants.LogMessageTemplate,
+                    nameof(InstancesController),
+                    nameof(GetInstancesByFilter),
+                    LogConstants.ErrorMessage.CallingFail);
+
+                return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateInstance(CreateInstanceCommand createInstanceCommand)
         {

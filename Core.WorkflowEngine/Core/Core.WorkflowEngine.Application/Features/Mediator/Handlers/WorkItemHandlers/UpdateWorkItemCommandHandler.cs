@@ -5,8 +5,10 @@ using Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandler
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.WorkItemBusinessRules;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Configuration.Constants;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -16,47 +18,27 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 {
     public class UpdateWorkItemCommandHandler : IRequestHandler<UpdateWorkItemCommand, InternalCommandResponse<DateTimeOffset>>
     {
-        private readonly IRepository<WorkItem> _repository;
         private readonly IMapper _mapper;
-        private readonly ILogger<UpdateWorkItemCommandHandler> _logger;
-        private readonly IWorkItemBusinessRule _businessRule;
+        private readonly IWorkItemService _workItemService;
 
-        public UpdateWorkItemCommandHandler(IRepository<WorkItem> wiRepository, IMapper mapper, ILogger<UpdateWorkItemCommandHandler> logger, IWorkItemBusinessRule businessRule)
+        public UpdateWorkItemCommandHandler(IMapper mapper, IWorkItemService workItemService)
         {
-            _repository = wiRepository;
             _mapper = mapper;
-            _logger = logger;
-            _businessRule = businessRule;
+            _workItemService = workItemService;
         }
 
         public async Task<InternalCommandResponse<DateTimeOffset>> Handle(UpdateWorkItemCommand request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
-
-            Expression<Func<WorkItem, bool>> filter = x => x.Id == request.Id;
-            dBQueryOptions.filter = filter;
-
-            // Veri yoksa true döner.
-            bool CheckData = await _businessRule.CheckExistingDataAsync(dBQueryOptions);
-
-            if (CheckData)
-            {
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(UpdateWorkItemCommandHandler),
-                        LogConstants.ErrorMessages.DataUpdateFailed);
-
-                return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
-            }
-
             WorkItem dataFromDto = _mapper.Map<WorkItem>(request);
 
-            DateTimeOffset updatedDate = await _repository.UpdateDataAsync(dataFromDto);
+            InternalServiceResponse<DateTimeOffset> result = await _workItemService.UpdateAsync(dataFromDto, cancellationToken);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(UpdateWorkItemCommandHandler),
-                LogConstants.SuccessMessages.DataUpdatedSuccessfully);
+            if (result.IsSuccess)
+            {
+                return InternalCommandResponse<DateTimeOffset>.Success(result.Data, InternalCommandConstants.SuccessWorkItemUpdating);
+            }
 
-            return InternalCommandResponse<DateTimeOffset>.Success(updatedDate, InternalCommandConstants.SuccessWorkItemUpdating);
+            return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorWorkItemUpdating);
         }
     }
 }

@@ -52,6 +52,14 @@ namespace Core.WorkflowEngine.Application.Features.Constants
         public const string ErrorProcessTaskActionUpdating = "An error occured while new process task action is updating.";
         public const string ErrorProcessTaskActionDeleting = "An error occured while new process task action is deleting.";
 
+        public const string SuccessProcessTaskTransitionCreating = "New process task transition added successfully.";
+        public const string SuccessProcessTaskTransitionUpdating = "New process task transition updated successfully.";
+        public const string SuccessProcessTaskTransitionDeleting = "New process task transition deleted successfully.";
+
+        public const string ErrorProcessTaskTransitionCreating = "An error occured while new process task transition is adding.";
+        public const string ErrorProcessTaskTransitionUpdating = "An error occured while new process task transition is updating.";
+        public const string ErrorProcessTaskTransitionDeleting = "An error occured while new process task transition is deleting.";
+
         public const string WorkItemNotFound = "Specified workitem id is not found.";
         public const string AlreadyExistData = "Added instance is already exist.";
         public const string NotFoundData = "Updated instance is not found.";

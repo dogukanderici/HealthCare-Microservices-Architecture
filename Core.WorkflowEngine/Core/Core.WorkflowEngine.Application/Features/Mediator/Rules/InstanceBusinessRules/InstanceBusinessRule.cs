@@ -1,5 +1,6 @@
 ﻿using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
+using Core.WorkflowEngine.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,19 +9,17 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules
 {
-    public class InstanceBusinessRule<TEntity, TQueryData> : IInstanceBusinessRule<TEntity, TQueryData>
-        where TEntity : class
-        where TQueryData : DBQueryOptions<TEntity>
+    public class InstanceBusinessRule : IInstanceBusinessRule
     {
-        private readonly IBaseBusinessRule<TEntity, TQueryData> _baseBusinessRule;
+        private readonly IBaseBusinessRule<Instance, DBQueryOptions<Instance>> _baseBusinessRule;
 
-        public InstanceBusinessRule(IBaseBusinessRule<TEntity, TQueryData> baseBusinessRule)
+        public InstanceBusinessRule(IBaseBusinessRule<Instance, DBQueryOptions<Instance>> baseBusinessRule)
         {
             _baseBusinessRule = baseBusinessRule;
         }
 
         // Kriterlere uyan aynı veriden başka olup olmadığını kontrol eder.
-        public async Task<bool> ExistingInstanceControlAsync(TQueryData queryData)
+        public async Task<bool> ExistingInstanceControlAsync(DBQueryOptions<Instance> queryData)
         {
             int dataCount = await _baseBusinessRule.ExistingDataControlAsync(queryData);
 
@@ -28,7 +27,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusine
         }
 
         // Tüm kurallar çalıştırılır ve true veya false dönen tek bir sonuç üretir.
-        public async Task<bool> CheckAllRulesAsync(TQueryData queryData)
+        public async Task<bool> CheckAllRulesAsync(DBQueryOptions<Instance> queryData)
         {
             bool isExistInstance = await ExistingInstanceControlAsync(queryData);
 

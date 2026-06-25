@@ -24,5 +24,12 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Rules.WorkItemBusine
 
             return data == 0;
         }
+
+        public async Task<bool> CheckAllRulesAsync(DBQueryOptions<WorkItem> dBQueryOptions)
+        {
+            bool checkExist = await CheckExistingDataAsync(dBQueryOptions);
+
+            return checkExist;
+        }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries;
+using Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.WebAPI.Constants;
 using Core.WorkflowEngine.WebAPI.Wrappers;
@@ -71,6 +73,41 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
                                     LogConstants.ErrorMessage.CallingFail);
 
                 return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
+            }
+        }
+
+        [HttpPost("filtered")]
+        public async Task<IActionResult> GetWorkItemsByFilter(GetWorkItemsByFilterQuery query)
+        {
+            try
+            {
+                GetWorkItemsByFilterQuery filter = GetWorkItemsByFilterQuery.Filter(
+                    query.InstanceId,
+                    query.AssignedUserId,
+                    query.Status,
+                    query.CreatedAt,
+                    query.CreatedBy
+                    );
+
+                List<GetWorkItemsByFilterQueryResult> result = await _mediator.Send(filter);
+
+                _logger.LogInformation(LogConstants.LogMessageTemplate,
+                    nameof(ProcessesController),
+                    nameof(GetWorkItemsByFilter),
+                    LogConstants.SuccessMessage.CallingSuccess);
+
+                return Ok(GenericAPIResponse<List<GetWorkItemsByFilterQueryResult>>.SuccessAPIResponse(result));
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(LogConstants.LogMessageTemplate,
+                                    nameof(ProcessesController),
+                                    nameof(GetWorkItemsByFilter),
+                                    LogConstants.ErrorMessage.CallingFail);
+
+                return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
+
             }
         }
 

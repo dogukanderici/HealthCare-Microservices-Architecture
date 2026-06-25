@@ -1,4 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Interfaces;
+﻿using Core.WorkflowEngine.Configuration;
+using Core.WorkflowEngine.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules
 {
-    public interface IInstanceBusinessRule<TEntity, TQueryData>
+    public interface IInstanceBusinessRule
     {
-        Task<bool> ExistingInstanceControlAsync(TQueryData queryData);
-        
+        Task<bool> ExistingInstanceControlAsync(DBQueryOptions<Instance> queryData);
 
-        Task<bool> CheckAllRulesAsync(TQueryData queryData);
+
+        Task<bool> CheckAllRulesAsync(DBQueryOptions<Instance> queryData);
     }
 }

@@ -40,11 +40,7 @@ namespace Core.WorkflowEngine.Application.Features.Commons.Behaviors
                     typeof(TRequest).Name,
                     LogConstants.SuccessMessages.TransactionSuccessed);
 
-                return new TResponse
-                {
-                    IsSuccess = true,
-                    InternalMessage = LogConstants.SuccessMessages.TransactionSuccessed
-                };
+                return response;
             }
             catch (Exception ex)
             {

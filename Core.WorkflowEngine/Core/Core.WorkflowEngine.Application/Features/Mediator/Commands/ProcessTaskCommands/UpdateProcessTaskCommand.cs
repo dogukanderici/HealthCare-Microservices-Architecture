@@ -1,4 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskCommands
 {
-    public class UpdateProcessTaskCommand : IRequest<InternalCommandResponse<DateTimeOffset>>
+    public class UpdateProcessTaskCommand : IRequest<InternalCommandResponse<DateTimeOffset>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
         public Guid ProcessId { get; set; }

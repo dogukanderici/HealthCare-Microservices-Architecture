@@ -26,9 +26,9 @@ namespace Core.WorkflowEngine.Application.Services
         private readonly IRepository<WorkItem> _wiRepository;
         private readonly ILogger<InstanceService> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IInstanceBusinessRule<Instance, DBQueryOptions<Instance>> _businessRule;
+        private readonly IInstanceBusinessRule _businessRule;
 
-        public InstanceService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule<Instance, DBQueryOptions<Instance>> businessRule)
+        public InstanceService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule businessRule)
         {
             _repository = repository;
             _wiRepository = wiRepository;

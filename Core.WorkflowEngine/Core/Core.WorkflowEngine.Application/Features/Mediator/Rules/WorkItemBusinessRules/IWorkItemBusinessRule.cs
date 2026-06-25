@@ -11,5 +11,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Rules.WorkItemBusine
     public interface IWorkItemBusinessRule
     {
         Task<bool> CheckExistingDataAsync(DBQueryOptions<WorkItem> dBQueryOptions);
+        Task<bool> CheckAllRulesAsync(DBQueryOptions<WorkItem> dBQueryOptions);
     }
 }

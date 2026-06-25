@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace Core.WorkflowEngine.WebAPI.Controllers
 {
@@ -67,6 +68,39 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
                 _logger.LogError(LogConstants.LogMessageTemplate,
                     nameof(WorkItemsController),
                     nameof(GetWorkItems),
+                    ex);
+
+                return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
+            }
+        }
+
+        [HttpPost("filtered")]
+        public async Task<IActionResult> GetWorkItemsByFilter(GetWorkItemsByFilterQuery query)
+        {
+            try
+            {
+                GetWorkItemsByFilterQuery filter = GetWorkItemsByFilterQuery.Filter(
+                    query.InstanceId,
+                    query.AssignedUserId,
+                    query.Status,
+                    query.CreatedAt,
+                    query.CreatedBy
+                    );
+
+                List<GetWorkItemsByFilterQueryResult> result = await _mediator.Send(filter);
+
+                _logger.LogInformation(LogConstants.LogMessageTemplate,
+                    nameof(WorkItemsController),
+                    nameof(GetWorkItemsByFilter),
+                    JsonConvert.SerializeObject(query));
+
+                return Ok(GenericAPIResponse<List<GetWorkItemsByFilterQueryResult>>.SuccessAPIResponse(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(LogConstants.LogMessageTemplate,
+                    nameof(WorkItemsController),
+                    nameof(GetWorkItemsByFilter),
                     ex);
 
                 return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
