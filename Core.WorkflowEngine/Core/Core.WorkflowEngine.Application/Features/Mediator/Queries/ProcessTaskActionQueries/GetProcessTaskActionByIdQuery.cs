@@ -1,4 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskActionResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskActionQueries
 {
-    public class GetProcessTaskActionByIdQuery : IRequest<GetProcessTaskActionByIdQueryResult>
+    public class GetProcessTaskActionByIdQuery : IRequest<InternalHandlerResponse<GetProcessTaskActionByIdQueryResult>>
     {
         public Guid Id { get; set; }
 

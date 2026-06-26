@@ -13,7 +13,7 @@ using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {
-    public class DeleteInstanceCommandHandler : IRequestHandler<DeleteInstanceCommand, InternalCommandResponse<bool>>
+    public class DeleteInstanceCommandHandler : IRequestHandler<DeleteInstanceCommand, InternalHandlerResponse<bool>>
     {
         private readonly IRepository<Instance> _repository;
         private readonly ILogger<DeleteInstanceCommandHandler> _logger;
@@ -26,7 +26,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
             _instanceService = instanceService;
         }
 
-        public async Task<InternalCommandResponse<bool>> Handle(DeleteInstanceCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<bool>> Handle(DeleteInstanceCommand request, CancellationToken cancellationToken)
         {
             InternalServiceResponse<bool> serviceResponse = await _instanceService.DeleteAsync(request.Id, cancellationToken);
 
@@ -36,7 +36,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
                         nameof(UpdateInstanceCommandHandler),
                         LogConstants.SuccessMessages.DataDeletedSuccessfully);
 
-                return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessInstanceDeleting);
+                return InternalHandlerResponse<bool>.Success(true, InternalCommandConstants.SuccessInstanceDeleting);
             }
 
 
@@ -44,7 +44,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
                 nameof(UpdateInstanceCommandHandler),
                 LogConstants.ErrorMessages.DataNotFound);
 
-            return InternalCommandResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
+            return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
         }
     }
 }

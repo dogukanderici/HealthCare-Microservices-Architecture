@@ -4,6 +4,7 @@
     {
         public static readonly string ServiceName = "HealthCare.WorkflowEngine";
         public static string LogMessageTemplate = "Controller: {Controller}, Action: {Action}, Message: {Message}";
+        public static string ValidationTemplate = "Invalid Validation Rules - Errors: {Errors}";
 
         public static class SuccessMessage
         {

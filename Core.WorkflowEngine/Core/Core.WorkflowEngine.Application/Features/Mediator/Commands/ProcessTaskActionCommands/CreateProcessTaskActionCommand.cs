@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskActionCommands
 {
-    public class CreateProcessTaskActionCommand : IRequest<InternalCommandResponse<Guid>>, ITransactionalRequest
+    public class CreateProcessTaskActionCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
     {
         public Guid ProcessTaskId { get; set; }
         public Guid ActionId { get; set; }

@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
-    public class DeleteProcessTaskActionCommandHandler : IRequestHandler<DeleteProcessTaskActionCommand, InternalCommandResponse<bool>>
+    public class DeleteProcessTaskActionCommandHandler : IRequestHandler<DeleteProcessTaskActionCommand, InternalHandlerResponse<bool>>
     {
         private readonly IRepository<ProcessTaskAction> _repository;
         private readonly IMapper _mapper;
@@ -30,7 +30,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<InternalCommandResponse<bool>> Handle(DeleteProcessTaskActionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<bool>> Handle(DeleteProcessTaskActionCommand request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTaskAction> dBQueryOptions = new DBQueryOptions<ProcessTaskAction>();
 
@@ -43,18 +43,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             {
                 await _repository.DeleteDataAsync(result);
 
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(UpdateProcessTaskActionCommandHandler),
-                    LogConstants.SuccessMessages.DataDeletedSuccessfully);
-
-                return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessTaskActionDeleting);
+                return InternalHandlerResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessTaskActionDeleting);
             }
 
-            _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(UpdateProcessTaskActionCommandHandler),
-                    LogConstants.ErrorMessages.DataDeletionFailed);
-
-            return InternalCommandResponse<bool>.Failure(InternalCommandConstants.ErrorProcessTaskActionDeleting);
+            return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.ErrorProcessTaskActionDeleting);
         }
     }
 }

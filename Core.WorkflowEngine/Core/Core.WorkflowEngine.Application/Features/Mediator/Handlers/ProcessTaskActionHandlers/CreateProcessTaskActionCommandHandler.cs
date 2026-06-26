@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
-    public class CreateProcessTaskActionCommandHandler : IRequestHandler<CreateProcessTaskActionCommand, InternalCommandResponse<Guid>>
+    public class CreateProcessTaskActionCommandHandler : IRequestHandler<CreateProcessTaskActionCommand, InternalHandlerResponse<Guid>>
     {
         private readonly IRepository<ProcessTaskAction> _repository;
         private readonly IMapper _mapper;
@@ -28,17 +28,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<InternalCommandResponse<Guid>> Handle(CreateProcessTaskActionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<Guid>> Handle(CreateProcessTaskActionCommand request, CancellationToken cancellationToken)
         {
             ProcessTaskAction dataFromDto = _mapper.Map<ProcessTaskAction>(request);
 
             Guid result = await _repository.CreateDataAsync(dataFromDto);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(CreateProcessTaskActionCommandHandler),
-                LogConstants.SuccessMessages.DataCreatedSuccessfully);
-
-            return InternalCommandResponse<Guid>.Success(result, InternalCommandConstants.SuccessProcessTaskActionCreating);
+            return InternalHandlerResponse<Guid>.Success(result, InternalCommandConstants.SuccessProcessTaskActionCreating);
         }
     }
 }

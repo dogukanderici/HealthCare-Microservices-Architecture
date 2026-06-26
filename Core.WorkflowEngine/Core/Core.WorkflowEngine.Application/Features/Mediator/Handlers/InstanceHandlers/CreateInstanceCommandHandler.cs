@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {
-    public class CreateInstanceCommandHandler : IRequestHandler<CreateInstanceCommand, InternalCommandResponse<Guid>>
+    public class CreateInstanceCommandHandler : IRequestHandler<CreateInstanceCommand, InternalHandlerResponse<Guid>>
     {
         private readonly IMapper _mapper;
         private readonly ILogger<CreateInstanceCommandHandler> _logger;
@@ -27,7 +27,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
             _instanceService = instanceService;
         }
 
-        public async Task<InternalCommandResponse<Guid>> Handle(CreateInstanceCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<Guid>> Handle(CreateInstanceCommand request, CancellationToken cancellationToken)
         {
 
             Instance instanceEntity = _mapper.Map<Instance>(request);
@@ -38,10 +38,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
             if (serviceResponse.IsSuccess)
             {
 
-                return InternalCommandResponse<Guid>.Success(serviceResponse.Data, InternalCommandConstants.SuccessInstanceCreating);
+                return InternalHandlerResponse<Guid>.Success(serviceResponse.Data, InternalCommandConstants.SuccessInstanceCreating);
             }
 
-            return InternalCommandResponse<Guid>.Failure(InternalCommandConstants.ErrorInstanceCreating);
+            return InternalHandlerResponse<Guid>.Failure(InternalCommandConstants.ErrorInstanceCreating);
 
         }
     }

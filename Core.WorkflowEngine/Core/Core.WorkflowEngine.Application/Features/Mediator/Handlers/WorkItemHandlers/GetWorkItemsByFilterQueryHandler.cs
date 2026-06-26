@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Domain.Entities;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
-    public class GetWorkItemsByFilterQueryHandler : IRequestHandler<GetWorkItemsByFilterQuery, List<GetWorkItemsByFilterQueryResult>>
+    public class GetWorkItemsByFilterQueryHandler : IRequestHandler<GetWorkItemsByFilterQuery, InternalHandlerResponse<List<GetWorkItemsByFilterQueryResult>>>
     {
         private readonly IRepository<WorkItem> _repository;
         private readonly ILogger<GetWorkItemsQueryHandler> _logger;
@@ -28,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
             _mapper = mapper;
         }
 
-        public async Task<List<GetWorkItemsByFilterQueryResult>> Handle(GetWorkItemsByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<List<GetWorkItemsByFilterQueryResult>>> Handle(GetWorkItemsByFilterQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
 
@@ -43,7 +44,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 
             List<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
-            return _mapper.Map<List<GetWorkItemsByFilterQueryResult>>(result);
+            return InternalHandlerResponse<List<GetWorkItemsByFilterQueryResult>>
+                .Success(_mapper.Map<List<GetWorkItemsByFilterQueryResult>>(result));
         }
     }
 }

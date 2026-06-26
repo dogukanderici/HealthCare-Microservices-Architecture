@@ -1,4 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries
 {
-    public class GetWorkItemsByFilterQuery : IRequest<List<GetWorkItemsByFilterQueryResult>>
+    public class GetWorkItemsByFilterQuery : IRequest<InternalHandlerResponse<List<GetWorkItemsByFilterQueryResult>>>
     {
         public Guid? InstanceId { get; set; }
         public Guid? AssignedUserId { get; set; }

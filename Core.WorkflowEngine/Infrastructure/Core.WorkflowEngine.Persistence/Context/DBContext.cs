@@ -61,6 +61,6 @@ namespace Core.WorkflowEngine.Persistence.Context
         public DbSet<ProcessDefinition> ProcessDefinitions { get; set; }
         public DbSet<ProcessTask> ProcessTasks { get; set; }
         public DbSet<ProcessTaskAction> ProcessTaskActions { get; set; }
-        public DbSet<ProcessTaskTransition> processTaskTransitions { get; set; }
+        public DbSet<ProcessTaskTransition> ProcessTaskTransitions { get; set; }
     }
 }

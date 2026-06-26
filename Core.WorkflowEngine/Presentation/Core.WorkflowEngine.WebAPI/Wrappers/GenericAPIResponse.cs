@@ -21,12 +21,12 @@ namespace Core.WorkflowEngine.WebAPI.Wrappers
             };
         }
 
-        public static GenericAPIResponse<T> ErrorAPIResponse()
+        public static GenericAPIResponse<T> ErrorAPIResponse(string message = APIConstants.Error)
         {
             return new GenericAPIResponse<T>
             {
                 StatusCode = 400,
-                Message = APIConstants.Error,
+                Message = message,
                 Data = default!,
                 TimeStamp = DateTimeOffset.UtcNow
             };

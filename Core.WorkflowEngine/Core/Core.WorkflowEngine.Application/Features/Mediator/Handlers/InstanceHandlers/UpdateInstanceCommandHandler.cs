@@ -16,7 +16,7 @@ using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {
-    public class UpdateInstanceCommandHandler : IRequestHandler<UpdateInstanceCommand, InternalCommandResponse<DateTimeOffset>>
+    public class UpdateInstanceCommandHandler : IRequestHandler<UpdateInstanceCommand, InternalHandlerResponse<DateTimeOffset>>
     {
         private readonly IMapper _mapper;
         private readonly ILogger<UpdateInstanceCommandHandler> _logger;
@@ -29,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
             _instanceService = instanceService;
         }
 
-        public async Task<InternalCommandResponse<DateTimeOffset>> Handle(UpdateInstanceCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateInstanceCommand request, CancellationToken cancellationToken)
         {
             Instance dataFromDto = _mapper.Map<Instance>(request);
 
@@ -42,14 +42,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
                         nameof(UpdateInstanceCommandHandler),
                         LogConstants.SuccessMessages.DataUpdatedSuccessfully);
 
-                return InternalCommandResponse<DateTimeOffset>.Success(serviceResponse.Data, InternalCommandConstants.SuccessInstanceUpdating);
+                return InternalHandlerResponse<DateTimeOffset>.Success(serviceResponse.Data, InternalCommandConstants.SuccessInstanceUpdating);
             }
 
             _logger.LogError(LogConstants.LogMessageTemplate,
                 nameof(UpdateInstanceCommandHandler),
                 serviceResponse.ServiceMessage);
 
-            return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.InvalidBusinessRule);
+            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.InvalidBusinessRule);
         }
     }
 }

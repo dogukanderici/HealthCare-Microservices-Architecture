@@ -1,4 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries
 {
-    public class GetProcessTaskTransitionsByFilterQuery : IRequest<List<GetProcessTaskTransitionsByFilterQueryResult>>
+    public class GetProcessTaskTransitionsByFilterQuery : IRequest<InternalHandlerResponse<List<GetProcessTaskTransitionsByFilterQueryResult>>>
     {
         public Guid? ProcessTaskId { get; set; }
         public Guid? NextTaskId { get; set; }

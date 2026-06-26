@@ -16,7 +16,7 @@ using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
-    public class UpdateWorkItemCommandHandler : IRequestHandler<UpdateWorkItemCommand, InternalCommandResponse<DateTimeOffset>>
+    public class UpdateWorkItemCommandHandler : IRequestHandler<UpdateWorkItemCommand, InternalHandlerResponse<DateTimeOffset>>
     {
         private readonly IMapper _mapper;
         private readonly IWorkItemService _workItemService;
@@ -27,7 +27,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
             _workItemService = workItemService;
         }
 
-        public async Task<InternalCommandResponse<DateTimeOffset>> Handle(UpdateWorkItemCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateWorkItemCommand request, CancellationToken cancellationToken)
         {
             WorkItem dataFromDto = _mapper.Map<WorkItem>(request);
 
@@ -35,10 +35,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 
             if (result.IsSuccess)
             {
-                return InternalCommandResponse<DateTimeOffset>.Success(result.Data, InternalCommandConstants.SuccessWorkItemUpdating);
+                return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalCommandConstants.SuccessWorkItemUpdating);
             }
 
-            return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorWorkItemUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorWorkItemUpdating);
         }
     }
 }

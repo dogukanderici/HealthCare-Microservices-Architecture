@@ -9,7 +9,7 @@ using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
-    public class CreateWorkItemCommandHandler : IRequestHandler<CreateWorkItemCommand, InternalCommandResponse<Guid>>
+    public class CreateWorkItemCommandHandler : IRequestHandler<CreateWorkItemCommand, InternalHandlerResponse<Guid>>
     {
         private readonly IMapper _mapper;
         private readonly IWorkItemService _workItemService;
@@ -20,7 +20,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
             _workItemService = workItemService;
         }
 
-        public async Task<InternalCommandResponse<Guid>> Handle(CreateWorkItemCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<Guid>> Handle(CreateWorkItemCommand request, CancellationToken cancellationToken)
         {
             WorkItem dataFromDto = _mapper.Map<WorkItem>(request);
 
@@ -28,10 +28,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 
             if (result.IsSuccess)
             {
-                return InternalCommandResponse<Guid>.Success(result.Data, InternalCommandConstants.SuccessWorkItemCreating);
+                return InternalHandlerResponse<Guid>.Success(result.Data, InternalCommandConstants.SuccessWorkItemCreating);
             }
 
-            return InternalCommandResponse<Guid>.Failure(InternalCommandConstants.ErrorWorkItemCreating);
+            return InternalHandlerResponse<Guid>.Failure(InternalCommandConstants.ErrorWorkItemCreating);
         }
     }
 }

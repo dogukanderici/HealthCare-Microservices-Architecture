@@ -16,7 +16,8 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefinitionHandlers
 {
-    public class CreateProcessDefinitionCommandHandler : IRequestHandler<CreateProcessDefinitionCommand, InternalCommandResponse<Guid>>
+    public class CreateProcessDefinitionCommandHandler : IRequestHandler<CreateProcessDefinitionCommand, InternalHandlerResponse<Guid>>,
+        IValidationRequest
     {
         private readonly IRepository<ProcessDefinition> _repository;
         private readonly ILogger<CreateProcessDefinitionCommandHandler> _logger;
@@ -29,23 +30,15 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             _mapper = mapper;
         }
 
-        public async Task<InternalCommandResponse<Guid>> Handle(CreateProcessDefinitionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<Guid>> Handle(CreateProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
             ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
 
             dataFromDto.Id = Guid.NewGuid();
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(CreateProcessDefinitionCommandHandler),
-                  JsonConvert.SerializeObject(dataFromDto));
-
             Guid result = await _repository.CreateDataAsync(dataFromDto);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(CreateProcessDefinitionCommandHandler),
-                $"{LogConstants.SuccessMessages.DataCreatedSuccessfully} Created Id: {result}");
-
-            return InternalCommandResponse<Guid>.Success(result, InternalCommandConstants.SuccessProcessDefinitionCreating);
+            return InternalHandlerResponse<Guid>.Success(result, InternalCommandConstants.SuccessProcessDefinitionCreating);
         }
     }
 }

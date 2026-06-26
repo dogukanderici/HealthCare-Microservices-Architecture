@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
-    public class DeleteWorkItemCommandHandler : IRequestHandler<DeleteWorkItemCommand, InternalCommandResponse<bool>>
+    public class DeleteWorkItemCommandHandler : IRequestHandler<DeleteWorkItemCommand, InternalHandlerResponse<bool>>
     {
         private readonly IWorkItemService _workItemService;
 
@@ -23,16 +23,16 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
             _workItemService = workItemService;
         }
 
-        public async Task<InternalCommandResponse<bool>> Handle(DeleteWorkItemCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<bool>> Handle(DeleteWorkItemCommand request, CancellationToken cancellationToken)
         {
             InternalServiceResponse<bool> result = await _workItemService.DeleteAsync(request.Id, cancellationToken);
 
             if (result.IsSuccess)
             {
-                return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.WorkItemNotFound);
+                return InternalHandlerResponse<bool>.Success(true, InternalCommandConstants.WorkItemNotFound);
             }
 
-            return InternalCommandResponse<bool>.Failure(InternalCommandConstants.ErrorWorkItemDeleting);
+            return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.ErrorWorkItemDeleting);
         }
     }
 }

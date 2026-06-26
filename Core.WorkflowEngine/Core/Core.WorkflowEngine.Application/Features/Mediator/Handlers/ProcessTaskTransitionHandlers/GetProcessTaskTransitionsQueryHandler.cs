@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Configuration.Wrappers;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
-    public class GetProcessTaskTransitionsQueryHandler : IRequestHandler<GetProcessTaskTransitionsQuery, List<GetProcessTaskTransitionsQueryResult>>
+    public class GetProcessTaskTransitionsQueryHandler : IRequestHandler<GetProcessTaskTransitionsQuery, InternalHandlerResponse<List<GetProcessTaskTransitionsQueryResult>>>
     {
         private readonly ITaskTransitionService _taskTransitionService;
         private readonly IMapper _mapper;
@@ -28,13 +29,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<List<GetProcessTaskTransitionsQueryResult>> Handle(GetProcessTaskTransitionsQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<List<GetProcessTaskTransitionsQueryResult>>> Handle(GetProcessTaskTransitionsQuery request, CancellationToken cancellationToken)
         {
             TaskTransitionFilterDto serviceQueryDto = _mapper.Map<TaskTransitionFilterDto>(request);
 
             InternalServiceResponse<List<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(serviceQueryDto);
 
-            return _mapper.Map<List<GetProcessTaskTransitionsQueryResult>>(result.Data);
+            return InternalHandlerResponse<List<GetProcessTaskTransitionsQueryResult>>.Success(_mapper.Map<List<GetProcessTaskTransitionsQueryResult>>(result.Data));
         }
     }
 }

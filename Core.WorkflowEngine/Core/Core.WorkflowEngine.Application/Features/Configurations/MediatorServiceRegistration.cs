@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Core.WorkflowEngine.Application.Features.Commons.Behaviors;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,12 @@ namespace Core.WorkflowEngine.Application.Features.Configurations
     {
         public static IServiceCollection AddMediatorServiceRegistration(this IServiceCollection services)
         {
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MediatorAssemblyMarker).Assembly));
+            services.AddMediatR(cfg =>
+            {
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+
+                cfg.RegisterServicesFromAssembly(typeof(MediatorAssemblyMarker).Assembly);
+            });
 
             return services;
         }

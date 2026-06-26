@@ -18,7 +18,8 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefinitionHandlers
 {
-    public class UpdateProcessDefinitionCommandHandler : IRequestHandler<UpdateProcessDefinitionCommand, InternalCommandResponse<DateTimeOffset>>
+    public class UpdateProcessDefinitionCommandHandler : IRequestHandler<UpdateProcessDefinitionCommand, InternalHandlerResponse<DateTimeOffset>>,
+        IValidationRequest
     {
         private readonly IRepository<ProcessDefinition> _repository;
         private readonly IUnitOfWork _unitOfWork;
@@ -35,7 +36,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             _businessRule = businessRule;
         }
 
-        public async Task<InternalCommandResponse<DateTimeOffset>> Handle(UpdateProcessDefinitionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
@@ -47,22 +48,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 
             if (checkExistData)
             {
-                _logger.LogError(LogConstants.LogMessageTemplate,
-                nameof(UpdateProcessDefinitionCommandHandler),
-                $"{LogConstants.ErrorMessages.DataUpdateFailed} Not Found Id: {request.Id}");
-
-                return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
+                return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
             }
 
             ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
 
             DateTimeOffset result = await _repository.UpdateDataAsync(dataFromDto);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(UpdateProcessDefinitionCommandHandler),
-                $"{LogConstants.SuccessMessages.DataDeletedSuccessfully} Updated Id: {request.Id}");
-
-            return InternalCommandResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessDefinitionUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessDefinitionUpdating);
         }
     }
 }

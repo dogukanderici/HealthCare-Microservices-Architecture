@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefinitionHandlers
 {
-    public class DeleteProcessDefinitionCommandHandler : IRequestHandler<DeleteProcessDefinitionCommand, InternalCommandResponse<bool>>
+    public class DeleteProcessDefinitionCommandHandler : IRequestHandler<DeleteProcessDefinitionCommand, InternalHandlerResponse<bool>>
     {
         private readonly IRepository<ProcessDefinition> _repository;
         private readonly ILogger<DeleteProcessDefinitionCommandHandler> _logger;
@@ -28,7 +28,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             _logger = logger;
         }
 
-        public async Task<InternalCommandResponse<bool>> Handle(DeleteProcessDefinitionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<bool>> Handle(DeleteProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
@@ -39,20 +39,12 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 
             if (result == null)
             {
-                _logger.LogError(LogConstants.LogMessageTemplate,
-                nameof(DeleteProcessDefinitionCommandHandler),
-                $"{LogConstants.ErrorMessages.DataUpdateFailed} Not Found Id: {request.Id}");
-
-                return InternalCommandResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
+                return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
             }
 
             await _repository.DeleteDataAsync(result);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(DeleteProcessDefinitionCommandHandler),
-                $"{LogConstants.SuccessMessages.DataDeletedSuccessfully} Deleted Id: {request.Id}");
-
-            return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessDefinitionDeleting);
+            return InternalHandlerResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessDefinitionDeleting);
         }
     }
 }

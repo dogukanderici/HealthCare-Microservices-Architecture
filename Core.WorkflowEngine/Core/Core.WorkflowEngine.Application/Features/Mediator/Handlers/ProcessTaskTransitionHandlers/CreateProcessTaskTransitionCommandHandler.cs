@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
-    public class CreateProcessTaskTransitionCommandHandler : IRequestHandler<CreateProcessTaskTransitionCommand, InternalCommandResponse<Guid>>
+    public class CreateProcessTaskTransitionCommandHandler : IRequestHandler<CreateProcessTaskTransitionCommand, InternalHandlerResponse<Guid>>
     {
         private readonly ITaskTransitionService _service;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _mapper = mapper;
         }
 
-        public async Task<InternalCommandResponse<Guid>> Handle(CreateProcessTaskTransitionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<Guid>> Handle(CreateProcessTaskTransitionCommand request, CancellationToken cancellationToken)
         {
             ProcessTaskTransition dataFromDto = _mapper.Map<ProcessTaskTransition>(request);
 
@@ -33,10 +33,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
             if (result.IsSuccess)
             {
-                return InternalCommandResponse<Guid>.Success(result.Data, InternalCommandConstants.SuccessProcessTaskTransitionCreating);
+                return InternalHandlerResponse<Guid>.Success(result.Data, InternalCommandConstants.SuccessProcessTaskTransitionCreating);
             }
 
-            return InternalCommandResponse<Guid>.Failure(InternalCommandConstants.ErrorProcessTaskTransitionCreating);
+            return InternalHandlerResponse<Guid>.Failure(InternalCommandConstants.ErrorProcessTaskTransitionCreating);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Domain.Entities;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskHandlers
 {
-    public class GetProcessTaskByIdQueryHandler : IRequestHandler<GetProcessTaskByIdQuery, GetProcessTaskByIdQueryResult>
+    public class GetProcessTaskByIdQueryHandler : IRequestHandler<GetProcessTaskByIdQuery, InternalHandlerResponse<GetProcessTaskByIdQueryResult>>
     {
         private readonly IRepository<ProcessTask> _repository;
         private readonly IMapper _mapper;
@@ -28,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<GetProcessTaskByIdQueryResult> Handle(GetProcessTaskByIdQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<GetProcessTaskByIdQueryResult>> Handle(GetProcessTaskByIdQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
 
@@ -37,7 +38,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
             ProcessTask result = await _repository.GetDataAsync(dBQueryOptions);
 
-            return _mapper.Map<GetProcessTaskByIdQueryResult>(result);
+            return InternalHandlerResponse<GetProcessTaskByIdQueryResult>.Success(_mapper.Map<GetProcessTaskByIdQueryResult>(result));
         }
     }
 }

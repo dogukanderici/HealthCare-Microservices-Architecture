@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Domain.Entities;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefinitionHandlers
 {
-    public class GetProcessDefinitionByIdQueryHandler : IRequestHandler<GetProcessDefinitionByIdQuery, GetProcessDefinitionByIdQueryResult>
+    public class GetProcessDefinitionByIdQueryHandler : IRequestHandler<GetProcessDefinitionByIdQuery, InternalHandlerResponse<GetProcessDefinitionByIdQueryResult>>
     {
         private readonly IRepository<ProcessDefinition> _repository;
         private readonly ILogger<GetProcessDefinitionByIdQueryHandler> _logger;
@@ -28,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             _mapper = mapper;
         }
 
-        public async Task<GetProcessDefinitionByIdQueryResult> Handle(GetProcessDefinitionByIdQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<GetProcessDefinitionByIdQueryResult>> Handle(GetProcessDefinitionByIdQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
@@ -37,7 +38,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 
             ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);
 
-            return _mapper.Map<GetProcessDefinitionByIdQueryResult>(result);
+            return InternalHandlerResponse<GetProcessDefinitionByIdQueryResult>.Success(_mapper.Map<GetProcessDefinitionByIdQueryResult>(result));
         }
     }
 }

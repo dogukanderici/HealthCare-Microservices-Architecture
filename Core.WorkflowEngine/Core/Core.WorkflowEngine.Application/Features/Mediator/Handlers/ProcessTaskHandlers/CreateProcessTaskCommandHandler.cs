@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskHandlers
 {
-    public class CreateProcessTaskCommandHandler : IRequestHandler<CreateProcessTaskCommand, InternalCommandResponse<Guid>>
+    public class CreateProcessTaskCommandHandler : IRequestHandler<CreateProcessTaskCommand, InternalHandlerResponse<Guid>>
     {
         private readonly IRepository<ProcessTask> _repository;
         private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<InternalCommandResponse<Guid>> Handle(CreateProcessTaskCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<Guid>> Handle(CreateProcessTaskCommand request, CancellationToken cancellationToken)
         {
             ProcessTask dataFropmDto = _mapper.Map<ProcessTask>(request);
 
@@ -39,7 +39,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
                      nameof(CreateProcessTaskCommandHandler),
                      LogConstants.SuccessMessages.DataCreatedSuccessfully);
 
-            return InternalCommandResponse<Guid>.Success(id, InternalCommandConstants.SuccessProcessTaskCreating);
+            return InternalHandlerResponse<Guid>.Success(id, InternalCommandConstants.SuccessProcessTaskCreating);
         }
     }
 }

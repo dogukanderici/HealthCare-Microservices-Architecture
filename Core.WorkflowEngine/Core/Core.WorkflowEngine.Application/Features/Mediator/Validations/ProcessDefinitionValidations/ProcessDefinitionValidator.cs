@@ -29,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Validations.ProcessD
 
         private bool CheckSpecialChar(string data)
         {
-            return Regex.IsMatch(data, @"^[^&?*]*$");
+            return Regex.IsMatch(data, @"^[^@&?*%$#£]*$");
         }
     }
 }

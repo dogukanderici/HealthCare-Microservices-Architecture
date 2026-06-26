@@ -1,13 +1,8 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries;
-using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
-using Core.WorkflowEngine.WebAPI.Constants;
-using Core.WorkflowEngine.WebAPI.Wrappers;
+using Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using static Core.WorkflowEngine.WebAPI.Constants.LogConstants;
 
 namespace Core.WorkflowEngine.WebAPI.Controllers
 {
@@ -16,70 +11,40 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
     public class WorkItemsController : BaseController
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<WorkItemsController> _logger;
+        private readonly IControllerReponseHelper<WorkItemsController> _controllerReponseHelper;
 
-        public WorkItemsController(IMediator mediator, ILogger<WorkItemsController> logger)
+        public WorkItemsController(IMediator mediator, IControllerReponseHelper<WorkItemsController> controllerReponseHelper)
         {
             _mediator = mediator;
-            _logger = logger;
+            _controllerReponseHelper = controllerReponseHelper;
         }
 
         [HttpGet("instance/{id}")]
         public async Task<IActionResult> GetWorkItemByIntanceId(Guid id)
         {
-            try
-            {
-                List<GetWorkItemsQueryResult> result = await _mediator.Send(new GetWorkItemsQuery(id));
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(WorkItemsController),
-                    nameof(GetWorkItems),
-                    LogConstants.SuccessMessage.CallingSuccess);
-
-                return Ok(GenericAPIResponse<List<GetWorkItemsQueryResult>>.SuccessAPIResponse(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(WorkItemsController),
-                    nameof(GetWorkItems),
-                    ex);
-
-                return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
-            }
+            return await _controllerReponseHelper.ExecuteAsync(
+                () => _mediator.Send(new GetWorkItemsQuery(id)),
+                nameof(GetWorkItemByIntanceId),
+                SuccessMessage.CallingSuccess,
+                ErrorMessage.CallingFail
+                );
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetWorkItems(Guid id)
         {
-            try
-            {
-                GetWorkItemByIdQueryResult result = await _mediator.Send(new GetWorkItemByIdQuery(id));
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(WorkItemsController),
-                    nameof(GetWorkItems),
-                    LogConstants.SuccessMessage.CallingSuccess);
-
-                return Ok(GenericAPIResponse<GetWorkItemByIdQueryResult>.SuccessAPIResponse(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(WorkItemsController),
-                    nameof(GetWorkItems),
-                    ex);
-
-                return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
-            }
+            return await _controllerReponseHelper.ExecuteAsync(
+                () => _mediator.Send(new GetWorkItemByIdQuery(id)),
+                nameof(GetWorkItems),
+                SuccessMessage.CallingSuccess,
+                ErrorMessage.CallingFail
+                );
         }
 
         [HttpPost("filtered")]
         public async Task<IActionResult> GetWorkItemsByFilter(GetWorkItemsByFilterQuery query)
         {
-            try
-            {
-                GetWorkItemsByFilterQuery filter = GetWorkItemsByFilterQuery.Filter(
+            GetWorkItemsByFilterQuery filter = GetWorkItemsByFilterQuery.Filter(
                     query.InstanceId,
                     query.AssignedUserId,
                     query.Status,
@@ -87,24 +52,12 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
                     query.CreatedBy
                     );
 
-                List<GetWorkItemsByFilterQueryResult> result = await _mediator.Send(filter);
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(WorkItemsController),
-                    nameof(GetWorkItemsByFilter),
-                    JsonConvert.SerializeObject(query));
-
-                return Ok(GenericAPIResponse<List<GetWorkItemsByFilterQueryResult>>.SuccessAPIResponse(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(WorkItemsController),
-                    nameof(GetWorkItemsByFilter),
-                    ex);
-
-                return BadRequest(GenericAPIResponse<bool>.ErrorAPIResponse());
-            }
+            return await _controllerReponseHelper.ExecuteAsync(
+                () => _mediator.Send(filter),
+                nameof(GetWorkItemsByFilter),
+                SuccessMessage.CallingSuccess,
+                ErrorMessage.CallingFail
+                );
         }
     }
 }

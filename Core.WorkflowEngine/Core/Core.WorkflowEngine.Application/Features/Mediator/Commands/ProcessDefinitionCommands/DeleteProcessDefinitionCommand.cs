@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands
 {
-    public class DeleteProcessDefinitionCommand : IRequest<InternalCommandResponse<bool>>, ITransactionalRequest
+    public class DeleteProcessDefinitionCommand : IRequest<InternalHandlerResponse<bool>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
 

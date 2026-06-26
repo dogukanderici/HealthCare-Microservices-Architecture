@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands
 {
-    public class CreateProcessDefinitionCommand : IRequest<InternalCommandResponse<Guid>>, ITransactionalRequest
+    public class CreateProcessDefinitionCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
     {
         public string ProcessName { get; set; }
         public bool IsActive { get; set; }

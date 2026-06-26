@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskHandlers
 {
-    public class UpdateProcessTaskCommandHandler : IRequestHandler<UpdateProcessTaskCommand, InternalCommandResponse<DateTimeOffset>>
+    public class UpdateProcessTaskCommandHandler : IRequestHandler<UpdateProcessTaskCommand, InternalHandlerResponse<DateTimeOffset>>
     {
         private readonly IRepository<ProcessTask> _repository;
         private readonly IMapper _mapper;
@@ -34,7 +34,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _businessRule = businessRule;
         }
 
-        public async Task<InternalCommandResponse<DateTimeOffset>> Handle(UpdateProcessTaskCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateProcessTaskCommand request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
 
@@ -51,7 +51,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
                          nameof(CreateProcessTaskCommandHandler),
                          LogConstants.ErrorMessages.DataUpdateFailed);
 
-                return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
+                return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
             }
 
             ProcessTask dataFromDto = _mapper.Map<ProcessTask>(request);
@@ -62,7 +62,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
                  nameof(CreateProcessTaskCommandHandler),
                  LogConstants.SuccessMessages.DataUpdatedSuccessfully);
 
-            return InternalCommandResponse<DateTimeOffset>.Success(DateTimeOffset.Now, InternalCommandConstants.SuccessProcessTaskUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Success(DateTimeOffset.Now, InternalCommandConstants.SuccessProcessTaskUpdating);
         }
     }
 }

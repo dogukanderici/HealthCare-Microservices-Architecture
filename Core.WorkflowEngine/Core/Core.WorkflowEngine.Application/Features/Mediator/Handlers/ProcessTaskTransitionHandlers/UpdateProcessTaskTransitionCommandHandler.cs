@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
-    public class UpdateProcessTaskTransitionCommandHandler : IRequestHandler<UpdateProcessTaskTransitionCommand, InternalCommandResponse<DateTimeOffset>>
+    public class UpdateProcessTaskTransitionCommandHandler : IRequestHandler<UpdateProcessTaskTransitionCommand, InternalHandlerResponse<DateTimeOffset>>
     {
         private readonly ITaskTransitionService _service;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _mapper = mapper;
         }
 
-        public async Task<InternalCommandResponse<DateTimeOffset>> Handle(UpdateProcessTaskTransitionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateProcessTaskTransitionCommand request, CancellationToken cancellationToken)
         {
             ProcessTaskTransition dataFromDto = _mapper.Map<ProcessTaskTransition>(request);
 
@@ -33,10 +33,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
             if (result.IsSuccess)
             {
-                return InternalCommandResponse<DateTimeOffset>.Success(result.Data, InternalCommandConstants.SuccessProcessTaskTransitionUpdating);
+                return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalCommandConstants.SuccessProcessTaskTransitionUpdating);
             }
 
-            return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorProcessTaskTransitionUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorProcessTaskTransitionUpdating);
         }
     }
 }

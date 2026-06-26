@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands
 {
-    public class UpdateWorkItemCommand : IRequest<InternalCommandResponse<DateTimeOffset>>, ITransactionalRequest
+    public class UpdateWorkItemCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }

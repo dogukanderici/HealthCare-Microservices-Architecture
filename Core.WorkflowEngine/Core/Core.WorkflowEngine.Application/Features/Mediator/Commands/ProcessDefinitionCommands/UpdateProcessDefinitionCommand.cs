@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands
 {
-    public class UpdateProcessDefinitionCommand : IRequest<InternalCommandResponse<DateTimeOffset>>, ITransactionalRequest
+    public class UpdateProcessDefinitionCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
         public string ProcessName { get; set; }

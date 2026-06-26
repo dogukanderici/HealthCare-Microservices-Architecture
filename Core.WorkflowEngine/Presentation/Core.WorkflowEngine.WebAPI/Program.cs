@@ -8,6 +8,8 @@ using Core.WorkflowEngine.Application.Services;
 using Core.WorkflowEngine.Persistence.Context;
 using Core.WorkflowEngine.Persistence.Repositories;
 using Core.WorkflowEngine.Persistence.UnitOfWork;
+using Core.WorkflowEngine.WebAPI.Configurations;
+using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -61,6 +63,10 @@ builder.Services.AddBusinessRulesRegistration();
 
 // Service ( used in handler classes ) Configuration
 builder.Services.AddServiceRegistartion();
+
+builder.Services.AddValidatorsFromAssembly(typeof(ValidatorAssemblyMarker).Assembly);
+
+builder.Services.AddHelperServiceConfiguration();
 
 builder.Services.AddSwaggerGen();
 

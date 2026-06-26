@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskActionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskActionResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Configuration.Constants;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
-    public class GetProcessTaskActionsByFilterQueryHandler : IRequestHandler<GetProcessTaskActionsByFilterQuery, List<GetProcessTaskActionsByFilterQueryResult>>
+    public class GetProcessTaskActionsByFilterQueryHandler : IRequestHandler<GetProcessTaskActionsByFilterQuery, InternalHandlerResponse<List<GetProcessTaskActionsByFilterQueryResult>>>
     {
         private readonly IRepository<ProcessTaskAction> _repository;
         private readonly ILogger<GetProcessTaskActionsByFilterQueryHandler> _logger;
@@ -29,7 +30,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _mapper = mapper;
         }
 
-        public async Task<List<GetProcessTaskActionsByFilterQueryResult>> Handle(GetProcessTaskActionsByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<List<GetProcessTaskActionsByFilterQueryResult>>> Handle(GetProcessTaskActionsByFilterQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTaskAction> dBQueryOptions = new DBQueryOptions<ProcessTaskAction>();
 
@@ -44,11 +45,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
             List<ProcessTaskAction> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(GetProcessTaskActionsByFilterQueryHandler),
-                LogConstants.SuccessMessages.ProcessSuccessed);
-
-            return _mapper.Map<List<GetProcessTaskActionsByFilterQueryResult>>(result);
+            return InternalHandlerResponse<List<GetProcessTaskActionsByFilterQueryResult>>.Success(_mapper.Map<List<GetProcessTaskActionsByFilterQueryResult>>(result));
         }
     }
 }

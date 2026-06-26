@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Domain.Entities;
@@ -13,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {
-    public class GetInstancesQueryHandler : IRequestHandler<GetInstancesQuery, List<GetInstancesQueryResult>>
+    public class GetInstancesQueryHandler : IRequestHandler<GetInstancesQuery, InternalHandlerResponse<List<GetInstancesQueryResult>>>
     {
         private readonly IRepository<Instance> _repository;
         private readonly IMapper _mapper;
@@ -24,13 +25,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
             _mapper = mapper;
         }
 
-        public async Task<List<GetInstancesQueryResult>> Handle(GetInstancesQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<List<GetInstancesQueryResult>>> Handle(GetInstancesQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<Instance> dBQueryOptions = new DBQueryOptions<Instance>();
 
-            List<Instance> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            List<Instance> result = await _repository.GetAllDataAsync(dBQueryOptions);            
 
-            return _mapper.Map<List<GetInstancesQueryResult>>(result);
+            return InternalHandlerResponse<List<GetInstancesQueryResult>>.Success(_mapper.Map<List<GetInstancesQueryResult>>(result));
         }
     }
 }

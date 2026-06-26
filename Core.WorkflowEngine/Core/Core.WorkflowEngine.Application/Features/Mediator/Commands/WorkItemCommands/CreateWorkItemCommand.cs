@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands
 {
-    public class CreateWorkItemCommand : IRequest<InternalCommandResponse<Guid>>, ITransactionalRequest
+    public class CreateWorkItemCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
     {
         public Guid InstanceId { get; set; }
         public Guid AssignedUserId { get; set; }

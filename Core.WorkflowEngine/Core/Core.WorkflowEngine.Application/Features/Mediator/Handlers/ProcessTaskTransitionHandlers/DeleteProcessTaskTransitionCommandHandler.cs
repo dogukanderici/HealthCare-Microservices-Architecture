@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
-    public class DeleteProcessTaskTransitionCommandHandler : IRequestHandler<DeleteProcessTaskTransitionCommand, InternalCommandResponse<bool>>
+    public class DeleteProcessTaskTransitionCommandHandler : IRequestHandler<DeleteProcessTaskTransitionCommand, InternalHandlerResponse<bool>>
     {
         private readonly ITaskTransitionService _service;
 
@@ -23,16 +23,16 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _service = service;
         }
 
-        public async Task<InternalCommandResponse<bool>> Handle(DeleteProcessTaskTransitionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<bool>> Handle(DeleteProcessTaskTransitionCommand request, CancellationToken cancellationToken)
         {
             InternalServiceResponse<bool> result = await _service.DeleteAsync(request.Id, cancellationToken);
 
             if (result.IsSuccess)
             {
-                return InternalCommandResponse<bool>.Success(result.Data, InternalCommandConstants.SuccessProcessTaskTransitionDeleting);
+                return InternalHandlerResponse<bool>.Success(result.Data, InternalCommandConstants.SuccessProcessTaskTransitionDeleting);
             }
 
-            return InternalCommandResponse<bool>.Failure(InternalCommandConstants.ErrorProcessTaskTransitionDeleting);
+            return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.ErrorProcessTaskTransitionDeleting);
         }
     }
 }

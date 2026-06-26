@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Wrappers.Responses
 {
-    public class InternalCommandResponse<T> : IInternalCommandResponse
+    public class InternalHandlerResponse<T> : IInternalCommandResponse, IValidationResult
     {
         public bool IsSuccess { get; set; }
         public string InternalMessage { get; set; }
         public T Data { get; private set; }
+        public List<string>? ValidationErrors { get; set; }
 
-        public static InternalCommandResponse<T> Success(T data, string internalMessage = "Success")
+        public static InternalHandlerResponse<T> Success(T data, string internalMessage = "Success")
         {
-            return new InternalCommandResponse<T>
+            return new InternalHandlerResponse<T>
             {
                 IsSuccess = true,
                 InternalMessage = internalMessage,
@@ -23,9 +24,9 @@ namespace Core.WorkflowEngine.Application.Features.Wrappers.Responses
             };
         }
 
-        public static InternalCommandResponse<T> Failure(string internalMessage = "Fail")
+        public static InternalHandlerResponse<T> Failure(string internalMessage = "Fail")
         {
-            return new InternalCommandResponse<T>
+            return new InternalHandlerResponse<T>
             {
                 IsSuccess = false,
                 InternalMessage = internalMessage,

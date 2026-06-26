@@ -18,7 +18,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
-    public class UpdateProcessTaskActionCommandHandler : IRequestHandler<UpdateProcessTaskActionCommand, InternalCommandResponse<DateTimeOffset>>
+    public class UpdateProcessTaskActionCommandHandler : IRequestHandler<UpdateProcessTaskActionCommand, InternalHandlerResponse<DateTimeOffset>>
     {
         private readonly IRepository<ProcessTaskAction> _repository;
         private readonly IMapper _mapper;
@@ -33,7 +33,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _businessRule = businessRule;
         }
 
-        public async Task<InternalCommandResponse<DateTimeOffset>> Handle(UpdateProcessTaskActionCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateProcessTaskActionCommand request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTaskAction> dBQueryOptions = new DBQueryOptions<ProcessTaskAction>();
 
@@ -49,18 +49,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
                 DateTimeOffset result = await _repository.UpdateDataAsync(dataFromDto);
 
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(UpdateProcessTaskActionCommandHandler),
-                    LogConstants.SuccessMessages.DataUpdatedSuccessfully);
-
-                return InternalCommandResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessTaskActionUpdating);
+                return InternalHandlerResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessTaskActionUpdating);
             }
 
-            _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(UpdateProcessTaskActionCommandHandler),
-                    LogConstants.ErrorMessages.DataUpdateFailed);
-
-            return InternalCommandResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorProcessTaskActionUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorProcessTaskActionUpdating);
         }
     }
 }

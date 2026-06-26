@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskHandlers
 {
-    public class DeleteProcessTaskCommandHandler : IRequestHandler<DeleteProcessTaskCommand, InternalCommandResponse<bool>>
+    public class DeleteProcessTaskCommandHandler : IRequestHandler<DeleteProcessTaskCommand, InternalHandlerResponse<bool>>
     {
         private readonly IRepository<ProcessTask> _repository;
         private readonly ILogger<DeleteProcessTaskCommandHandler> _logger;
@@ -28,7 +28,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<InternalCommandResponse<bool>> Handle(DeleteProcessTaskCommand request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<bool>> Handle(DeleteProcessTaskCommand request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
 
@@ -46,14 +46,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
                     nameof(DeleteProcessTaskCommandHandler),
                     InternalCommandConstants.SuccessProcessTaskDeleting);
 
-                return InternalCommandResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessTaskDeleting);
+                return InternalHandlerResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessTaskDeleting);
             }
 
             _logger.LogError(LogConstants.LogMessageTemplate,
                     nameof(DeleteProcessTaskCommandHandler),
                     InternalCommandConstants.NotFoundData);
 
-            return InternalCommandResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
+            return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
         }
     }
 }

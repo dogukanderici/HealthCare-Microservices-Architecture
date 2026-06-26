@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Domain.Entities;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefinitionHandlers
 {
-    public class GetProcessDefinitionsByFilterQueryHandler : IRequestHandler<GetProcessDefinitionsByFilterQuery, List<GetProcessDefinitionsByFilterQueryResult>>
+    public class GetProcessDefinitionsByFilterQueryHandler : IRequestHandler<GetProcessDefinitionsByFilterQuery, InternalHandlerResponse<List<GetProcessDefinitionsByFilterQueryResult>>>
     {
         private readonly IRepository<ProcessDefinition> _repository;
         private readonly ILogger<GetProcessDefinitionsByFilterQueryHandler> _logger;
@@ -28,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             _mapper = mapper;
         }
 
-        public async Task<List<GetProcessDefinitionsByFilterQueryResult>> Handle(GetProcessDefinitionsByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<List<GetProcessDefinitionsByFilterQueryResult>>> Handle(GetProcessDefinitionsByFilterQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
@@ -41,7 +42,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 
             List<ProcessDefinition> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
-            return _mapper.Map<List<GetProcessDefinitionsByFilterQueryResult>>(result);
+            return InternalHandlerResponse<List<GetProcessDefinitionsByFilterQueryResult>>.Success(_mapper.Map<List<GetProcessDefinitionsByFilterQueryResult>>(result));
         }
     }
 }

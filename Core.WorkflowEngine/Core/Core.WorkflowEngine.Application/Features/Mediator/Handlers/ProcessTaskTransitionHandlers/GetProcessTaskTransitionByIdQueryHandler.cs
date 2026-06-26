@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Configuration.Wrappers;
@@ -15,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
-    public class GetProcessTaskTransitionByIdQueryHandler : IRequestHandler<GetProcessTaskTransitionByIdQuery, GetProcessTaskTransitionByIdQueryResult>
+    public class GetProcessTaskTransitionByIdQueryHandler : IRequestHandler<GetProcessTaskTransitionByIdQuery, InternalHandlerResponse<GetProcessTaskTransitionByIdQueryResult>>
     {
         private readonly ITaskTransitionService _taskTransitionService;
         private readonly IMapper _mapper;
@@ -28,11 +29,12 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<GetProcessTaskTransitionByIdQueryResult> Handle(GetProcessTaskTransitionByIdQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<GetProcessTaskTransitionByIdQueryResult>> Handle(GetProcessTaskTransitionByIdQuery request, CancellationToken cancellationToken)
         {
             InternalServiceResponse<ProcessTaskTransition> result = await _taskTransitionService.GetDataByIdAsync(request.Id);
 
-            return _mapper.Map<GetProcessTaskTransitionByIdQueryResult>(result.Data);
+            return InternalHandlerResponse<GetProcessTaskTransitionByIdQueryResult>
+                .Success(_mapper.Map<GetProcessTaskTransitionByIdQueryResult>(result.Data));
         }
     }
 }

@@ -2,6 +2,7 @@
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskActionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskActionResults;
+using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Configuration.Constants;
@@ -16,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
-    public class GetProcessTaskActionsQueryHandler : IRequestHandler<GetProcessTaskActionsQuery, List<GetProcessTaskActionsQueryResult>>
+    public class GetProcessTaskActionsQueryHandler : IRequestHandler<GetProcessTaskActionsQuery, InternalHandlerResponse<List<GetProcessTaskActionsQueryResult>>>
     {
         private readonly IRepository<ProcessTaskAction> _repository;
         private readonly ILogger<GetProcessTaskActionsQueryHandler> _logger;
@@ -29,7 +30,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _mapper = mapper;
         }
 
-        public async Task<List<GetProcessTaskActionsQueryResult>> Handle(GetProcessTaskActionsQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<List<GetProcessTaskActionsQueryResult>>> Handle(GetProcessTaskActionsQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTaskAction> dBQueryOptions = new DBQueryOptions<ProcessTaskAction>();
 
@@ -39,7 +40,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
                 nameof(GetProcessTaskActionsQueryHandler),
                 LogConstants.SuccessMessages.ProcessSuccessed);
 
-            return _mapper.Map<List<GetProcessTaskActionsQueryResult>>(result);
+            return InternalHandlerResponse<List<GetProcessTaskActionsQueryResult>>.Success(_mapper.Map<List<GetProcessTaskActionsQueryResult>>(result));
         }
     }
 }
