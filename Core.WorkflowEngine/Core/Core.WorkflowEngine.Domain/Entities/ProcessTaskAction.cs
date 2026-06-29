@@ -18,9 +18,9 @@ namespace Core.WorkflowEngine.Domain.Entities
         public Guid ProcessTaskId { get; set; }
         public Guid ActionId { get; set; }
         public string ActionName { get; set; }
-        public int ActionType { get; set; }
+        public int ActionType { get; set; } = 1;
         public int ExecutionOrder { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public Guid CreatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
