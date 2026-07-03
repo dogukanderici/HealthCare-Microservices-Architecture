@@ -15,6 +15,8 @@ namespace Core.WorkflowEngine.Application.Features.Configurations
         {
             services.AddMediatR(cfg =>
             {
+                // Behavior Configurations
+                cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
 
                 cfg.RegisterServicesFromAssembly(typeof(MediatorAssemblyMarker).Assembly);

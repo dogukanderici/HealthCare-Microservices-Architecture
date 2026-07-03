@@ -1,12 +1,45 @@
-﻿using Core.WorkflowEngine.Domain.Entities;
+﻿using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Domain.Abstractions;
+using Core.WorkflowEngine.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.WorkflowEngine.Persistence.Context
 {
     public class DBContext : DbContext
     {
-        public DBContext(DbContextOptions dbContextOptions) : base(dbContextOptions)
+        private ICurrentUserService _currentUserService;
+
+        public DBContext(DbContextOptions dbContextOptions, ICurrentUserService currentUserService) : base(dbContextOptions)
         {
+            _currentUserService = currentUserService;
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            Guid userId = _currentUserService.UserId;
+
+            // ChangeTracker ile sadece değişen veya yeni eklenen IAuditEntity'leri bulur.
+            foreach (var entry in ChangeTracker.Entries<IAuditEntity>())
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedBy = userId;
+                        entry.Entity.CreatedAt = DateTime.UtcNow;
+                        break;
+
+                    case EntityState.Modified:
+                        entry.Entity.UpdatedBy = userId;
+                        entry.Entity.UpdatedAt = DateTime.UtcNow;
+
+                        // Mevcut CreatedBy ve CreatedAt'in güncellenmesini engeller.
+                        entry.Property(x => x.CreatedBy).IsModified = false;
+                        entry.Property(x => x.CreatedAt).IsModified = false;
+                        break;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

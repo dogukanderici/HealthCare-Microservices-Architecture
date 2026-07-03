@@ -4,6 +4,7 @@ using Core.WorkflowEngine.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,8 +21,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessDefinit
             _businessRule = businessRule;
         }
 
-        public async Task<bool> ExistingProcessDefinitionDataAsync(DBQueryOptions<ProcessDefinition> dbQueryOptions)
+        public async Task<bool> ExistingProcessDefinitionDataAsync(Guid id)
         {
+            DBQueryOptions<ProcessDefinition> dbQueryOptions = new DBQueryOptions<ProcessDefinition>();
+
+            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == id;
+            dbQueryOptions.filter = filter;
+
             int data = await _businessRule.ExistingDataControlAsync(dbQueryOptions);
 
             return data == 0;

@@ -2,6 +2,7 @@
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkflowExecutionResults;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Domain.Entities;
 using System;
@@ -25,6 +26,7 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
 
             CreateMap<GetProcessTaskTransitionsQuery, TaskTransitionFilterDto>().ReverseMap(); // Service Query Dto
             CreateMap<GetProcessTaskTransitionsByFilterQuery, TaskTransitionFilterDto>().ReverseMap(); // Service Query Dto
+            CreateMap<ProcessTaskTransition, GetTransitionsByFilterQueryResult>().ReverseMap();
         }
     }
 }

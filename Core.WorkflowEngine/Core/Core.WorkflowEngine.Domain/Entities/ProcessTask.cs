@@ -17,6 +17,7 @@ namespace Core.WorkflowEngine.Domain.Entities
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid ProcessId { get; set; }
         public string StepName { get; set; }
+        public Guid AssignedUser { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
         public bool IsStartStep { get; set; } = false;
         public bool IsActive { get; set; } = true;
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;

@@ -43,7 +43,7 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer("IdentityServerAccessToken", options =>
     {
-        options.Authority = "http://HealthCare_IdentityServer_API:8080";
+        options.Authority = "http://Core_IdentityServer_API:8080";
         options.Audience = "HealthCareFullPermission";
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;

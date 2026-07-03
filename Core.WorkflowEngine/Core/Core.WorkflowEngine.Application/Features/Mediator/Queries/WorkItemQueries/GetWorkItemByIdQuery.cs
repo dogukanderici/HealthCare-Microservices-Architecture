@@ -11,11 +11,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQuer
 {
     public class GetWorkItemByIdQuery : IRequest<InternalHandlerResponse<GetWorkItemByIdQueryResult>>
     {
-        public Guid Id { get; set; }
+        public Guid WorkItemId { get; set; }
 
-        public GetWorkItemByIdQuery(Guid id)
+        public GetWorkItemByIdQuery(Guid workItemId)
         {
-            Id = id;
+            WorkItemId = workItemId;
         }
     }
 }

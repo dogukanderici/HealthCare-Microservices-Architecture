@@ -11,6 +11,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessDefinit
 {
     public interface IProcessDefinitionBusinessRule
     {
-        Task<bool> ExistingProcessDefinitionDataAsync(DBQueryOptions<ProcessDefinition> dbQueryOptions);
+        Task<bool> ExistingProcessDefinitionDataAsync(Guid id);
     }
 }

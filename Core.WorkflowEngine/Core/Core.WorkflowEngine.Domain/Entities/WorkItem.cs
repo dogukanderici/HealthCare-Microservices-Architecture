@@ -20,7 +20,7 @@ namespace Core.WorkflowEngine.Domain.Entities
         public Guid AssignedRoleId { get; set; }
         public DateTimeOffset CompletedAt { get; set; }
         public Guid CompletedBy { get; set; }
-        public int Status { get; set; } = 1;
+        public int Status { get; set; } = 1; // Waiting
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
         public Guid CreatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;

@@ -1,8 +1,6 @@
-using Core.WorkflowEngine.Application.Features.Commons;
 using Core.WorkflowEngine.Application.Features.Commons.Behaviors;
 using Core.WorkflowEngine.Application.Features.Configurations;
 using Core.WorkflowEngine.Application.Features.Mappings.Configurations;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Services;
 using Core.WorkflowEngine.Persistence.Context;
@@ -11,7 +9,10 @@ using Core.WorkflowEngine.Persistence.UnitOfWork;
 using Core.WorkflowEngine.WebAPI.Configurations;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
@@ -21,6 +22,41 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "IdentityServerAccessToken";
+    options.DefaultChallengeScheme = "IdentityServerAccessToken";
+})
+    .AddJwtBearer("IdentityServerAccessToken", options =>
+    {
+        options.Authority = "http://Core_IdentityServer_API:8080";
+        options.Audience = "HealthCareFullPermission";
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = "http://loacalhost:5001",
+            ValidateAudience = true,
+            ValidAudience = "HealthCareFullPermission",
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+            RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" // [Authorize(Roles="...")] için önemli.
+        };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                // Docker loglarında hatayı görüntülemek için.
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                logger.LogError($"Authentication Error : {context.Exception.Message}");
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 // Serilog Configurations
 var logPath = "/app/logs/workflowengine";
@@ -39,6 +75,8 @@ builder.Host.UseSerilog();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddHttpContextAccessor();
+
 // Postgre SQL Configuration
 builder.Services.AddDbContext<DBContext>(
     opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DBConnectionSettings"))
@@ -56,8 +94,6 @@ builder.Services.AddAutoMapperServiceRegistration();
 // MediatR Registration
 builder.Services.AddMediatorServiceRegistration();
 
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
-
 // Business Rule Configuration
 builder.Services.AddBusinessRulesRegistration();
 
@@ -68,7 +104,39 @@ builder.Services.AddValidatorsFromAssembly(typeof(ValidatorAssemblyMarker).Assem
 
 builder.Services.AddHelperServiceConfiguration();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "Dogukan",
+        Version = "Version 1.0.0"
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT token giriniz."
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 
@@ -82,6 +150,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

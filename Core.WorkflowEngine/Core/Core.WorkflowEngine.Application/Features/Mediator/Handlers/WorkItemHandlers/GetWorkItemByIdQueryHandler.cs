@@ -3,7 +3,10 @@ using Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.ServiceDtos.WorkItemServiceDtos;
 using Core.WorkflowEngine.Configuration;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -22,24 +25,25 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
         private readonly ILogger<GetWorkItemsQueryHandler> _logger;
         private readonly IMapper _mapper;
 
-        public GetWorkItemByIdQueryHandler(IRepository<WorkItem> repository, ILogger<GetWorkItemsQueryHandler> logger, IMapper mapper)
+        private readonly IWorkItemService _workItemService;
+
+        public GetWorkItemByIdQueryHandler(IRepository<WorkItem> repository, ILogger<GetWorkItemsQueryHandler> logger, IMapper mapper, IWorkItemService workItemService)
         {
             _repository = repository;
             _logger = logger;
             _mapper = mapper;
+            _workItemService = workItemService;
         }
 
         public async Task<InternalHandlerResponse<GetWorkItemByIdQueryResult>> Handle(GetWorkItemByIdQuery request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
 
-            Expression<Func<WorkItem, bool>> filter = x => x.Id == request.Id;
-            dBQueryOptions.filter = filter;
+            WorkItemFilterDto dataFromDto = _mapper.Map<WorkItemFilterDto>(request);
 
-            WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
+            InternalServiceResponse<WorkItem> result = await _workItemService.GetWorkItemByIdAsync(dataFromDto);
 
             return InternalHandlerResponse<GetWorkItemByIdQueryResult>
-                .Success(_mapper.Map<GetWorkItemByIdQueryResult>(result));
+                .Success(_mapper.Map<GetWorkItemByIdQueryResult>(result.Data));
         }
     }
 }

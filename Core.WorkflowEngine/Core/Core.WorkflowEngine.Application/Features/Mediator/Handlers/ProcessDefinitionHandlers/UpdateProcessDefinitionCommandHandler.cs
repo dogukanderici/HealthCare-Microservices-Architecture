@@ -4,6 +4,7 @@ using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefiniti
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessDefinitionBusinessRules;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Configuration.Constants;
 using Core.WorkflowEngine.Domain.Entities;
@@ -26,34 +27,33 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
         private readonly ILogger<UpdateProcessDefinitionCommandHandler> _logger;
         private readonly IMapper _mapper;
         private readonly IProcessDefinitionBusinessRule _businessRule;
+        private readonly IProcessDefinitionService _processDefinitionService;
 
-        public UpdateProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, IUnitOfWork unitOfWork, ILogger<UpdateProcessDefinitionCommandHandler> logger, IMapper mapper, IProcessDefinitionBusinessRule businessRule)
+        public UpdateProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, IUnitOfWork unitOfWork, ILogger<UpdateProcessDefinitionCommandHandler> logger, IMapper mapper, IProcessDefinitionBusinessRule businessRule, IProcessDefinitionService processDefinitionService)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
             _businessRule = businessRule;
+            _processDefinitionService = processDefinitionService;
         }
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
-
-            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == request.Id;
-            dBQueryOptions.filter = filter;
-
             // Veri yoksa true döner;
-            bool checkExistData = await _businessRule.ExistingProcessDefinitionDataAsync(dBQueryOptions);
+            bool checkExistData = await _businessRule.ExistingProcessDefinitionDataAsync(request.Id);
 
             if (checkExistData)
             {
                 return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
             }
 
-            ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
+            ProcessDefinition existedData = await _processDefinitionService.GetDataById(request.Id);
 
-            DateTimeOffset result = await _repository.UpdateDataAsync(dataFromDto);
+            _mapper.Map(request, existedData);
+
+            DateTimeOffset result = await _repository.UpdateDataAsync(existedData);
 
             return InternalHandlerResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessDefinitionUpdating);
         }

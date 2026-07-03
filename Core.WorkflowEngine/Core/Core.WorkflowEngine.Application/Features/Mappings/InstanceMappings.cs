@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.InstanceCommands;
+using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExecutionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
 using Core.WorkflowEngine.Domain.Entities;
 using System;
@@ -20,6 +21,8 @@ namespace HealthCare.WorkflowEngine.Application.Features.Mappings
             CreateMap<Instance, CreateInstanceCommand>().ReverseMap();
             CreateMap<Instance, UpdateInstanceCommand>().ReverseMap();
             CreateMap<Instance, DeleteInstanceCommand>().ReverseMap();
+
+            CreateMap<Instance, CreateInstanceExecutionCommand>().ReverseMap();
         }
     }
 }

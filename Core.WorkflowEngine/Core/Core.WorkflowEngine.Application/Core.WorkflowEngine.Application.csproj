@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Mediator\Commands\WorkflowExecutionCommands\" />
-    <Folder Include="Features\Mediator\Handlers\WorkflowExecutionHandlers\" />
-    <Folder Include="Features\Mediator\Queries\WorkflowExecutionQueries\" />
-    <Folder Include="Features\Mediator\Results\WorkflowExecutionResults\" />
     <Folder Include="Features\Mediator\Validations\InstanceValidations\" />
   </ItemGroup>
 

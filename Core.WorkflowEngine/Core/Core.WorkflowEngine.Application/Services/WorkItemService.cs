@@ -4,6 +4,7 @@ using Core.WorkflowEngine.Application.Features.Mediator.Rules.WorkItemBusinessRu
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.ServiceDtos.WorkItemServiceDtos;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Configuration.Constants;
 using Core.WorkflowEngine.Configuration.Wrappers;
@@ -30,6 +31,18 @@ namespace Core.WorkflowEngine.Application.Services
             _repository = repository;
             _logger = logger;
             _businessRule = businessRule;
+        }
+
+        public async Task<InternalServiceResponse<WorkItem>> GetWorkItemByIdAsync(WorkItemFilterDto workItemFilterDto)
+        {
+            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+
+            Expression<Func<WorkItem, bool>> filter = x => x.Id == workItemFilterDto.WorkItemId;
+            dBQueryOptions.filter = filter;
+
+            WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
+
+            return InternalServiceResponse<WorkItem>.Success(result);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(WorkItem entity, CancellationToken cancellationToken)

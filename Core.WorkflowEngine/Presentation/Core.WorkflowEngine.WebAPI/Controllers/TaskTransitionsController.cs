@@ -2,11 +2,13 @@
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries;
 using Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Core.WorkflowEngine.WebAPI.Constants.LogConstants;
 
 namespace Core.WorkflowEngine.WebAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "IdentityServerAccessToken", Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class TaskTransitionsController : BaseController
