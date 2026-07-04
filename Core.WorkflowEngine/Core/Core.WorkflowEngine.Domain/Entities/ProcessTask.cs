@@ -25,6 +25,7 @@ namespace Core.WorkflowEngine.Domain.Entities
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
         public Guid UpdatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
 
+        [ForeignKey("ProcessId")]
         public ProcessDefinition ProcessDefinition { get; set; }
         public ICollection<ProcessTaskAction> ProcessTaskActions { get; set; } = new List<ProcessTaskAction>();
         public ICollection<Instance> Instances { get; set; } = new List<Instance>();

@@ -17,7 +17,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Validations.ProcessT
         public ProcessTaskActionValidator()
         {
             RuleFor(pta => pta.ProcessTaskId).NotEmpty().WithMessage(NotEmptyMessage);
-            RuleFor(pta => pta.ActionId).NotEmpty().WithMessage(NotEmptyMessage);
             RuleFor(pta => pta.ActionName)
                 .NotEmpty().WithMessage(NotEmptyMessage)
                 .Must(x => x is string).WithMessage(StringTypeofMessage)
