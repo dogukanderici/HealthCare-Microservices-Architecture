@@ -37,6 +37,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             Expression<Func<ProcessTask, bool>> filter = x => x.ProcessId == request.ProcessId;
             dBQueryOptions.filter = filter;
 
+            List<Expression<Func<ProcessTask, object>>> includes = [
+                x=>x.ProcessDefinition
+                ];
+            dBQueryOptions.includes = includes;
+
             List<ProcessTask> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
             return InternalHandlerResponse<List<GetProcessTasksQueryResult>>.Success(_mapper.Map<List<GetProcessTasksQueryResult>>(result));

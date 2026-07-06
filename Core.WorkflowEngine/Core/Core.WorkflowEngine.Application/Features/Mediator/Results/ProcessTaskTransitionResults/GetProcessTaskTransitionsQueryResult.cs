@@ -15,5 +15,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskT
         public Guid ActionId { get; set; }
         public string ConditionExpression { get; set; }
         public bool IsActive { get; set; }
+
+        public GetProcessTaskTransitionWithProcessTaskResult ProcessTask { get; set; }
+        public GetProcessTaskTransitionWithProcessTaskResult NextTask { get; set; }
     }
 }

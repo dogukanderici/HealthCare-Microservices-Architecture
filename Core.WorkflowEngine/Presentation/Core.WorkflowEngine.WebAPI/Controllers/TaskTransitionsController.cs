@@ -1,5 +1,6 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries;
+using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -22,11 +23,11 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
             _controllerReponseHelper = controllerReponseHelper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTaskTransitions()
+        [HttpGet("GetByTaskId/{taskId}")]
+        public async Task<IActionResult> GetTaskTransitions(Guid taskId)
         {
             return await _controllerReponseHelper.ExecuteAsync(
-                () => _mediator.Send(new GetProcessTaskTransitionsQuery()),
+                () => _mediator.Send(new GetProcessTaskTransitionsQuery(taskId)),
                 nameof(GetTaskTransitions),
                 SuccessMessage.CallingSuccess,
                 ErrorMessage.CallingFail
@@ -49,7 +50,6 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
         {
             GetProcessTaskTransitionsByFilterQuery filter = GetProcessTaskTransitionsByFilterQuery.Filter(
                     query.ProcessTaskId,
-                    query.NextTaskId,
                     query.ActionId,
                     query.IsActive
                     );

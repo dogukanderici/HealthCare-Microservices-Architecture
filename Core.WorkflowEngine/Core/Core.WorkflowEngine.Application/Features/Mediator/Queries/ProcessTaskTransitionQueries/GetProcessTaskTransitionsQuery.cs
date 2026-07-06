@@ -5,11 +5,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries
 {
     public class GetProcessTaskTransitionsQuery : IRequest<InternalHandlerResponse<List<GetProcessTaskTransitionsQueryResult>>>
     {
+        public Guid ProcessTaskId { get; set; }
+
+        public GetProcessTaskTransitionsQuery(Guid processTaskId)
+        {
+            ProcessTaskId = processTaskId;
+        }
     }
 }

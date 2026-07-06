@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries
@@ -12,20 +13,20 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskT
     public class GetProcessTaskTransitionsByFilterQuery : IRequest<InternalHandlerResponse<List<GetProcessTaskTransitionsByFilterQueryResult>>>
     {
         public Guid? ProcessTaskId { get; set; }
-        public Guid? NextTaskId { get; set; }
         public Guid? ActionId { get; set; }
         public bool? IsActive { get; set; }
 
+
+        [JsonConstructor]
         private GetProcessTaskTransitionsByFilterQuery()
         {
 
         }
 
-        public static GetProcessTaskTransitionsByFilterQuery Filter(Guid? processTaskId, Guid? nextTaskId, Guid? actionId, bool? isActive) =>
+        public static GetProcessTaskTransitionsByFilterQuery Filter(Guid? processTaskId, Guid? actionId, bool? isActive) =>
             new GetProcessTaskTransitionsByFilterQuery
             {
                 ProcessTaskId = processTaskId,
-                NextTaskId = nextTaskId,
                 ActionId = actionId,
                 IsActive = isActive
             };

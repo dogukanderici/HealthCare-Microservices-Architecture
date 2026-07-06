@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskQueries
@@ -16,6 +17,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskQ
         public bool? IsStartStep { get; set; }
         public bool? IsActive { get; set; }
 
+        [JsonConstructor]
         private GetProcessTasksByFilterQuery()
         {
 

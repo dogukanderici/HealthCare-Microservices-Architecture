@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries
@@ -17,6 +18,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQuer
 
 
         // Oluşturlan Nesnenin Tek Başına Çağrılmasını Engeller. Static Metotu Kullanıma Zorlar.
+        [JsonConstructor]
         private GetInstanceByFilterQuery()
         {
 

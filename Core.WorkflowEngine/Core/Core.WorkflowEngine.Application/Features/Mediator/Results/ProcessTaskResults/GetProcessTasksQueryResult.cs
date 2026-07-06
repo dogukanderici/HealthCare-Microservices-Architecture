@@ -15,5 +15,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskR
         public string StepName { get; set; }
         public bool IsStartStep { get; set; }
         public bool IsActive { get; set; }
+
+        public GetProcessTaskWithProcessResult Process { get; set; }
     }
 }

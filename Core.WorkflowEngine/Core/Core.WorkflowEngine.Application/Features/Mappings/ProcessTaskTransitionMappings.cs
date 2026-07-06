@@ -27,6 +27,8 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
             CreateMap<GetProcessTaskTransitionsQuery, TaskTransitionFilterDto>().ReverseMap(); // Service Query Dto
             CreateMap<GetProcessTaskTransitionsByFilterQuery, TaskTransitionFilterDto>().ReverseMap(); // Service Query Dto
             CreateMap<ProcessTaskTransition, GetTransitionsByFilterQueryResult>().ReverseMap();
+
+            CreateMap<ProcessTask, GetProcessTaskTransitionWithProcessTaskResult>().ReverseMap();
         }
     }
 }

@@ -43,6 +43,12 @@ namespace Core.WorkflowEngine.Application.Services
             );
             dBQueryOptions.filter = filter;
 
+            List<Expression<Func<ProcessTaskTransition, object>>> include = [
+                x => x.ProcessTask,
+                x => x.NextTask
+                ];
+            dBQueryOptions.includes = include;
+
             List<ProcessTaskTransition> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
             return InternalServiceResponse<List<ProcessTaskTransition>>.Success(result);

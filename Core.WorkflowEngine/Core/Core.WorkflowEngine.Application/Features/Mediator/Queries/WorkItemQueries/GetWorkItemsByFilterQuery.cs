@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries
@@ -17,6 +18,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQuer
         public DateTimeOffset? CreatedAt { get; set; }
         public Guid? CreatedBy { get; set; }
 
+        [JsonConstructor]
         private GetWorkItemsByFilterQuery()
         {
 
