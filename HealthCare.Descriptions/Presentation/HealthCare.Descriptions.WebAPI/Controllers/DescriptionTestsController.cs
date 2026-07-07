@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Core.WorkflowEngine.WebAPI.Controllers
+namespace HealthCare.Descriptions.WebAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestsController : ControllerBase
+    public class DescriptionTestsController : ControllerBase
     {
     }
 }
