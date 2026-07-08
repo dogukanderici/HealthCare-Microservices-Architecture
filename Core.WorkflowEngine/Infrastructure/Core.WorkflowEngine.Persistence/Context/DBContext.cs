@@ -21,16 +21,22 @@ namespace Core.WorkflowEngine.Persistence.Context
             // ChangeTracker ile sadece değişen veya yeni eklenen IAuditEntity'leri bulur.
             foreach (var entry in ChangeTracker.Entries<IAuditEntity>())
             {
+                DateTimeOffset currentDate = _currentUserService.CurrentDate;
+
                 switch (entry.State)
                 {
                     case EntityState.Added:
                         entry.Entity.CreatedBy = userId;
-                        entry.Entity.CreatedAt = DateTime.UtcNow;
+                        entry.Entity.CreatedAt = currentDate;
+
+                        entry.Entity.UpdatedBy = userId;
+                        entry.Entity.UpdatedAt = currentDate;
+
                         break;
 
                     case EntityState.Modified:
                         entry.Entity.UpdatedBy = userId;
-                        entry.Entity.UpdatedAt = DateTime.UtcNow;
+                        entry.Entity.UpdatedAt = currentDate;
 
                         // Mevcut CreatedBy ve CreatedAt'in güncellenmesini engeller.
                         entry.Property(x => x.CreatedBy).IsModified = false;

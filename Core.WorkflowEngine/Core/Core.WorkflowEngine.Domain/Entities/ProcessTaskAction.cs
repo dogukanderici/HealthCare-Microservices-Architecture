@@ -21,10 +21,10 @@ namespace Core.WorkflowEngine.Domain.Entities
         public int ActionType { get; set; } = 1;
         public int ExecutionOrder { get; set; } = 0;
         public bool IsActive { get; set; } = true;
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public Guid CreatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-        public Guid UpdatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
+        public DateTimeOffset CreatedAt { get; set; }
+        public Guid CreatedBy { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+        public Guid UpdatedBy { get; set; }
 
         public ProcessTask ProcessTask { get; set; }
         public ICollection<ProcessTaskTransition> ProcessTaskTransitions { get; set; } = new List<ProcessTaskTransition>();

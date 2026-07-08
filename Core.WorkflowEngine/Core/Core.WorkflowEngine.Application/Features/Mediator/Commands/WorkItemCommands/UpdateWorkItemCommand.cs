@@ -13,8 +13,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCom
     {
         public Guid Id { get; set; }
         public Guid InstanceId { get; set; }
+        public Guid StepId { get; set; }
         public Guid AssignedUserId { get; set; }
         public Guid AssignedRoleId { get; set; }
+        public Guid SelectedAction { get; set; }
         public DateTimeOffset CompletedAt { get; set; }
         public Guid CompletedBy { get; set; }
         public int Status { get; set; }

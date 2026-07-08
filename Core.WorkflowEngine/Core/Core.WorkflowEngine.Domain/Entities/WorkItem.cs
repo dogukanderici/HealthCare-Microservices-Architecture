@@ -16,15 +16,17 @@ namespace Core.WorkflowEngine.Domain.Entities
         [Column("Id")]
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid InstanceId { get; set; }
+        public Guid StepId { get; set; }
         public Guid AssignedUserId { get; set; }
         public Guid AssignedRoleId { get; set; }
+        public Guid SelectedAction { get; set; }
         public DateTimeOffset CompletedAt { get; set; }
         public Guid CompletedBy { get; set; }
         public int Status { get; set; } = 1; // Waiting
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public Guid CreatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-        public Guid UpdatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
+        public DateTimeOffset CreatedAt { get; set; }
+        public Guid CreatedBy { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+        public Guid UpdatedBy { get; set; }
 
         public Instance Instance { get; set; }
     }

@@ -24,17 +24,19 @@ namespace Core.WorkflowEngine.Application.Services
     {
         private readonly IRepository<Instance> _repository;
         private readonly IRepository<WorkItem> _wiRepository;
+        private readonly IRepository<ProcessTask> _taskRepository;
         private readonly ILogger<InstanceService> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IInstanceBusinessRule _businessRule;
 
-        public InstanceService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule businessRule)
+        public InstanceService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule businessRule, IRepository<ProcessTask> taskRepository)
         {
             _repository = repository;
             _wiRepository = wiRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _businessRule = businessRule;
+            _taskRepository = taskRepository;
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(Instance entity, CancellationToken cancellationToken)
@@ -50,6 +52,7 @@ namespace Core.WorkflowEngine.Application.Services
 
                 WorkItem workitemEntity = new WorkItem();
                 workitemEntity.InstanceId = entity.Id;
+                workitemEntity.StepId = entity.TaskId;
 
                 Guid workitemId = await _wiRepository.CreateDataAsync(workitemEntity);
 

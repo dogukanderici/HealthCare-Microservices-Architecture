@@ -12,6 +12,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.InstanceCom
     public class UpdateInstanceCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
+        public Guid ProcessId { get; set; }
         public Guid TaskId { get; set; }
         public int Number { get; set; }
         public Guid InitiatorWorkItemId { get; set; }

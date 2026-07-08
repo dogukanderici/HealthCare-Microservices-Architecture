@@ -16,15 +16,16 @@ namespace Core.WorkflowEngine.Domain.Entities
         [Column("Id")]
         public Guid Id { get; set; } = Guid.NewGuid();
         public Guid? InitiatorWorkItemId { get; set; }
+        public Guid ProcessId { get; set; }
         public Guid TaskId { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Number { get; set; }
         public int Status { get; set; } = 1;
-        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.Now;
-        public Guid CreatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
-        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.Now;
-        public Guid UpdatedBy { get; set; } = Guid.Parse("00000000-0000-0000-0000-000000000000");
+        public DateTimeOffset CreatedAt { get; set; }
+        public Guid CreatedBy { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+        public Guid UpdatedBy { get; set; }
 
         [ForeignKey(nameof(InitiatorWorkItemId))]
         public WorkItem InitiatorWorkItem { get; set; } // Navigation Property

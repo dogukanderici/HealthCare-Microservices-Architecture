@@ -10,6 +10,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.InstanceCom
 {
     public class CreateInstanceCommand : IRequest<InternalHandlerResponse<Guid>>
     {
-        public Guid TaskId { get; set; } = Guid.NewGuid();
+        public Guid ProcessId { get; set; }
+        public Guid TaskId { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExecutionCommands;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Application.ServiceDtos.WorkItemServiceDtos;
@@ -16,12 +17,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
         private readonly ITaskTransitionService _taskTransitionService;
         private readonly IWorkItemService _workItemService;
         private readonly IMapper _mapper;
+        private readonly ICurrentUserService _currentUserService;
 
-        public CommitWorkItemExecutionCommandHandler(ITaskTransitionService taskTransitionService, IWorkItemService workItemService, IMapper mapper)
+        public CommitWorkItemExecutionCommandHandler(ITaskTransitionService taskTransitionService, IWorkItemService workItemService, IMapper mapper, ICurrentUserService currentUserService)
         {
             _taskTransitionService = taskTransitionService;
             _workItemService = workItemService;
             _mapper = mapper;
+            _currentUserService = currentUserService;
         }
 
         public async Task<InternalHandlerResponse<Guid>> Handle(CommitWorkItemExecutionCommand request, CancellationToken cancellationToken)
@@ -42,6 +45,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
 
                 // InitiatorWorkItem burada güncellenir.
                 workItem.Data.Status = 2; // Completed
+                workItem.Data.SelectedAction = request.ActionId;
+                workItem.Data.CompletedBy = _currentUserService.UserId;
+                workItem.Data.CompletedAt = _currentUserService.CurrentDate;
                 await _workItemService.UpdateAsync(workItem.Data, cancellationToken);
 
                 // Sonraki task için transition var mı kontrol edilir.
@@ -56,7 +62,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
                     WorkItem workItemFromDto = _mapper.Map<WorkItem>(request);
 
                     // Task kullanıcısına transition tablosundaki kayıtlı kullancıya atanır.
-                    // TO-DO
+                    Guid assignedUserId = item.ProcessTask.AssignedUser;
+
+                    workItemFromDto.AssignedUserId = assignedUserId;
+                    workItemFromDto.InstanceId = request.InstanceId;
+                    workItemFromDto.StepId = item.NextTaskId;
 
                     InternalServiceResponse<Guid> workItemResult = await _workItemService.CreateAsync(workItemFromDto, cancellationToken);
                     newWorkItemId = workItemResult.Data;

@@ -12,6 +12,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCom
     public class CreateWorkItemCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
     {
         public Guid InstanceId { get; set; }
+        public Guid StepId { get; set; }
         public Guid AssignedUserId { get; set; }
         public Guid AssignedRoleId { get; set; }
         public DateTimeOffset CompletedAt { get; set; }

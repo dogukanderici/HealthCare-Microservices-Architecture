@@ -33,5 +33,15 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
                 );
         }
 
+        [HttpPost("CommitWorkItem")]
+        public Task<IActionResult> CommitWorkItem(CommitWorkItemExecutionCommand commitWorkItemExecutionCommand)
+        {
+            return _controllerResponseHelper.ExecuteAsync(
+                () => _mediator.Send(commitWorkItemExecutionCommand),
+                nameof(CommitWorkItem),
+                SuccessMessage.CallingSuccess,
+                ErrorMessage.CallingFail
+                );
+        }
     }
 }
