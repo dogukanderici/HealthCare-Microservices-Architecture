@@ -32,5 +32,9 @@ namespace Core.WorkflowEngine.Domain.Entities
 
         public ICollection<WorkItem> WorkItems { get; set; } = new List<WorkItem>();
         public ProcessTask ProcessTask { get; set; }
+
+
+        [ForeignKey(nameof(ProcessId))]
+        public ProcessDefinition ProcessDefinition { get; set; }
     }
 }

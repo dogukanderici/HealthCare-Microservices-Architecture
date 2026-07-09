@@ -23,5 +23,6 @@ namespace Core.WorkflowEngine.Domain.Entities
         public Guid UpdatedBy { get; set; }
 
         public ICollection<ProcessTask> processTasks { get; set; } = new List<ProcessTask>();
+        public ICollection<Instance> Instance { get; set; } = new List<Instance>();
     }
 }

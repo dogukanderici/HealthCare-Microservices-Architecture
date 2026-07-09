@@ -2,6 +2,7 @@
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
 using Core.WorkflowEngine.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -23,6 +24,8 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
             CreateMap<ProcessTask, CreateProcessTaskCommand>().ReverseMap();
             CreateMap<ProcessTask, UpdateProcessTaskCommand>().ReverseMap();
             CreateMap<ProcessTask, DeleteProcessTaskCommand>().ReverseMap();
+
+            CreateMap<ProcessTask, GetWorkItemWithProcessTaskResult>().ReverseMap();
         }
     }
 }

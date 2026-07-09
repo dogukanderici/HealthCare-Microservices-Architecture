@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskResults;
 using Core.WorkflowEngine.Domain.Entities;
@@ -24,6 +25,8 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
             CreateMap<ProcessDefinition, DeleteProcessDefinitionCommand>().ReverseMap();
 
             CreateMap<ProcessDefinition, GetProcessTaskWithProcessResult>().ReverseMap();
+
+            CreateMap<ProcessDefinition, GetInstanceWithProcessResult>().ReverseMap();
         }
     }
 }

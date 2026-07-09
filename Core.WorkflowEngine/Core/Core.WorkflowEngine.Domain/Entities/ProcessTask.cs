@@ -27,8 +27,10 @@ namespace Core.WorkflowEngine.Domain.Entities
 
         [ForeignKey("ProcessId")]
         public ProcessDefinition ProcessDefinition { get; set; }
+
         public ICollection<ProcessTaskAction> ProcessTaskActions { get; set; } = new List<ProcessTaskAction>();
         public ICollection<Instance> Instances { get; set; } = new List<Instance>();
         public ICollection<ProcessTaskTransition> ProcessTaskTransitions { get; set; } = new List<ProcessTaskTransition>();
+        public ICollection<WorkItem> WorkItem { get; set; } = new List<WorkItem>();
     }
 }

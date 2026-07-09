@@ -28,6 +28,11 @@ namespace Core.WorkflowEngine.Domain.Entities
         public DateTimeOffset UpdatedAt { get; set; }
         public Guid UpdatedBy { get; set; }
 
+
+        [ForeignKey(nameof(InstanceId))]
         public Instance Instance { get; set; }
+
+        [ForeignKey(nameof(StepId))]
+        public ProcessTask ProcessTask { get; set; }
     }
 }
