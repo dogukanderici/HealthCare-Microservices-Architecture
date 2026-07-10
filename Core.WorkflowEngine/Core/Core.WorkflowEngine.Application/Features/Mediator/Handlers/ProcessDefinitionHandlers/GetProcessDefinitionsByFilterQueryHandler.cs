@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefinitionHandlers
 {
-    public class GetProcessDefinitionsByFilterQueryHandler : IRequestHandler<GetProcessDefinitionsByFilterQuery, InternalHandlerResponse<List<GetProcessDefinitionsByFilterQueryResult>>>
+    public class GetProcessDefinitionsByFilterQueryHandler : IRequestHandler<GetProcessDefinitionsByFilterQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>>
     {
         private readonly IRepository<ProcessDefinition> _repository;
         private readonly ILogger<GetProcessDefinitionsByFilterQueryHandler> _logger;
@@ -29,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             _mapper = mapper;
         }
 
-        public async Task<InternalHandlerResponse<List<GetProcessDefinitionsByFilterQueryResult>>> Handle(GetProcessDefinitionsByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>> Handle(GetProcessDefinitionsByFilterQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
@@ -40,9 +40,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 
             dBQueryOptions.filter = filter;
 
-            List<ProcessDefinition> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            IReadOnlyCollection<ProcessDefinition> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
-            return InternalHandlerResponse<List<GetProcessDefinitionsByFilterQueryResult>>.Success(_mapper.Map<List<GetProcessDefinitionsByFilterQueryResult>>(result));
+            return InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>(result));
         }
     }
 }

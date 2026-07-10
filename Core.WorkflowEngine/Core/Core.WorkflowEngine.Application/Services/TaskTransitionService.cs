@@ -32,7 +32,7 @@ namespace Core.WorkflowEngine.Application.Services
             _businessRule = businessRule;
         }
 
-        public async Task<InternalServiceResponse<List<ProcessTaskTransition>>> GetDatasByFilterAsync(TaskTransitionFilterDto taskTransitionFilterDto)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>> GetDatasByFilterAsync(TaskTransitionFilterDto taskTransitionFilterDto)
         {
             DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
 
@@ -49,9 +49,9 @@ namespace Core.WorkflowEngine.Application.Services
                 ];
             dBQueryOptions.includes = include;
 
-            List<ProcessTaskTransition> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            IReadOnlyCollection<ProcessTaskTransition> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
-            return InternalServiceResponse<List<ProcessTaskTransition>>.Success(result);
+            return InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>.Success(result);
         }
 
         public async Task<InternalServiceResponse<ProcessTaskTransition>> GetDataByIdAsync(Guid id)

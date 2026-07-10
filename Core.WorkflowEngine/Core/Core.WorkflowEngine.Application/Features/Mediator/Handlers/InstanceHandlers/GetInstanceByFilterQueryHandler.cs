@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {
-    public class GetInstanceByFilterQueryHandler : IRequestHandler<GetInstanceByFilterQuery, InternalHandlerResponse<List<GetInstancesByFilterQueryResult>>>
+    public class GetInstanceByFilterQueryHandler : IRequestHandler<GetInstanceByFilterQuery, InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>>
     {
         private readonly IRepository<Instance> _repository;
         private readonly IMapper _mapper;
@@ -26,7 +26,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
             _mapper = mapper;
         }
 
-        public async Task<InternalHandlerResponse<List<GetInstancesByFilterQueryResult>>> Handle(GetInstanceByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>> Handle(GetInstanceByFilterQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<Instance> options = new DBQueryOptions<Instance>();
 
@@ -38,9 +38,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
 
             options.filter = filter;
 
-            List<Instance> result = await _repository.GetAllDataAsync(options);
+            IReadOnlyCollection<Instance> result = await _repository.GetAllDataAsync(options);
 
-            return InternalHandlerResponse<List<GetInstancesByFilterQueryResult>>.Success(_mapper.Map<List<GetInstancesByFilterQueryResult>>(result));
+            return InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetInstancesByFilterQueryResult>>(result));
         }
     }
 }

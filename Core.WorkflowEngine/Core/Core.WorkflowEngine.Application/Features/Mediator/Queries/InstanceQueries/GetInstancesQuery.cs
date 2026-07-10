@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries
 {
-    public class GetInstancesQuery : IRequest<InternalHandlerResponse<List<GetInstancesQueryResult>>>
+    public class GetInstancesQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>>
     {
     }
 }

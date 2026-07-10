@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
-    public class GetWorkItemsQueryHandler : IRequestHandler<GetWorkItemsQuery, InternalHandlerResponse<List<GetWorkItemsQueryResult>>>
+    public class GetWorkItemsQueryHandler : IRequestHandler<GetWorkItemsQuery, InternalHandlerResponse<IReadOnlyCollection<GetWorkItemsQueryResult>>>
     {
         private readonly IRepository<WorkItem> _repository;
         private readonly ILogger<GetWorkItemsQueryHandler> _logger;
@@ -29,16 +29,16 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
             _mapper = mapper;
         }
 
-        public async Task<InternalHandlerResponse<List<GetWorkItemsQueryResult>>> Handle(GetWorkItemsQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetWorkItemsQueryResult>>> Handle(GetWorkItemsQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
 
             Expression<Func<WorkItem, bool>> filter = x => x.InstanceId == request.InstanceId;
             dBQueryOptions.filter = filter;
 
-            List<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            IReadOnlyCollection<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
-            return InternalHandlerResponse<List<GetWorkItemsQueryResult>>.Success(_mapper.Map<List<GetWorkItemsQueryResult>>(result));
+            return InternalHandlerResponse<IReadOnlyCollection<GetWorkItemsQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetWorkItemsQueryResult>>(result));
         }
     }
 }

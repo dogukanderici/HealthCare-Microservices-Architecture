@@ -10,7 +10,7 @@ using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExecutionHandlers
 {
-    public class GetTransitionsByFilterQueryHandler : IRequestHandler<GetTransitionsByFilterQuery, InternalHandlerResponse<List<GetTransitionsByFilterQueryResult>>>
+    public class GetTransitionsByFilterQueryHandler : IRequestHandler<GetTransitionsByFilterQuery, InternalHandlerResponse<IReadOnlyCollection<GetTransitionsByFilterQueryResult>>>
     {
         private readonly ITaskTransitionService _taskTransitionService;
         private readonly IMapper _mapper;
@@ -21,14 +21,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
             _mapper = mapper;
         }
 
-        public async Task<InternalHandlerResponse<List<GetTransitionsByFilterQueryResult>>> Handle(GetTransitionsByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetTransitionsByFilterQueryResult>>> Handle(GetTransitionsByFilterQuery request, CancellationToken cancellationToken)
         {
             TaskTransitionFilterDto dataFromDto = _mapper.Map<TaskTransitionFilterDto>(request);
 
-            InternalServiceResponse<List<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(dataFromDto);
+            InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(dataFromDto);
 
-            return InternalHandlerResponse<List<GetTransitionsByFilterQueryResult>>.Success(
-                _mapper.Map<List<GetTransitionsByFilterQueryResult>>(result)
+            return InternalHandlerResponse<IReadOnlyCollection<GetTransitionsByFilterQueryResult>>.Success(
+                _mapper.Map<IReadOnlyCollection<GetTransitionsByFilterQueryResult>>(result)
                 );
         }
     }

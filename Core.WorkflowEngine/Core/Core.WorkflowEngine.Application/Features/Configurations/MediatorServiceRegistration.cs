@@ -18,6 +18,7 @@ namespace Core.WorkflowEngine.Application.Features.Configurations
                 // Behavior Configurations
                 cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                cfg.AddOpenBehavior(typeof(CachingBehavior<,>));
 
                 cfg.RegisterServicesFromAssembly(typeof(MediatorAssemblyMarker).Assembly);
             });

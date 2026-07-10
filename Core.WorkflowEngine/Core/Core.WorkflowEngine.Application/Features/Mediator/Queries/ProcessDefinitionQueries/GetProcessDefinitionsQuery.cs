@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries
 {
-    public class GetProcessDefinitionsQuery : IRequest<InternalHandlerResponse<List<GetProcessDefinitionsQueryResult>>>
+    public class GetProcessDefinitionsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>>
     {
     }
 }

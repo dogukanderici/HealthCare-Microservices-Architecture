@@ -33,16 +33,41 @@ namespace Core.WorkflowEngine.Application.Services
             _businessRule = businessRule;
         }
 
-        public async Task<InternalServiceResponse<WorkItem>> GetWorkItemByIdAsync(WorkItemFilterDto workItemFilterDto)
+        public async Task<InternalServiceResponse<WorkItem>> GetWorkItemByIdAsync(Guid id)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
 
-            Expression<Func<WorkItem, bool>> filter = x => x.Id == workItemFilterDto.WorkItemId;
+            Expression<Func<WorkItem, bool>> filter = x => x.Id == id;
             dBQueryOptions.filter = filter;
 
             WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
 
             return InternalServiceResponse<WorkItem>.Success(result);
+        }
+
+        public async Task<InternalServiceResponse<IReadOnlyCollection<WorkItem>>> GetWorkItemByFilterAsync(WorkItemFilterDto workItemFilterDto)
+        {
+            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+
+            Expression<Func<WorkItem, bool>> filter = x => (
+                (!workItemFilterDto.InstanceId.HasValue || x.InstanceId == workItemFilterDto.InstanceId) &&
+                (!workItemFilterDto.WorkItemId.HasValue || x.Id == workItemFilterDto.WorkItemId) &&
+                (!workItemFilterDto.AssignedUserId.HasValue || x.AssignedUserId == workItemFilterDto.AssignedUserId) &&
+                (!workItemFilterDto.Status.HasValue || x.Status == workItemFilterDto.Status) &&
+                (!workItemFilterDto.CreatedAt.HasValue || x.CreatedAt == workItemFilterDto.CreatedAt)
+            );
+            dBQueryOptions.filter = filter;
+
+            IReadOnlyCollection<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
+
+            return InternalServiceResponse<IReadOnlyCollection<WorkItem>>.Success(result);
+        }
+
+        public async Task<InternalServiceResponse<IReadOnlyCollection<WorkItem>>> GetWorkItemByFilterAsync(DBQueryOptions<WorkItem> dBQueryOptions)
+        {
+            IReadOnlyCollection<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
+
+            return InternalServiceResponse<IReadOnlyCollection<WorkItem>>.Success(result);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(WorkItem entity, CancellationToken cancellationToken)

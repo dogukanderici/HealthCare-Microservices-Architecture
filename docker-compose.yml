@@ -13,7 +13,23 @@ services:
       test: ["CMD", "rabbitmq-diagnostics", "check_running"]
       interval: 5s
       timeout: 5s
-      retries: 5 
+      retries: 5
+  
+  # Her Servisin Kendine Ait Redis'i Olacak.
+  workflow-redis:
+     image: redis:7.2-alpine
+     container_name: Core_WorkflowEngine_Redis
+     ports:
+        - "6379:6379"
+     command: redis-server --save "" --appendonly no # Cache amaçlı, diske yazmaz
+     depends_on:
+      core_workflowEngine_db:
+        condition: service_started # DB başlayınca tetiklenir
+      rabbitmq:
+        condition: service_healthy # RabbitMQ tamamen hazır olunca tetiklenir
+     restart: always
+     networks:
+      - HealthCare_Network
    
   # İlk Olarak Veritabanları Ayağa Kaldırılır.
   core_workflowEngine_db:

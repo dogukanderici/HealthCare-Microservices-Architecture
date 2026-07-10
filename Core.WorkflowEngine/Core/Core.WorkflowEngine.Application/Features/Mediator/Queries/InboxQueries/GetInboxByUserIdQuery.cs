@@ -1,5 +1,6 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.InboxResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,12 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InboxQueries
 {
-    public class GetInboxByUserIdQuery : IRequest<InternalHandlerResponse<List<GetInboxByUserIdQueryResult>>>
+    public class GetInboxByUserIdQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>>, ICacheableQuery
     {
         public Guid AssignedUserId { get; set; }
+        public string CacheKey => $"{nameof(GetInboxByUserIdQuery)}-{AssignedUserId}";
+        public TimeSpan ExpirationTime => TimeSpan.FromHours(1);
+
 
         public GetInboxByUserIdQuery(Guid assignedUserId)
         {

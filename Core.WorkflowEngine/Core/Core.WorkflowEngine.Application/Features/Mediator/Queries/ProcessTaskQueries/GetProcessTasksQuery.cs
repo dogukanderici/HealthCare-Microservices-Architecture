@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskQueries
 {
-    public class GetProcessTasksQuery : IRequest<InternalHandlerResponse<List<GetProcessTasksQueryResult>>>
+    public class GetProcessTasksQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessTasksQueryResult>>>
     {
         public Guid ProcessId { get; set; }
 

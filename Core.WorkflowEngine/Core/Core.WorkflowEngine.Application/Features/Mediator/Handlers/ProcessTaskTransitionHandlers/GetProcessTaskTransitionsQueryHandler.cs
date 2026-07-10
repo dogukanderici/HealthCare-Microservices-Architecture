@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
-    public class GetProcessTaskTransitionsQueryHandler : IRequestHandler<GetProcessTaskTransitionsQuery, InternalHandlerResponse<List<GetProcessTaskTransitionsQueryResult>>>
+    public class GetProcessTaskTransitionsQueryHandler : IRequestHandler<GetProcessTaskTransitionsQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>>>
     {
         private readonly ITaskTransitionService _taskTransitionService;
         private readonly IMapper _mapper;
@@ -29,13 +29,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<InternalHandlerResponse<List<GetProcessTaskTransitionsQueryResult>>> Handle(GetProcessTaskTransitionsQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>>> Handle(GetProcessTaskTransitionsQuery request, CancellationToken cancellationToken)
         {
             TaskTransitionFilterDto serviceQueryDto = _mapper.Map<TaskTransitionFilterDto>(request);
 
-            InternalServiceResponse<List<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(serviceQueryDto);
+            InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(serviceQueryDto);
 
-            return InternalHandlerResponse<List<GetProcessTaskTransitionsQueryResult>>.Success(_mapper.Map<List<GetProcessTaskTransitionsQueryResult>>(result.Data));
+            return InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>>(result.Data));
         }
     }
 }

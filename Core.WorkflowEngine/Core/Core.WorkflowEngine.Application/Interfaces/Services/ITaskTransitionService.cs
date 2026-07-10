@@ -13,6 +13,6 @@ namespace Core.WorkflowEngine.Application.Interfaces.Services
     public interface ITaskTransitionService : IBaseService<ProcessTaskTransition>
     {
         Task<InternalServiceResponse<ProcessTaskTransition>> GetDataByIdAsync(Guid id);
-        Task<InternalServiceResponse<List<ProcessTaskTransition>>> GetDatasByFilterAsync(TaskTransitionFilterDto taskTransitionFilterDto);
+        Task<InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>> GetDatasByFilterAsync(TaskTransitionFilterDto taskTransitionFilterDto);
     }
 }

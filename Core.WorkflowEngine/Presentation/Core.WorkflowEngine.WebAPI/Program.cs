@@ -1,20 +1,21 @@
-using Core.WorkflowEngine.Application.Features.Commons.Behaviors;
 using Core.WorkflowEngine.Application.Features.Configurations;
 using Core.WorkflowEngine.Application.Features.Mappings.Configurations;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Application.Services;
+using Core.WorkflowEngine.Persistence.CacheProvider;
 using Core.WorkflowEngine.Persistence.Context;
 using Core.WorkflowEngine.Persistence.Repositories;
 using Core.WorkflowEngine.Persistence.UnitOfWork;
 using Core.WorkflowEngine.WebAPI.Configurations;
 using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -87,6 +88,19 @@ builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // UnitOfWork Configuration
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Redis Configuration
+var redisConnection = builder.Configuration.GetConnectionString("RedisConnectionSettings");
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    return ConnectionMultiplexer.Connect(redisConnection);
+});
+builder.Services.AddScoped<IDatabase>(sp =>
+{
+    var multiplexer = sp.GetRequiredService<IConnectionMultiplexer>();
+    return multiplexer.GetDatabase();
+});
+builder.Services.AddScoped(typeof(ICacheProvider), typeof(CacheProvider));
 
 // AutoMApper Registration
 builder.Services.AddAutoMapperServiceRegistration();

@@ -37,10 +37,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 
         public async Task<InternalHandlerResponse<GetWorkItemByIdQueryResult>> Handle(GetWorkItemByIdQuery request, CancellationToken cancellationToken)
         {
-
-            WorkItemFilterDto dataFromDto = _mapper.Map<WorkItemFilterDto>(request);
-
-            InternalServiceResponse<WorkItem> result = await _workItemService.GetWorkItemByIdAsync(dataFromDto);
+            InternalServiceResponse<WorkItem> result = await _workItemService.GetWorkItemByIdAsync(request.WorkItemId);
 
             return InternalHandlerResponse<GetWorkItemByIdQueryResult>
                 .Success(_mapper.Map<GetWorkItemByIdQueryResult>(result.Data));

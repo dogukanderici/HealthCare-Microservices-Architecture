@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries
 {
-    public class GetProcessTaskTransitionsByFilterQuery : IRequest<InternalHandlerResponse<List<GetProcessTaskTransitionsByFilterQueryResult>>>
+    public class GetProcessTaskTransitionsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsByFilterQueryResult>>>
     {
         public Guid? ProcessTaskId { get; set; }
         public Guid? ActionId { get; set; }

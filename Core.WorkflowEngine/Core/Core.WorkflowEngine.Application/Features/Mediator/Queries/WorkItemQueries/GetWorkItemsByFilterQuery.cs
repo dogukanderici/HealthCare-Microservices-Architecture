@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries
 {
-    public class GetWorkItemsByFilterQuery : IRequest<InternalHandlerResponse<List<GetWorkItemsByFilterQueryResult>>>
+    public class GetWorkItemsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetWorkItemsByFilterQueryResult>>>
     {
         public Guid? InstanceId { get; set; }
         public Guid? AssignedUserId { get; set; }

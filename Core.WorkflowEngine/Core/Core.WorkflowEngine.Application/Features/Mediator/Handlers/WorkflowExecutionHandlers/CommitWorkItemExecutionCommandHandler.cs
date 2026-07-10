@@ -35,8 +35,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
             // 4. Eğer yoksa, workflow instance tamamlanmış olur ve instance durumu Completed olarak güncellenir.
             // 5. Tüm db işlemleri tek bir transaction içinde yapılır. Eğer herhangi bir işlem başarısız olursa, tüm işlemler geri alınır.
 
-            WorkItemFilterDto dataFromDto = _mapper.Map<WorkItemFilterDto>(request);
-            InternalServiceResponse<WorkItem> workItem = await _workItemService.GetWorkItemByIdAsync(dataFromDto);
+            InternalServiceResponse<WorkItem> workItem = await _workItemService.GetWorkItemByIdAsync(request.WorkItemId);
 
             if (workItem != null)
             {
@@ -52,7 +51,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
 
                 // Sonraki task için transition var mı kontrol edilir.
                 TaskTransitionFilterDto filterFromDto = _mapper.Map<TaskTransitionFilterDto>(request);
-                InternalServiceResponse<List<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(filterFromDto);
+                InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(filterFromDto);
 
                 Guid.TryParse("00000000-0000-0000-0000-000000000000", out Guid newWorkItemId);
 

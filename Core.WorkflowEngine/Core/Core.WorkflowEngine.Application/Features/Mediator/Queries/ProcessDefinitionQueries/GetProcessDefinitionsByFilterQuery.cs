@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries
 {
-    public class GetProcessDefinitionsByFilterQuery : IRequest<InternalHandlerResponse<List<GetProcessDefinitionsByFilterQueryResult>>>
+    public class GetProcessDefinitionsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>>
     {
         public string? ProcessName { get; set; }
         public bool? IsActive { get; set; }

@@ -3,7 +3,9 @@ using Core.WorkflowEngine.Application.Features.Mediator.Queries.InboxQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InboxResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using System;
@@ -15,18 +17,22 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InboxHandlers
 {
-    public class GetInboxByUserIdQueryHandler : IRequestHandler<GetInboxByUserIdQuery, InternalHandlerResponse<List<GetInboxByUserIdQueryResult>>>
+    public class GetInboxByUserIdQueryHandler : IRequestHandler<GetInboxByUserIdQuery, InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>>
     {
-        private readonly IRepository<WorkItem> _workItemRepository;
+        private readonly IWorkItemService _workItemService;
         private readonly IMapper _mapper;
+        private readonly ICacheProvider _cacheProvider;
+        private readonly ICurrentUserService _currentUserService;
 
-        public GetInboxByUserIdQueryHandler(IRepository<WorkItem> workItemRepository, IMapper mapper)
+        public GetInboxByUserIdQueryHandler(IWorkItemService workItemService, IMapper mapper, ICacheProvider cacheProvider, ICurrentUserService currentUserService)
         {
-            _workItemRepository = workItemRepository;
+            _workItemService = workItemService;
             _mapper = mapper;
+            _cacheProvider = cacheProvider;
+            _currentUserService = currentUserService;
         }
 
-        public async Task<InternalHandlerResponse<List<GetInboxByUserIdQueryResult>>> Handle(GetInboxByUserIdQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>> Handle(GetInboxByUserIdQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
 
@@ -54,9 +60,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InboxHandle
             dBQueryOptions.filter = filter;
             dBQueryOptions.thenIncludes = thenIncludes;
 
-            List<WorkItem> result = await _workItemRepository.GetAllDataAsync(dBQueryOptions);
+            InternalServiceResponse<IReadOnlyCollection<WorkItem>> result = await _workItemService.GetWorkItemByFilterAsync(dBQueryOptions);
 
-            return InternalHandlerResponse<List<GetInboxByUserIdQueryResult>>.Success(_mapper.Map<List<GetInboxByUserIdQueryResult>>(result));
+            IReadOnlyCollection<GetInboxByUserIdQueryResult> mappedData = _mapper.Map<IReadOnlyCollection<GetInboxByUserIdQueryResult>>(result.Data);
+
+            return InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>.Success(mappedData);
         }
     }
 }

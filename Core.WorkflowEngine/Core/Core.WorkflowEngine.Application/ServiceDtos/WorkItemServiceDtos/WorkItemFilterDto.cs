@@ -8,6 +8,10 @@ namespace Core.WorkflowEngine.Application.ServiceDtos.WorkItemServiceDtos
 {
     public class WorkItemFilterDto
     {
-        public Guid WorkItemId { get; set; }
+        public Guid? InstanceId { get; set; }
+        public Guid? WorkItemId { get; set; }
+        public Guid? AssignedUserId { get; set; }
+        public int? Status { get; set; }
+        public DateTimeOffset? CreatedAt { get; set; }
     }
 }

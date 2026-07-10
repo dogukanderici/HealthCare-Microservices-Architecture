@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
-    public class GetProcessTaskActionsQueryHandler : IRequestHandler<GetProcessTaskActionsQuery, InternalHandlerResponse<List<GetProcessTaskActionsQueryResult>>>
+    public class GetProcessTaskActionsQueryHandler : IRequestHandler<GetProcessTaskActionsQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>>
     {
         private readonly IRepository<ProcessTaskAction> _repository;
         private readonly ILogger<GetProcessTaskActionsQueryHandler> _logger;
@@ -30,17 +30,17 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _mapper = mapper;
         }
 
-        public async Task<InternalHandlerResponse<List<GetProcessTaskActionsQueryResult>>> Handle(GetProcessTaskActionsQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>> Handle(GetProcessTaskActionsQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTaskAction> dBQueryOptions = new DBQueryOptions<ProcessTaskAction>();
 
-            List<ProcessTaskAction> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            IReadOnlyCollection<ProcessTaskAction> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
             _logger.LogInformation(LogConstants.LogMessageTemplate,
                 nameof(GetProcessTaskActionsQueryHandler),
                 LogConstants.SuccessMessages.ProcessSuccessed);
 
-            return InternalHandlerResponse<List<GetProcessTaskActionsQueryResult>>.Success(_mapper.Map<List<GetProcessTaskActionsQueryResult>>(result));
+            return InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>(result));
         }
     }
 }

@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskHandlers
 {
-    public class GetProcessTasksByFilterQueryHandler : IRequestHandler<GetProcessTasksByFilterQuery, InternalHandlerResponse<List<GetProcessTasksByFilterQueryResult>>>
+    public class GetProcessTasksByFilterQueryHandler : IRequestHandler<GetProcessTasksByFilterQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>>>
     {
         private readonly IRepository<ProcessTask> _repository;
         private readonly IMapper _mapper;
@@ -29,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             _logger = logger;
         }
 
-        public async Task<InternalHandlerResponse<List<GetProcessTasksByFilterQueryResult>>> Handle(GetProcessTasksByFilterQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>>> Handle(GetProcessTasksByFilterQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
 
@@ -41,9 +41,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
             dBQueryOptions.filter = filter;
 
-            List<ProcessTask> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            IReadOnlyCollection<ProcessTask> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
-            return InternalHandlerResponse<List<GetProcessTasksByFilterQueryResult>>.Success(_mapper.Map<List<GetProcessTasksByFilterQueryResult>>(result));
+            return InternalHandlerResponse<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>>(result));
         }
     }
 }
