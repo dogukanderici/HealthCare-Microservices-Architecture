@@ -3,6 +3,7 @@ using Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;

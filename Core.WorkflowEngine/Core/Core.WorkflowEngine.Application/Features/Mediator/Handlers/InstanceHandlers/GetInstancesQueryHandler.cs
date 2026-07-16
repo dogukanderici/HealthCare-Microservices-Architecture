@@ -21,39 +21,22 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
     {
         private readonly IRepository<Instance> _repository;
         private readonly IMapper _mapper;
-        private readonly ICacheProvider _cacheProvider;
 
-        public GetInstancesQueryHandler(IRepository<Instance> repository, IMapper mapper, ICacheProvider cacheProvider)
+        public GetInstancesQueryHandler(IRepository<Instance> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
-            _cacheProvider = cacheProvider;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>> Handle(GetInstancesQuery request, CancellationToken cancellationToken)
         {
-            string cacheKey = $"{nameof(GetInstancesQuery)}";
+            DBQueryOptions<Instance> dBQueryOptions = new DBQueryOptions<Instance>();
 
-            bool isCachedDataExists = await _cacheProvider.IsKeyExistsAsync(cacheKey);
+            IReadOnlyCollection<Instance> result = await _repository.GetAllDataAsync(dBQueryOptions);
 
-            if (isCachedDataExists)
-            {
-                var cacheResult = await _cacheProvider.GetCacheDataAsync<IReadOnlyCollection<GetInstancesQueryResult>>(cacheKey);
+            IReadOnlyCollection<GetInstancesQueryResult> mappedData = _mapper.Map<IReadOnlyCollection<GetInstancesQueryResult>>(result);
 
-                return InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>.Success(cacheResult);
-            }
-            else
-            {
-                DBQueryOptions<Instance> dBQueryOptions = new DBQueryOptions<Instance>();
-
-                IReadOnlyCollection<Instance> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-                IReadOnlyCollection<GetInstancesQueryResult> mappedData = _mapper.Map<IReadOnlyCollection<GetInstancesQueryResult>>(result);
-
-                bool cacheSetResult = await _cacheProvider.SetCacheDataAsync(cacheKey, mappedData);
-
-                return InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>.Success(mappedData);
-            }
+            return InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>.Success(mappedData);
         }
     }
 }

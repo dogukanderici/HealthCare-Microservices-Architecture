@@ -2,18 +2,12 @@
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.InboxQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InboxResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
-using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InboxHandlers
 {
@@ -21,15 +15,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InboxHandle
     {
         private readonly IWorkItemService _workItemService;
         private readonly IMapper _mapper;
-        private readonly ICacheProvider _cacheProvider;
-        private readonly ICurrentUserService _currentUserService;
 
-        public GetInboxByUserIdQueryHandler(IWorkItemService workItemService, IMapper mapper, ICacheProvider cacheProvider, ICurrentUserService currentUserService)
+        public GetInboxByUserIdQueryHandler(IWorkItemService workItemService, IMapper mapper)
         {
             _workItemService = workItemService;
             _mapper = mapper;
-            _cacheProvider = cacheProvider;
-            _currentUserService = currentUserService;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>> Handle(GetInboxByUserIdQuery request, CancellationToken cancellationToken)

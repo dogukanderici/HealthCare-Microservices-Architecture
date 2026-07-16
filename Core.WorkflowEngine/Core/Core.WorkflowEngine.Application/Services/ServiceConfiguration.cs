@@ -1,4 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Interfaces;
+﻿using Core.WorkflowEngine.Application.Features.Commons.Utilities;
+using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -18,6 +19,8 @@ namespace Core.WorkflowEngine.Application.Services
             services.AddScoped(typeof(ITaskTransitionService), typeof(TaskTransitionService));
             services.AddScoped(typeof(ICurrentUserService), typeof(CurrentUserService));
             services.AddScoped(typeof(IProcessDefinitionService), typeof(ProcessDefinitionService));
+
+            services.AddScoped(typeof(IDynamicPropertyJoiner), typeof(DynamicPropertyJoiner));
 
             return services;
         }
