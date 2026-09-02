@@ -14,12 +14,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefin
 {
     public class GetProcessDefinitionsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>>, ICacheableQuery
     {
+        public Guid? ProcessSpecId { get; set; }
         public string? ProcessName { get; set; }
         public bool? IsActive { get; set; }
 
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey(
             [
                 typeof(GetProcessDefinitionsByFilterQuery).Name,
+                ProcessSpecId.ToString(),
                 ProcessName,
                 (IsActive.HasValue ? "true":"false")
             ]
@@ -33,9 +35,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefin
 
         }
 
-        public static GetProcessDefinitionsByFilterQuery Filter(string? processName, bool? isActive) =>
+        public static GetProcessDefinitionsByFilterQuery Filter(Guid? processSpecId, string? processName, bool? isActive) =>
             new GetProcessDefinitionsByFilterQuery
             {
+                ProcessSpecId = processSpecId,
                 ProcessName = processName,
                 IsActive = isActive
             };

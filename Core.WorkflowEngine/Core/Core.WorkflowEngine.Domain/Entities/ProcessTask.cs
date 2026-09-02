@@ -25,6 +25,7 @@ namespace Core.WorkflowEngine.Domain.Entities
         public DateTimeOffset UpdatedAt { get; set; }
         public Guid UpdatedBy { get; set; }
 
+
         [ForeignKey("ProcessId")]
         public ProcessDefinition ProcessDefinition { get; set; }
 

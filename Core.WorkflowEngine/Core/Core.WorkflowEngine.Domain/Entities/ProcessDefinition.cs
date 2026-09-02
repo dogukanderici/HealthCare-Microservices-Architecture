@@ -15,12 +15,14 @@ namespace Core.WorkflowEngine.Domain.Entities
         [Key]
         [Column("Id")]
         public Guid Id { get; set; } = Guid.NewGuid();
+        public Guid ProcessSpecId { get; set; }
         public string ProcessName { get; set; }
         public bool IsActive { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public Guid UpdatedBy { get; set; }
+        public int VersionNumber { get; set; }
 
         public ICollection<ProcessTask> processTasks { get; set; } = new List<ProcessTask>();
         public ICollection<Instance> Instance { get; set; } = new List<Instance>();

@@ -15,6 +15,5 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExe
         public Guid WorkItemId { get; set; }
         public Guid ProcessTaskId { get; set; }
         public Guid ActionId { get; set; }
-        //public Guid VersionId { get; set; }
     }
 }

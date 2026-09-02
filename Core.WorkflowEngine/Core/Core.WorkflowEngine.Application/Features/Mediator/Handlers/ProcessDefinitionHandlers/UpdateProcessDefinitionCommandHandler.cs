@@ -7,6 +7,7 @@ using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Configuration.Constants;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -22,40 +23,27 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
     public class UpdateProcessDefinitionCommandHandler : IRequestHandler<UpdateProcessDefinitionCommand, InternalHandlerResponse<DateTimeOffset>>,
         IValidationRequest
     {
-        private readonly IRepository<ProcessDefinition> _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ILogger<UpdateProcessDefinitionCommandHandler> _logger;
-        private readonly IMapper _mapper;
-        private readonly IProcessDefinitionBusinessRule _businessRule;
         private readonly IProcessDefinitionService _processDefinitionService;
+        private readonly IMapper _mapper;
 
-        public UpdateProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, IUnitOfWork unitOfWork, ILogger<UpdateProcessDefinitionCommandHandler> logger, IMapper mapper, IProcessDefinitionBusinessRule businessRule, IProcessDefinitionService processDefinitionService)
+        public UpdateProcessDefinitionCommandHandler(IProcessDefinitionService processDefinitionService, IMapper mapper)
         {
-            _repository = repository;
-            _unitOfWork = unitOfWork;
-            _logger = logger;
-            _mapper = mapper;
-            _businessRule = businessRule;
             _processDefinitionService = processDefinitionService;
+            _mapper = mapper;
         }
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
-            // Veri yoksa true döner;
-            bool checkExistData = await _businessRule.ExistingProcessDefinitionDataAsync(request.Id);
 
-            if (checkExistData)
-            {
-                return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.NotFoundData);
-            }
+            InternalServiceResponse<ProcessDefinition> serviceResponse = await _processDefinitionService.GetDataByIdAsync(request.Id);
 
-            ProcessDefinition existedData = await _processDefinitionService.GetDataById(request.Id);
+            ProcessDefinition existedData = serviceResponse.Data;
 
             _mapper.Map(request, existedData);
 
-            DateTimeOffset result = await _repository.UpdateDataAsync(existedData);
+            InternalServiceResponse<DateTimeOffset> result = await _processDefinitionService.UpdateAsync(existedData, cancellationToken);
 
-            return InternalHandlerResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessDefinitionUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalCommandConstants.SuccessProcessDefinitionUpdating);
         }
     }
 }

@@ -3,7 +3,9 @@ using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitio
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -18,27 +20,20 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 {
     public class GetProcessDefinitionByIdQueryHandler : IRequestHandler<GetProcessDefinitionByIdQuery, InternalHandlerResponse<GetProcessDefinitionByIdQueryResult>>
     {
-        private readonly IRepository<ProcessDefinition> _repository;
-        private readonly ILogger<GetProcessDefinitionByIdQueryHandler> _logger;
+        private readonly IProcessDefinitionService _processDefinitionService;
         private readonly IMapper _mapper;
 
-        public GetProcessDefinitionByIdQueryHandler(IRepository<ProcessDefinition> repository, ILogger<GetProcessDefinitionByIdQueryHandler> logger, IMapper mapper)
+        public GetProcessDefinitionByIdQueryHandler(IProcessDefinitionService processDefinitionService, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
+            _processDefinitionService = processDefinitionService;
             _mapper = mapper;
         }
 
         public async Task<InternalHandlerResponse<GetProcessDefinitionByIdQueryResult>> Handle(GetProcessDefinitionByIdQuery request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
+            InternalServiceResponse<ProcessDefinition> serviceResponse = await _processDefinitionService.GetDataByIdAsync(request.Id);
 
-            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == request.Id;
-            dBQueryOptions.filter = filter;
-
-            ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);
-
-            return InternalHandlerResponse<GetProcessDefinitionByIdQueryResult>.Success(_mapper.Map<GetProcessDefinitionByIdQueryResult>(result));
+            return InternalHandlerResponse<GetProcessDefinitionByIdQueryResult>.Success(_mapper.Map<GetProcessDefinitionByIdQueryResult>(serviceResponse.Data));
         }
     }
 }

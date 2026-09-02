@@ -47,15 +47,16 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
         [HttpPost("filtered")]
         public async Task<IActionResult> GetTasksByFilter(GetProcessTasksByFilterQuery query)
         {
-            GetProcessTasksByFilterQuery filter = GetProcessTasksByFilterQuery.Filter(
-                query.ProcessId,
-                query.StepName,
-                query.IsStartStep,
-                query.IsActive
-                );
+            //GetProcessTasksByFilterQuery filter = GetProcessTasksByFilterQuery.Filter(
+            //    query.ProcessId,
+            //    query.StepName,
+            //    query.IsStartStep,
+            //    query.IsActive,
+            //    query.VersionNumber
+            //    );
 
             return await _controllerReponseHelper.ExecuteAsync(
-                () => _mediator.Send(filter),
+                () => _mediator.Send(query),
                 nameof(GetTasksByFilter),
                 SuccessMessage.CallingSuccess,
                 ErrorMessage.CallingFail

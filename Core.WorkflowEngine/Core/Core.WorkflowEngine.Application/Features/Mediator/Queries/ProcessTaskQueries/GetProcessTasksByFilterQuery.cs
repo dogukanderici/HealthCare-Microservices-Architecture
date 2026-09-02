@@ -34,6 +34,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskQ
 
         }
 
+        // Unit Test veya Backend'de başka bir yerde kullanmak istenirse factory metot kullanılabilir.
+
         public static GetProcessTasksByFilterQuery Filter(Guid? processId, string? stepName, bool? isStartStep, bool? isActivce) =>
             new GetProcessTasksByFilterQuery
             {

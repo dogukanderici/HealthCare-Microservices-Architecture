@@ -46,17 +46,25 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
                 );
         }
 
+        //[HttpGet("lastestversion")]
+        //public async Task<IActionResult> GetLastestVersionProcessByProcessSpecId(Guid processSpecId)
+        //{
+        //    return await _controllerReponseHelper.ExecuteAsync(
+        //            ()=>_mediator.Send()
+        //        );
+        //}
+
         [HttpPost("filtered")]
         public async Task<IActionResult> GetProcessesByFilter(GetProcessDefinitionsByFilterQuery query)
         {
 
-            GetProcessDefinitionsByFilterQuery filter = GetProcessDefinitionsByFilterQuery.Filter(
-                    query.ProcessName,
-                    query.IsActive
-                    );
+            //GetProcessDefinitionsByFilterQuery filter = GetProcessDefinitionsByFilterQuery.Filter(
+            //        query.ProcessName,
+            //        query.IsActive
+            //        );
 
             return await _controllerReponseHelper.ExecuteAsync(
-                () => _mediator.Send(filter),
+                () => _mediator.Send(query),
                 nameof(GetProcessesByFilter),
                 SuccessMessage.CallingSuccess,
                 ErrorMessage.CallingFail

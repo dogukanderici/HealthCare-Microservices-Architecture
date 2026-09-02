@@ -17,5 +17,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTask
         public string StepName { get; set; }
         public bool IsStartStep { get; set; }
         public bool IsActive { get; set; }
+        public int VersionNumber { get; set; }
     }
 }

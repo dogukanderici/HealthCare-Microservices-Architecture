@@ -3,7 +3,9 @@ using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitio
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -17,24 +19,22 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 {
     public class GetProcessDefinitionsQueryHandler : IRequestHandler<GetProcessDefinitionsQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>>
     {
-        private readonly IRepository<ProcessDefinition> _repository;
-        private readonly ILogger<GetProcessDefinitionsQueryHandler> _logger;
+        private readonly IProcessDefinitionService _processDefinitionService;
         private readonly IMapper _mapper;
 
-        public GetProcessDefinitionsQueryHandler(IRepository<ProcessDefinition> repository, ILogger<GetProcessDefinitionsQueryHandler> logger, IMapper mapper)
+        public GetProcessDefinitionsQueryHandler(IProcessDefinitionService processDefinitionService, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
+            _processDefinitionService = processDefinitionService;
             _mapper = mapper;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>> Handle(GetProcessDefinitionsQuery request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
+            InternalServiceResponse<IReadOnlyCollection<ProcessDefinition>> serviceResponse =
+                await _processDefinitionService.GetDatasAsync();
 
-            IReadOnlyCollection<ProcessDefinition> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>(result));
+            return InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>
+                .Success(_mapper.Map<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>(serviceResponse.Data));
         }
     }
 }

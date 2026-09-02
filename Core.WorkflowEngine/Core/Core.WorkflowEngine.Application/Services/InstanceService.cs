@@ -24,19 +24,19 @@ namespace Core.WorkflowEngine.Application.Services
     {
         private readonly IRepository<Instance> _repository;
         private readonly IRepository<WorkItem> _wiRepository;
-        private readonly IRepository<ProcessTask> _taskRepository;
         private readonly ILogger<InstanceService> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IInstanceBusinessRule _businessRule;
+        private readonly IProcessTaskService _processTaskService;
 
-        public InstanceService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule businessRule, IRepository<ProcessTask> taskRepository)
+        public InstanceService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule businessRule, IProcessTaskService processTaskService)
         {
             _repository = repository;
             _wiRepository = wiRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _businessRule = businessRule;
-            _taskRepository = taskRepository;
+            _processTaskService = processTaskService;
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(Instance entity, CancellationToken cancellationToken)
@@ -50,9 +50,13 @@ namespace Core.WorkflowEngine.Application.Services
                 // Circular Dependency hatası fırlatmaması için öncelikle Instances için ön kayıt yapılır.
                 await _unitOfWork.CommitAsync(cancellationToken);
 
+                // ProcessId ile başlangıç adımı bulunur.
+                ProcessTask taskData = await _processTaskService.GetDataByProcessIdAsync(entity.ProcessId);
+                Guid processTaskId = taskData.Id;
+
                 WorkItem workitemEntity = new WorkItem();
                 workitemEntity.InstanceId = entity.Id;
-                workitemEntity.StepId = entity.TaskId;
+                workitemEntity.StepId = processTaskId; // Başlangıç adımı ProcessId kullanılarak bulunur.
 
                 Guid workitemId = await _wiRepository.CreateDataAsync(workitemEntity);
 

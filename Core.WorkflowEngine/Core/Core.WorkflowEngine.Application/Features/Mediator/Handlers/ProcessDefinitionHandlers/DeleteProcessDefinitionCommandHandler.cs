@@ -3,8 +3,10 @@ using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Configuration.Constants;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -19,32 +21,19 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 {
     public class DeleteProcessDefinitionCommandHandler : IRequestHandler<DeleteProcessDefinitionCommand, InternalHandlerResponse<bool>>
     {
-        private readonly IRepository<ProcessDefinition> _repository;
-        private readonly ILogger<DeleteProcessDefinitionCommandHandler> _logger;
 
-        public DeleteProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, ILogger<DeleteProcessDefinitionCommandHandler> logger)
+        private readonly IProcessDefinitionService _processDefinitionService;
+
+        public DeleteProcessDefinitionCommandHandler(IProcessDefinitionService processDefinitionService)
         {
-            _repository = repository;
-            _logger = logger;
+            _processDefinitionService = processDefinitionService;
         }
 
         public async Task<InternalHandlerResponse<bool>> Handle(DeleteProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
+            InternalServiceResponse<bool> serviceResult = await _processDefinitionService.DeleteAsync(request.Id, cancellationToken);
 
-            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == request.Id;
-            dBQueryOptions.filter = filter;
-
-            ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);
-
-            if (result == null)
-            {
-                return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
-            }
-
-            await _repository.DeleteDataAsync(result);
-
-            return InternalHandlerResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessDefinitionDeleting);
+            return InternalHandlerResponse<bool>.Success(serviceResult.Data, InternalCommandConstants.SuccessProcessDefinitionDeleting);
         }
     }
 }

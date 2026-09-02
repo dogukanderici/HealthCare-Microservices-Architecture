@@ -3,7 +3,10 @@ using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitio
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.ServiceDtos.ProcessDefinitionDtos;
 using Core.WorkflowEngine.Configuration;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -18,31 +21,24 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 {
     public class GetProcessDefinitionsByFilterQueryHandler : IRequestHandler<GetProcessDefinitionsByFilterQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>>
     {
-        private readonly IRepository<ProcessDefinition> _repository;
-        private readonly ILogger<GetProcessDefinitionsByFilterQueryHandler> _logger;
+        private readonly IProcessDefinitionService _processDefinitionService;
         private readonly IMapper _mapper;
 
-        public GetProcessDefinitionsByFilterQueryHandler(IRepository<ProcessDefinition> repository, ILogger<GetProcessDefinitionsByFilterQueryHandler> logger, IMapper mapper)
+        public GetProcessDefinitionsByFilterQueryHandler(IProcessDefinitionService processDefinitionService, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
+            _processDefinitionService = processDefinitionService;
             _mapper = mapper;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>> Handle(GetProcessDefinitionsByFilterQuery request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
+            ProcessDefinitionFilterDto mappedRequest = _mapper.Map<ProcessDefinitionFilterDto>(request);
 
-            Expression<Func<ProcessDefinition, bool>> filter = x => (
-            (!request.IsActive.HasValue || x.IsActive == request.IsActive) &&
-            (string.IsNullOrEmpty(request.ProcessName) || x.ProcessName == request.ProcessName)
-            );
+            InternalServiceResponse<IReadOnlyCollection<ProcessDefinition>> serviceResponse =
+                await _processDefinitionService.GetDatasByFilterAsync(mappedRequest);
 
-            dBQueryOptions.filter = filter;
-
-            IReadOnlyCollection<ProcessDefinition> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>(result));
+            return InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>
+                .Success(_mapper.Map<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>(serviceResponse.Data));
         }
     }
 }

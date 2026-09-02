@@ -36,7 +36,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             Expression<Func<ProcessTask, bool>> filter = x => (
             (!request.ProcessId.HasValue || x.ProcessId == request.ProcessId) &&
             (string.IsNullOrEmpty(request.StepName) || x.StepName == request.StepName) &&
-            (!request.IsActive.HasValue || x.IsActive == request.IsActive)
+            (!request.IsActive.HasValue || x.IsActive == request.IsActive) &&
+            (!request.IsStartStep.HasValue || x.IsStartStep == request.IsStartStep)
             );
 
             dBQueryOptions.filter = filter;

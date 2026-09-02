@@ -3,7 +3,9 @@ using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
 using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Configuration.Constants;
+using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -19,14 +21,12 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
     public class CreateProcessDefinitionCommandHandler : IRequestHandler<CreateProcessDefinitionCommand, InternalHandlerResponse<Guid>>,
         IValidationRequest
     {
-        private readonly IRepository<ProcessDefinition> _repository;
-        private readonly ILogger<CreateProcessDefinitionCommandHandler> _logger;
+        private readonly IProcessDefinitionService _processDefinitionService;
         private readonly IMapper _mapper;
 
-        public CreateProcessDefinitionCommandHandler(IRepository<ProcessDefinition> repository, ILogger<CreateProcessDefinitionCommandHandler> logger, IMapper mapper)
+        public CreateProcessDefinitionCommandHandler(IProcessDefinitionService processDefinitionService, IMapper mapper)
         {
-            _repository = repository;
-            _logger = logger;
+            _processDefinitionService = processDefinitionService;
             _mapper = mapper;
         }
 
@@ -35,10 +35,16 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
 
             dataFromDto.Id = Guid.NewGuid();
+            dataFromDto.ProcessSpecId = Guid.NewGuid();
 
-            Guid result = await _repository.CreateDataAsync(dataFromDto);
+            InternalServiceResponse<Guid> result = await _processDefinitionService.CreateAsync(dataFromDto, cancellationToken);
 
-            return InternalHandlerResponse<Guid>.Success(result, InternalCommandConstants.SuccessProcessDefinitionCreating);
+            if (result.IsSuccess)
+            {
+                return InternalHandlerResponse<Guid>.Success(result.Data, InternalCommandConstants.SuccessProcessDefinitionCreating);
+            }
+
+            return InternalHandlerResponse<Guid>.Failure(InternalCommandConstants.ErrorProcessDefinitionCreating);
         }
     }
 }
