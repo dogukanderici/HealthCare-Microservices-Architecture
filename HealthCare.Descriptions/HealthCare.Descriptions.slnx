@@ -1,8 +1,13 @@
 <Solution>
   <Folder Name="/Core/">
     <Project Path="Core/HealthCare.Descriptions.Application/HealthCare.Descriptions.Application.csproj" />
+    <Project Path="Core/HealthCare.Descriptions.Configuration/HealthCare.Descriptions.Configuration.csproj" />
     <Project Path="Core/HealthCare.Descriptions.Domain/HealthCare.Descriptions.Domain.csproj" />
   </Folder>
-  <Folder Name="/Infrastructure/" />
-  <Folder Name="/Presentation/" />
+  <Folder Name="/Infrastructure/">
+    <Project Path="Infrastructure/HealthCare.Descriptions.Persistence/HealthCare.Descriptions.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Presentation/HealthCare.Descriptions.WebAPI/HealthCare.Descriptions.WebAPI.csproj" />
+  </Folder>
 </Solution>
