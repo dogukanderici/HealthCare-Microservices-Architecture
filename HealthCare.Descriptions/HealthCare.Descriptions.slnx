@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/Core/">
+    <Project Path="Core/HealthCare.Descriptions.Application/HealthCare.Descriptions.Application.csproj" />
+    <Project Path="Core/HealthCare.Descriptions.Domain/HealthCare.Descriptions.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Infrastructure/" />
+  <Folder Name="/Presentation/" />
+</Solution>
