@@ -43,6 +43,15 @@ namespace HealthCare.Descriptions.Persistence.Repositories
                 .AsNoTracking()
                 .ApplyQueryOptions(queryOptions);
         }
+
+        public async Task<int> GetDataCountAsync(DBQueryOptions<TEntity> queryOptions)
+        {
+            return await _dbContext.Set<TEntity>()
+                .AsNoTracking()
+                .ApplyQueryOptions(queryOptions)
+                .CountAsync();
+        }
+
         public async Task<Guid> CreateAsync(TEntity entity)
         {
             await _dbContext.Set<TEntity>().AddAsync(entity);

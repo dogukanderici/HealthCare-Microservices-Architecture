@@ -13,6 +13,7 @@ namespace HealthCare.Descriptions.Application.Interfaces
         Task<ICollection<T>> GetAllAsync(DBQueryOptions<T>? queryOptions = null);
         IQueryable<T> GetQuearble(DBQueryOptions<T>? queryOptions = null);
         Task<T> GetByIdAsync(DBQueryOptions<T> queryOptions);
+        Task<int> GetDataCountAsync(DBQueryOptions<T> queryOptions);
         Task<Guid> CreateAsync(T entity);
         Task<DateTimeOffset> UpdateAsync(T entity);
         Task DeleteAsync(T entity);
