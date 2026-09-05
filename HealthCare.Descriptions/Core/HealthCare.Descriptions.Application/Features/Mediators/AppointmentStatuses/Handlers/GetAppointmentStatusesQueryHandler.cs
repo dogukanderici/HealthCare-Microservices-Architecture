@@ -1,4 +1,5 @@
 ﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Common.Wrappers;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Queries;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
@@ -26,9 +27,9 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
         {
             DBQueryOptions<AppointmentStatus> dBQueryOptions = new DBQueryOptions<AppointmentStatus>();
 
-            IReadOnlyCollection<GetAppointmentStatusesResult> result = await _service.GetDatasAsync(dBQueryOptions);
+            InternalServiceResponse<IReadOnlyCollection<GetAppointmentStatusesResult>> result = await _service.GetDatasAsync(dBQueryOptions);
 
-            return InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>.Success(result);
+            return InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>.Success(result.Data);
         }
     }
 }
