@@ -17,7 +17,7 @@ namespace HealthCare.Descriptions.Persistence.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<ICollection<TEntity>> GetAllAsync(DBQueryOptions<TEntity>? queryOptions = null)
+        public async Task<List<TEntity>> GetAllAsync(DBQueryOptions<TEntity>? queryOptions = null)
         {
             List<TEntity> datas = await _dbContext.Set<TEntity>()
                 .AsNoTracking()

@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Commands
 {
-    public class RemoveappointmentStatusCommand : IRequest<InternalHandlerResponse<bool>>, ITransactionalRequest
+    public class RemoveAppointmentStatusCommand : IRequest<InternalHandlerResponse<bool>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
 
-        public RemoveappointmentStatusCommand(Guid id)
+        public RemoveAppointmentStatusCommand(Guid id)
         {
             Id = id;
         }

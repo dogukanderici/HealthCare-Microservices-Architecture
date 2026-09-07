@@ -63,20 +63,26 @@ namespace HealthCare.Descriptions.Persistence.UnitofWork
 
         public void Dispose()
         {
-            if (!_disposed)
-            {
-                _transaction?.Dispose();
-                _disposed = true;
+            if (_disposed)
+                return;
 
-                GC.SuppressFinalize(this);
-            }
+            _transaction?.Dispose();
+            _transaction = null;
+
+            _disposed = true;
+
+            GC.SuppressFinalize(this);
         }
 
         public async ValueTask DisposeAsync()
         {
-            if (!_disposed)
+            if (_disposed)
+                return;
+
+            if (_transaction != null)
             {
                 await _transaction.DisposeAsync();
+                _transaction = null;
             }
 
             _disposed = true;

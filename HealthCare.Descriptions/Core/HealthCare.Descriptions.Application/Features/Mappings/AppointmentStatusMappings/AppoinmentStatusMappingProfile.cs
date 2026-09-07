@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Commands;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Results;
 using HealthCare.Descriptions.Domain.Entities;
 using System;
@@ -15,6 +16,9 @@ namespace HealthCare.Descriptions.Application.Features.Mappings.AppointmentStatu
         {
             CreateMap<AppointmentStatus, GetAppointmentStatusesResult>().ReverseMap();
             CreateMap<AppointmentStatus, GetAppointmentStatusByIdResult>().ReverseMap();
+            CreateMap<AppointmentStatus, CreateAppointmentStatusCommand>().ReverseMap();
+            CreateMap<AppointmentStatus, UpdateAppointmentStatusCommand>().ReverseMap();
+            CreateMap<AppointmentStatus, RemoveAppointmentStatusCommand>().ReverseMap();
         }
     }
 }

@@ -1,17 +1,13 @@
-﻿using HealthCare.Descriptions.Application.Interfaces.HandlerServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Results
+namespace HealthCare.Descriptions.Application.Common.Parameters
 {
-    public class GetAppointmentStatusByIdResult : ISingleResult
+    public class GenericAuditResult
     {
-        public Guid Id { get; set; }
-        public string StatusName { get; set; }
-
         public bool IsAvailable { get; set; } = true;
         public DateTimeOffset CreatedAt { get; set; }
         public Guid CreatedBy { get; set; }

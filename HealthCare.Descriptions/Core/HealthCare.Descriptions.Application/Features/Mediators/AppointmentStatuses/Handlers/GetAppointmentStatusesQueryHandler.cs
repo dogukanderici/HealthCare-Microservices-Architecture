@@ -3,7 +3,7 @@ using HealthCare.Descriptions.Application.Common.Wrappers;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Queries;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
-using HealthCare.Descriptions.Application.Interfaces.HandlerServices;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.AppointmentStatutes;
 using HealthCare.Descriptions.Domain.Entities;
 using MediatR;
 using System;
@@ -16,9 +16,9 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
 {
     public class GetAppointmentStatusesQueryHandler : IRequestHandler<GetAppointmentStatusesQuery, InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>>
     {
-        private readonly IAppointmentStatusService<AppointmentStatus, GetAppointmentStatusesResult> _service;
+        private readonly IAppointmentStatusQueryService _service;
 
-        public GetAppointmentStatusesQueryHandler(IAppointmentStatusService<AppointmentStatus, GetAppointmentStatusesResult> service)
+        public GetAppointmentStatusesQueryHandler(IAppointmentStatusQueryService service)
         {
             _service = service;
         }
@@ -27,7 +27,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
         {
             DBQueryOptions<AppointmentStatus> dBQueryOptions = new DBQueryOptions<AppointmentStatus>();
 
-            InternalServiceResponse<IReadOnlyCollection<GetAppointmentStatusesResult>> result = await _service.GetDatasAsync(dBQueryOptions);
+            InternalServiceResponse<IReadOnlyCollection<GetAppointmentStatusesResult>> result = await _service.GetDatasAsync<GetAppointmentStatusesResult>(dBQueryOptions);
 
             return InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>.Success(result.Data);
         }

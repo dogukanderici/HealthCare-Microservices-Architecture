@@ -12,7 +12,7 @@ namespace HealthCare.Descriptions.Application.Behaviors
 {
     public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ITransactionalRequest
-        where TResponse : IInternalHandlerResponse, new()
+        where TResponse : IInternalHandlerResponse
     {
         private readonly IUnitofWork _unitOfWork;
         private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
@@ -25,6 +25,11 @@ namespace HealthCare.Descriptions.Application.Behaviors
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
+            //if (request is not ITransactionalRequest)
+            //{
+            //    return await next();
+            //}
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -51,11 +56,7 @@ namespace HealthCare.Descriptions.Application.Behaviors
                     ex
                     );
 
-                return new TResponse()
-                {
-                    IsSuccess = false,
-                    InternalMessage = ex.Message
-                };
+                throw;
             }
         }
     }

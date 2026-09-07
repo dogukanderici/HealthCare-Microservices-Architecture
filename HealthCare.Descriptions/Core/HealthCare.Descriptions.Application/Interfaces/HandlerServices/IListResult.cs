@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Interfaces.HandlerServices
 {
-    public interface IAppointmentStatusService<T, TResult> : IBaseService<T, TResult>
-        where T : class
-        where TResult : class
+    public interface IListResult
     {
-
     }
 }

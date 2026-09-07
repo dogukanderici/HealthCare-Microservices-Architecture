@@ -10,7 +10,7 @@ namespace HealthCare.Descriptions.Application.Interfaces
     public interface IRepository<T>
         where T : class
     {
-        Task<ICollection<T>> GetAllAsync(DBQueryOptions<T>? queryOptions = null);
+        Task<List<T>> GetAllAsync(DBQueryOptions<T>? queryOptions = null);
         IQueryable<T> GetQuearble(DBQueryOptions<T>? queryOptions = null);
         Task<T> GetByIdAsync(DBQueryOptions<T> queryOptions);
         Task<int> GetDataCountAsync(DBQueryOptions<T> queryOptions);
