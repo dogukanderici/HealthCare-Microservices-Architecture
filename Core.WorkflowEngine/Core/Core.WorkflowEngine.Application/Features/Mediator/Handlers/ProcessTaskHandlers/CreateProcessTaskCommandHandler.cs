@@ -1,18 +1,12 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Constants;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskCommands;
-using Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration.Constants;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskHandlers
 {
@@ -39,7 +33,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
                      nameof(CreateProcessTaskCommandHandler),
                      LogConstants.SuccessMessages.DataCreatedSuccessfully);
 
-            return InternalHandlerResponse<Guid>.Success(id, InternalCommandConstants.SuccessProcessTaskCreating);
+            return InternalHandlerResponse<Guid>.Success(id, InternalHandlerConstants.SuccessProcessTaskCreating);
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkflowExecutionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkflowExecutionResults;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
-using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 

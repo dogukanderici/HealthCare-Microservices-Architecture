@@ -1,19 +1,13 @@
-﻿using AutoMapper;
+﻿using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskCommands;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration;
-using Core.WorkflowEngine.Configuration.Constants;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskHandlers
 {
@@ -44,16 +38,16 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
                 _logger.LogInformation(LogConstants.LogMessageTemplate,
                     nameof(DeleteProcessTaskCommandHandler),
-                    InternalCommandConstants.SuccessProcessTaskDeleting);
+                    InternalHandlerConstants.SuccessProcessTaskDeleting);
 
-                return InternalHandlerResponse<bool>.Success(true, InternalCommandConstants.SuccessProcessTaskDeleting);
+                return InternalHandlerResponse<bool>.Success(true, InternalHandlerConstants.SuccessProcessTaskDeleting);
             }
 
             _logger.LogError(LogConstants.LogMessageTemplate,
                     nameof(DeleteProcessTaskCommandHandler),
-                    InternalCommandConstants.NotFoundData);
+                    InternalHandlerConstants.NotFoundData);
 
-            return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
+            return InternalHandlerResponse<bool>.Failure(InternalHandlerConstants.NotFoundData);
         }
     }
 }

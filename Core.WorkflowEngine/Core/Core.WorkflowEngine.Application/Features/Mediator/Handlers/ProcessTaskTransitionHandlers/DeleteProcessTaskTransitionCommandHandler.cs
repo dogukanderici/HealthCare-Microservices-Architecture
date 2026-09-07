@@ -1,16 +1,9 @@
-﻿using AutoMapper;
+﻿using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Configuration.Wrappers;
-using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
@@ -29,10 +22,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
             if (result.IsSuccess)
             {
-                return InternalHandlerResponse<bool>.Success(result.Data, InternalCommandConstants.SuccessProcessTaskTransitionDeleting);
+                return InternalHandlerResponse<bool>.Success(result.Data, InternalHandlerConstants.SuccessProcessTaskTransitionDeleting);
             }
 
-            return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.ErrorProcessTaskTransitionDeleting);
+            return InternalHandlerResponse<bool>.Failure(InternalHandlerConstants.ErrorProcessTaskTransitionDeleting);
         }
     }
 }

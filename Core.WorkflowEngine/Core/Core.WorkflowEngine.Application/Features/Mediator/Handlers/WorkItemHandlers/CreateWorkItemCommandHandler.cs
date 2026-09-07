@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 
@@ -28,10 +28,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 
             if (result.IsSuccess)
             {
-                return InternalHandlerResponse<Guid>.Success(result.Data, InternalCommandConstants.SuccessWorkItemCreating);
+                return InternalHandlerResponse<Guid>.Success(result.Data, InternalHandlerConstants.SuccessWorkItemCreating);
             }
 
-            return InternalHandlerResponse<Guid>.Failure(InternalCommandConstants.ErrorWorkItemCreating);
+            return InternalHandlerResponse<Guid>.Failure(InternalHandlerConstants.ErrorWorkItemCreating);
         }
     }
 }

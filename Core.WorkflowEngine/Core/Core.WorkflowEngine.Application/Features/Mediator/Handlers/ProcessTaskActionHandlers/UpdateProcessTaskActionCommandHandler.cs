@@ -1,20 +1,14 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskActionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskActionBusinessRules;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration;
-using Core.WorkflowEngine.Configuration.Constants;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
@@ -49,10 +43,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
                 DateTimeOffset result = await _repository.UpdateDataAsync(dataFromDto);
 
-                return InternalHandlerResponse<DateTimeOffset>.Success(result, InternalCommandConstants.SuccessProcessTaskActionUpdating);
+                return InternalHandlerResponse<DateTimeOffset>.Success(result, InternalHandlerConstants.SuccessProcessTaskActionUpdating);
             }
 
-            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorProcessTaskActionUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalHandlerConstants.ErrorProcessTaskActionUpdating);
         }
     }
 }

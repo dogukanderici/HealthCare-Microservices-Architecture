@@ -1,14 +1,9 @@
-﻿using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration.Constants;
+﻿using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.Features.Commons.Behaviors
+namespace Core.WorkflowEngine.Application.Behaviors
 {
     public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ITransactionalRequest

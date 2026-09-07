@@ -1,4 +1,4 @@
-﻿using Core.WorkflowEngine.Configuration;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Core.WorkflowEngine.Persistence.Extensions

@@ -1,14 +1,9 @@
-﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
-using Core.WorkflowEngine.Application.Features.Wrappers;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+﻿using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries
 {

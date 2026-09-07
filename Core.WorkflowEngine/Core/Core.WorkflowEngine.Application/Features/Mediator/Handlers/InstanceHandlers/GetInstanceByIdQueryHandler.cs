@@ -1,18 +1,12 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Configuration;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {

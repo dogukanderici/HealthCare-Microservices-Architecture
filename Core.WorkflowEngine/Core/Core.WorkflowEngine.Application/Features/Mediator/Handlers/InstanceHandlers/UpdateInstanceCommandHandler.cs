@@ -1,18 +1,13 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.InstanceCommands;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Configuration;
-using Core.WorkflowEngine.Configuration.Constants;
-using Core.WorkflowEngine.Configuration.Wrappers;
-using Core.WorkflowEngine.Domain.Abstractions;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {
@@ -42,14 +37,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
                         nameof(UpdateInstanceCommandHandler),
                         LogConstants.SuccessMessages.DataUpdatedSuccessfully);
 
-                return InternalHandlerResponse<DateTimeOffset>.Success(serviceResponse.Data, InternalCommandConstants.SuccessInstanceUpdating);
+                return InternalHandlerResponse<DateTimeOffset>.Success(serviceResponse.Data, InternalHandlerConstants.SuccessInstanceUpdating);
             }
 
             _logger.LogError(LogConstants.LogMessageTemplate,
                 nameof(UpdateInstanceCommandHandler),
                 serviceResponse.ServiceMessage);
 
-            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.InvalidBusinessRule);
+            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalHandlerConstants.InvalidBusinessRule);
         }
     }
 }

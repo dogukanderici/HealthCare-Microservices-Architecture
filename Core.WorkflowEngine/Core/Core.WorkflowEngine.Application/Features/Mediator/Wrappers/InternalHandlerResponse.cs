@@ -4,11 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using JsonConstructorAttribute = System.Text.Json.Serialization.JsonConstructorAttribute;
 
-namespace Core.WorkflowEngine.Application.Features.Wrappers.Responses
+namespace Core.WorkflowEngine.Application.Features.Mediator.Wrappers
 {
     public class InternalHandlerResponse<T> : IInternalCommandResponse, IValidationResult
     {
@@ -22,7 +21,7 @@ namespace Core.WorkflowEngine.Application.Features.Wrappers.Responses
         [JsonConstructor]
         private InternalHandlerResponse()
         {
-            
+
         }
 
         public static InternalHandlerResponse<T> Success(T data, string internalMessage = "Success")

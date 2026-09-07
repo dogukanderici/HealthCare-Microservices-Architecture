@@ -1,11 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration;
-using Core.WorkflowEngine.Domain.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Interfaces;
 
 namespace Core.WorkflowEngine.Application.Features.Commons
 {

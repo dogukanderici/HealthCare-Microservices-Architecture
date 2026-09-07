@@ -3,6 +3,7 @@ using Core.WorkflowEngine.Application.Features.Mappings.Configurations;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Application.Services;
+using Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions;
 using Core.WorkflowEngine.Persistence.CacheProvider;
 using Core.WorkflowEngine.Persistence.Context;
 using Core.WorkflowEngine.Persistence.Repositories;
@@ -112,7 +113,7 @@ builder.Services.AddMediatorServiceRegistration();
 builder.Services.AddBusinessRulesRegistration();
 
 // Service ( used in handler classes ) Configuration
-builder.Services.AddServiceRegistartion();
+builder.Services.AddServiceRegistration();
 
 builder.Services.AddValidatorsFromAssembly(typeof(ValidatorAssemblyMarker).Assembly);
 

@@ -1,4 +1,4 @@
-﻿using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+﻿using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers

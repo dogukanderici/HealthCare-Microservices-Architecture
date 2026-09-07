@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.InstanceCommands;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Configuration.Constants;
-using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -38,10 +37,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
             if (serviceResponse.IsSuccess)
             {
 
-                return InternalHandlerResponse<Guid>.Success(serviceResponse.Data, InternalCommandConstants.SuccessInstanceCreating);
+                return InternalHandlerResponse<Guid>.Success(serviceResponse.Data, InternalHandlerConstants.SuccessInstanceCreating);
             }
 
-            return InternalHandlerResponse<Guid>.Failure(InternalCommandConstants.ErrorInstanceCreating);
+            return InternalHandlerResponse<Guid>.Failure(InternalHandlerConstants.ErrorInstanceCreating);
 
         }
     }

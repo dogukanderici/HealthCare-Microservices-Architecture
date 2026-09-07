@@ -1,18 +1,11 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
-using Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.WorkItemBusinessRules;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Configuration;
-using Core.WorkflowEngine.Configuration.Constants;
-using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
@@ -35,10 +28,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 
             if (result.IsSuccess)
             {
-                return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalCommandConstants.SuccessWorkItemUpdating);
+                return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalHandlerConstants.SuccessWorkItemUpdating);
             }
 
-            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorWorkItemUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalHandlerConstants.ErrorWorkItemUpdating);
         }
     }
 }

@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Core.WorkflowEngine.Persistence\Core.WorkflowEngine.Persistence.csproj" />
+    <ProjectReference Include="..\Core.WorkflowEngine.Application\Core.WorkflowEngine.Application.csproj" />
+  </ItemGroup>
+
 </Project>

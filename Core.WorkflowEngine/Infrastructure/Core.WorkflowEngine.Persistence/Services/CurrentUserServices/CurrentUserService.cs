@@ -1,13 +1,8 @@
 ﻿using Core.WorkflowEngine.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.Services
+namespace Core.WorkflowEngine.Persistence.Services.CurrentUserServices
 {
     public class CurrentUserService : ICurrentUserService
     {

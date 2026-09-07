@@ -1,17 +1,8 @@
-﻿using AutoMapper;
-using Core.WorkflowEngine.Application.Features.Mediator.Queries.InboxQueries;
-using Core.WorkflowEngine.Application.Features.Mediator.Results.InboxResults;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
-using Core.WorkflowEngine.Application.Interfaces;
+﻿using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.Features.Commons.Behaviors
+namespace Core.WorkflowEngine.Application.Behaviors
 {
     public class CachingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ICacheableQuery, IRequest<TResponse>

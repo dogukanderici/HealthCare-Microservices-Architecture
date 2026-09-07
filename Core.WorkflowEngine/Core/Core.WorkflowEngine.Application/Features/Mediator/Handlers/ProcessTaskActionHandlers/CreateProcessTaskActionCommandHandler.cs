@@ -1,17 +1,11 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskActionCommands;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration.Constants;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
@@ -34,7 +28,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
             Guid result = await _repository.CreateDataAsync(dataFromDto);
 
-            return InternalHandlerResponse<Guid>.Success(result, InternalCommandConstants.SuccessProcessTaskActionCreating);
+            return InternalHandlerResponse<Guid>.Success(result, InternalHandlerConstants.SuccessProcessTaskActionCreating);
         }
     }
 }

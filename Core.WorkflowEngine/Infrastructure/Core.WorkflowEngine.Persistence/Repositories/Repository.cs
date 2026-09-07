@@ -1,5 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Configuration;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Domain.Abstractions;
 using Core.WorkflowEngine.Persistence.Context;
 using Core.WorkflowEngine.Persistence.Extensions;

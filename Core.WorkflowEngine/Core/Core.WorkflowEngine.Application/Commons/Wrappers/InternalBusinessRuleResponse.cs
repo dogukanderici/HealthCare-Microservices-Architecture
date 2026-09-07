@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.Features.Wrappers.Responses
+namespace Core.WorkflowEngine.Application.Commons.Wrappers
 {
     public class InternalBusinessRuleResponse<T>
     {

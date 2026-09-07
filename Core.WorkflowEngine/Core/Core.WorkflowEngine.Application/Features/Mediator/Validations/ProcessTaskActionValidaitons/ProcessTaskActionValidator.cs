@@ -1,14 +1,9 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskActionCommands;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
-using static Core.WorkflowEngine.Application.Features.Constants.ValidationConstants;
-using static Core.WorkflowEngine.Application.Features.Constants.ValidationConstants.ProcessTaskActionDefinition;
+using static Core.WorkflowEngine.Application.Commons.Constants.ValidationConstants;
+using static Core.WorkflowEngine.Application.Commons.Constants.ValidationConstants.ProcessTaskActionDefinition;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Validations.ProcessTaskActionValidaitons
 {

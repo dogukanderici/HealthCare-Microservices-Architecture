@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Configuration.Constants
+namespace Core.WorkflowEngine.Application.Commons.Constants
 {
     public static class LogConstants
     {

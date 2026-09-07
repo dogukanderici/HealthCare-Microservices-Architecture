@@ -1,15 +1,13 @@
-﻿using Core.WorkflowEngine.Application.Features.Constants;
+﻿using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.InstanceCommands;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Configuration;
-using Core.WorkflowEngine.Configuration.Constants;
-using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {
@@ -36,7 +34,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
                         nameof(UpdateInstanceCommandHandler),
                         LogConstants.SuccessMessages.DataDeletedSuccessfully);
 
-                return InternalHandlerResponse<bool>.Success(true, InternalCommandConstants.SuccessInstanceDeleting);
+                return InternalHandlerResponse<bool>.Success(true, InternalHandlerConstants.SuccessInstanceDeleting);
             }
 
 
@@ -44,7 +42,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
                 nameof(UpdateInstanceCommandHandler),
                 LogConstants.ErrorMessages.DataNotFound);
 
-            return InternalHandlerResponse<bool>.Failure(InternalCommandConstants.NotFoundData);
+            return InternalHandlerResponse<bool>.Failure(InternalHandlerConstants.NotFoundData);
         }
     }
 }

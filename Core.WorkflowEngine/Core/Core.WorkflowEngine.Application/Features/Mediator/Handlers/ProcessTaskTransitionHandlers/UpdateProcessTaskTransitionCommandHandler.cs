@@ -1,16 +1,11 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
-using Core.WorkflowEngine.Application.Features.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
@@ -33,10 +28,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 
             if (result.IsSuccess)
             {
-                return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalCommandConstants.SuccessProcessTaskTransitionUpdating);
+                return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalHandlerConstants.SuccessProcessTaskTransitionUpdating);
             }
 
-            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalCommandConstants.ErrorProcessTaskTransitionUpdating);
+            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalHandlerConstants.ErrorProcessTaskTransitionUpdating);
         }
     }
 }

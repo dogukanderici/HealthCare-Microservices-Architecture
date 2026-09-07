@@ -1,13 +1,11 @@
-﻿using Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers;
+﻿using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessDefinitionBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessDefinitionDtos;
-using Core.WorkflowEngine.Configuration;
-using Core.WorkflowEngine.Configuration.Constants;
-using Core.WorkflowEngine.Configuration.Wrappers;
 using Core.WorkflowEngine.Domain.Entities;
-using MediatR;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 

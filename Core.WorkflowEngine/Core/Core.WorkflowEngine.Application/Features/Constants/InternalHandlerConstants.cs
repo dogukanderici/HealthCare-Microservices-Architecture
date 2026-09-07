@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Constants
 {
-    public static class InternalCommandConstants
+    public static class InternalHandlerConstants
     {
         public const string SuccessInstanceCreating = "New instance added successfully.";
         public const string SuccessInstanceUpdating = "New instance updated successfully.";

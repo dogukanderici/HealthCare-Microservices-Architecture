@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Configuration.Wrappers
+namespace Core.WorkflowEngine.Application.Commons.Wrappers
 {
     public class InternalServiceResponse<T>
     {

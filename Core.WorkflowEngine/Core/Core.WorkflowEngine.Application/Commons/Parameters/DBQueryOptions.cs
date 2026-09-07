@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Configuration
+namespace Core.WorkflowEngine.Application.Commons.Parameters
 {
     public class DBQueryOptions<TEntity>
         where TEntity : class

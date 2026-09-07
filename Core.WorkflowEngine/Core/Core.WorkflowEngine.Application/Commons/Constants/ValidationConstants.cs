@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.Features.Constants
+namespace Core.WorkflowEngine.Application.Commons.Constants
 {
     public class ValidationConstants
     {

@@ -1,12 +1,7 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
 using FluentValidation;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-using static Core.WorkflowEngine.Application.Features.Constants.ValidationConstants;
+using static Core.WorkflowEngine.Application.Commons.Constants.ValidationConstants;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Validations.WorkItemValidations
 {

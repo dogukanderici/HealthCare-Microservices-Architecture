@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.WorkflowEngine.Application\Core.WorkflowEngine.Application.csproj" />
+    <ProjectReference Include="..\..\Core\Core.WorkflowEngine.Configuration\Core.WorkflowEngine.Configuration.csproj" />
     <ProjectReference Include="..\..\Infrastructure\Core.WorkflowEngine.Persistence\Core.WorkflowEngine.Persistence.csproj" />
   </ItemGroup>
 
