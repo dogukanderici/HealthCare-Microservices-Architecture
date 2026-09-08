@@ -1,31 +1,24 @@
-﻿using Core.WorkflowEngine.Application.Interfaces.Services;
+﻿using Core.WorkflowEngine.Application.Interfaces.HandlerServices.CacheServices;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using StackExchange.Redis;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Persistence.CacheProvider
 {
-    public class CacheProvider : ICacheProvider
+    public class CacheCommandProvider : ICacheCommandProvider
     {
         private readonly IDatabase _redisDB;
-        private ILogger<CacheProvider> _logger;
+        private ILogger<CacheQueryProvider> _logger;
 
-        public CacheProvider(IDatabase redisDB, ILogger<CacheProvider> logger)
+        public CacheCommandProvider(IDatabase redisDB, ILogger<CacheQueryProvider> logger)
         {
             _redisDB = redisDB;
             _logger = logger;
-        }
-
-        public async Task<bool> IsKeyExistsAsync(string key)
-        {
-            return await _redisDB.KeyExistsAsync(key);
-        }
-
-        public async Task<T?> GetCacheDataAsync<T>(string key)
-        {
-            string cacheData = await _redisDB.StringGetAsync(key);
-
-            return JsonConvert.DeserializeObject<T>(cacheData);
         }
 
         public async Task<bool> SetCacheDataAsync<T>(string key, T data, TimeSpan? expiration = null)

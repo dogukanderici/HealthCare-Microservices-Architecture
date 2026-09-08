@@ -3,50 +3,27 @@ using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskTransitionRules;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
-namespace Core.WorkflowEngine.Application.Services
+namespace Core.WorkflowEngine.Application.Services.TaskTransitionServices
 {
-    public class TaskTransitionService : ITaskTransitionService
+    public class TaskTransitionCommandService : ITaskTransitionCommandService
     {
         private readonly IRepository<ProcessTaskTransition> _repository;
-        private readonly ILogger<TaskTransitionService> _logger;
+        private readonly ILogger<TaskTransitionQueryService> _logger;
         private readonly ITaskTransitionBusinessRule _businessRule;
 
-        public TaskTransitionService(IRepository<ProcessTaskTransition> repository, ILogger<TaskTransitionService> logger, ITaskTransitionBusinessRule businessRule)
+        public TaskTransitionCommandService(IRepository<ProcessTaskTransition> repository, ILogger<TaskTransitionQueryService> logger, ITaskTransitionBusinessRule businessRule)
         {
             _repository = repository;
             _logger = logger;
             _businessRule = businessRule;
         }
 
-        public async Task<InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>> GetDatasByFilterAsync(TaskTransitionFilterDto taskTransitionFilterDto)
-        {
-            DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
-
-            Expression<Func<ProcessTaskTransition, bool>> filter = x => (
-            (!taskTransitionFilterDto.ProcessTaskId.HasValue || x.ProcessTaskId == taskTransitionFilterDto.ProcessTaskId) &&
-            (!taskTransitionFilterDto.ActionId.HasValue || x.ActionId == taskTransitionFilterDto.ActionId) &&
-            (!taskTransitionFilterDto.IsActive.HasValue || x.IsActive == taskTransitionFilterDto.IsActive)
-            );
-            dBQueryOptions.filter = filter;
-
-            List<Expression<Func<ProcessTaskTransition, object>>> include = [
-                x => x.ProcessTask,
-                x => x.NextTask
-                ];
-            dBQueryOptions.includes = include;
-
-            IReadOnlyCollection<ProcessTaskTransition> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>.Success(result);
-        }
-
-        public async Task<InternalServiceResponse<ProcessTaskTransition>> GetDataByIdAsync(Guid id)
+        public async Task<ProcessTaskTransition> GetWorkItemForUpdateAsync(Guid id)
         {
             DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
 
@@ -55,7 +32,7 @@ namespace Core.WorkflowEngine.Application.Services
 
             ProcessTaskTransition result = await _repository.GetDataAsync(dBQueryOptions);
 
-            return InternalServiceResponse<ProcessTaskTransition>.Success(result);
+            return result;
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(ProcessTaskTransition entity, CancellationToken cancellationToken)
@@ -63,7 +40,7 @@ namespace Core.WorkflowEngine.Application.Services
             Guid id = await _repository.CreateDataAsync(entity);
 
             _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(TaskTransitionService),
+                nameof(TaskTransitionQueryService),
                 LogConstants.SuccessMessages.DataCreatedSuccessfully);
 
             return InternalServiceResponse<Guid>.Success(id);
@@ -78,14 +55,14 @@ namespace Core.WorkflowEngine.Application.Services
                 DateTimeOffset result = await _repository.UpdateDataAsync(entity);
 
                 _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(TaskTransitionService),
+                    nameof(TaskTransitionQueryService),
                     LogConstants.SuccessMessages.DataUpdatedSuccessfully);
 
                 return InternalServiceResponse<DateTimeOffset>.Success(result);
             }
 
             _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(TaskTransitionService),
+                    nameof(TaskTransitionQueryService),
                     LogConstants.ErrorMessages.DataUpdateFailed);
 
             return InternalServiceResponse<DateTimeOffset>.Failure();
@@ -100,14 +77,14 @@ namespace Core.WorkflowEngine.Application.Services
                 await _repository.DeleteDataAsync(checkExisting.Data);
 
                 _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(TaskTransitionService),
+                    nameof(TaskTransitionQueryService),
                     LogConstants.SuccessMessages.DataDeletedSuccessfully);
 
                 return InternalServiceResponse<bool>.Success(true);
             }
 
             _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(TaskTransitionService),
+                    nameof(TaskTransitionQueryService),
                     LogConstants.ErrorMessages.DataUpdateFailed);
 
             return InternalServiceResponse<bool>.Failure();

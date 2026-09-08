@@ -4,7 +4,8 @@ using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExecutionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
@@ -13,15 +14,17 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
 {
     public class CommitWorkItemExecutionCommandHandler : IRequestHandler<CommitWorkItemExecutionCommand, InternalHandlerResponse<Guid>>
     {
-        private readonly ITaskTransitionService _taskTransitionService;
-        private readonly IWorkItemService _workItemService;
+        private readonly ITaskTransitionQueryService _taskTransitionService;
+        private readonly IWorkItemQueryService _workItemQueryService;
+        private readonly IWorkItemCommandService _workItemCommandService;
         private readonly IMapper _mapper;
         private readonly ICurrentUserService _currentUserService;
 
-        public CommitWorkItemExecutionCommandHandler(ITaskTransitionService taskTransitionService, IWorkItemService workItemService, IMapper mapper, ICurrentUserService currentUserService)
+        public CommitWorkItemExecutionCommandHandler(ITaskTransitionQueryService taskTransitionService, IWorkItemQueryService workItemQueryService, IWorkItemCommandService workItemCommandService, IMapper mapper, ICurrentUserService currentUserService)
         {
             _taskTransitionService = taskTransitionService;
-            _workItemService = workItemService;
+            _workItemQueryService = workItemQueryService;
+            _workItemCommandService = workItemCommandService;
             _mapper = mapper;
             _currentUserService = currentUserService;
         }
@@ -34,7 +37,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
             // 4. Eğer yoksa, workflow instance tamamlanmış olur ve instance durumu Completed olarak güncellenir.
             // 5. Tüm db işlemleri tek bir transaction içinde yapılır. Eğer herhangi bir işlem başarısız olursa, tüm işlemler geri alınır.
 
-            InternalServiceResponse<WorkItem> workItem = await _workItemService.GetWorkItemByIdAsync(request.WorkItemId);
+            InternalServiceResponse<WorkItem> workItem = await _workItemQueryService.GetDataByIdAsync(request.WorkItemId);
 
             if (workItem != null)
             {
@@ -46,7 +49,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
                 workItem.Data.SelectedAction = request.ActionId;
                 workItem.Data.CompletedBy = _currentUserService.UserId;
                 workItem.Data.CompletedAt = _currentUserService.CurrentDate;
-                await _workItemService.UpdateAsync(workItem.Data, cancellationToken);
+                await _workItemCommandService.UpdateAsync(workItem.Data, cancellationToken);
 
                 // Sonraki task için transition var mı kontrol edilir.
                 TaskTransitionFilterDto filterFromDto = _mapper.Map<TaskTransitionFilterDto>(request);
@@ -66,7 +69,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
                     workItemFromDto.InstanceId = request.InstanceId;
                     workItemFromDto.StepId = item.NextTaskId;
 
-                    InternalServiceResponse<Guid> workItemResult = await _workItemService.CreateAsync(workItemFromDto, cancellationToken);
+                    InternalServiceResponse<Guid> workItemResult = await _workItemCommandService.CreateAsync(workItemFromDto, cancellationToken);
                     newWorkItemId = workItemResult.Data;
 
                     return InternalHandlerResponse<Guid>.Success(newWorkItemId);

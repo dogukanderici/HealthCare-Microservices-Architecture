@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.Interfaces.Services
+namespace Core.WorkflowEngine.Application.Interfaces.HandlerServices.CacheServices
 {
-    public interface ICacheProvider
+    public interface ICacheQueryProvider
     {
         Task<bool> IsKeyExistsAsync(string key);
         Task<T?> GetCacheDataAsync<T>(string key); // GetCacheDataAsync<T> Ne tür bir veri olacağını çağrıldığı yer belirler.
-        Task<bool> SetCacheDataAsync<T>(string key, T data, TimeSpan? expiration = null);
-        Task<bool> DeleteCacheDataAsync(string key);
     }
 }

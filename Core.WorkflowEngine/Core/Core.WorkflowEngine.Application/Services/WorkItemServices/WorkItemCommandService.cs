@@ -4,28 +4,32 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers;
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.WorkItemBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Application.ServiceDtos.WorkItemServiceDtos;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
 using Core.WorkflowEngine.Domain.Entities;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.Services
+namespace Core.WorkflowEngine.Application.Services.WorkItemServices
 {
-    public class WorkItemService : IWorkItemService
+    public class WorkItemCommandService : IWorkItemCommandService
     {
         private readonly IRepository<WorkItem> _repository;
-        private readonly ILogger<WorkItemService> _logger;
+        private readonly ILogger<WorkItemQueryService> _logger;
         private readonly IWorkItemBusinessRule _businessRule;
 
-        public WorkItemService(IRepository<WorkItem> repository, ILogger<WorkItemService> logger, IWorkItemBusinessRule businessRule)
+        public WorkItemCommandService(IRepository<WorkItem> repository, ILogger<WorkItemQueryService> logger, IWorkItemBusinessRule businessRule)
         {
             _repository = repository;
             _logger = logger;
             _businessRule = businessRule;
         }
 
-        public async Task<InternalServiceResponse<WorkItem>> GetWorkItemByIdAsync(Guid id)
+        public async Task<WorkItem> GetWorkItemForUpdateAsync(Guid id)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
 
@@ -34,32 +38,7 @@ namespace Core.WorkflowEngine.Application.Services
 
             WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
 
-            return InternalServiceResponse<WorkItem>.Success(result);
-        }
-
-        public async Task<InternalServiceResponse<IReadOnlyCollection<WorkItem>>> GetWorkItemByFilterAsync(WorkItemFilterDto workItemFilterDto)
-        {
-            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
-
-            Expression<Func<WorkItem, bool>> filter = x => (
-                (!workItemFilterDto.InstanceId.HasValue || x.InstanceId == workItemFilterDto.InstanceId) &&
-                (!workItemFilterDto.WorkItemId.HasValue || x.Id == workItemFilterDto.WorkItemId) &&
-                (!workItemFilterDto.AssignedUserId.HasValue || x.AssignedUserId == workItemFilterDto.AssignedUserId) &&
-                (!workItemFilterDto.Status.HasValue || x.Status == workItemFilterDto.Status) &&
-                (!workItemFilterDto.CreatedAt.HasValue || x.CreatedAt == workItemFilterDto.CreatedAt)
-            );
-            dBQueryOptions.filter = filter;
-
-            IReadOnlyCollection<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<IReadOnlyCollection<WorkItem>>.Success(result);
-        }
-
-        public async Task<InternalServiceResponse<IReadOnlyCollection<WorkItem>>> GetWorkItemByFilterAsync(DBQueryOptions<WorkItem> dBQueryOptions)
-        {
-            IReadOnlyCollection<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<IReadOnlyCollection<WorkItem>>.Success(result);
+            return result;
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(WorkItem entity, CancellationToken cancellationToken)
@@ -67,7 +46,7 @@ namespace Core.WorkflowEngine.Application.Services
             Guid id = await _repository.CreateDataAsync(entity);
 
             _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(WorkItemService),
+                    nameof(WorkItemQueryService),
                     LogConstants.SuccessMessages.DataCreatedSuccessfully);
 
             return InternalServiceResponse<Guid>.Success(id);

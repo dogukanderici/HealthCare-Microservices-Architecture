@@ -4,7 +4,7 @@ using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 
@@ -13,12 +13,12 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
     public class CreateProcessDefinitionCommandHandler : IRequestHandler<CreateProcessDefinitionCommand, InternalHandlerResponse<Guid>>,
         IValidationRequest
     {
-        private readonly IProcessDefinitionService _processDefinitionService;
+        private readonly IProcessDefinitionCommandService _processDefinitionCommandService;
         private readonly IMapper _mapper;
 
-        public CreateProcessDefinitionCommandHandler(IProcessDefinitionService processDefinitionService, IMapper mapper)
+        public CreateProcessDefinitionCommandHandler(IProcessDefinitionCommandService processDefinitionCommandService, IMapper mapper)
         {
-            _processDefinitionService = processDefinitionService;
+            _processDefinitionCommandService = processDefinitionCommandService;
             _mapper = mapper;
         }
 
@@ -29,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             dataFromDto.Id = Guid.NewGuid();
             dataFromDto.ProcessSpecId = Guid.NewGuid();
 
-            InternalServiceResponse<Guid> result = await _processDefinitionService.CreateAsync(dataFromDto, cancellationToken);
+            InternalServiceResponse<Guid> result = await _processDefinitionCommandService.CreateAsync(dataFromDto, cancellationToken);
 
             if (result.IsSuccess)
             {

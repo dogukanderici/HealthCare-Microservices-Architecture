@@ -3,9 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.InstanceCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Domain.Entities;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -13,20 +11,18 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
 {
     public class DeleteInstanceCommandHandler : IRequestHandler<DeleteInstanceCommand, InternalHandlerResponse<bool>>
     {
-        private readonly IRepository<Instance> _repository;
+        private readonly IInstanceCommandService _instanceCommandService;
         private readonly ILogger<DeleteInstanceCommandHandler> _logger;
-        private readonly IInstanceService _instanceService;
 
-        public DeleteInstanceCommandHandler(IRepository<Instance> repository, ILogger<DeleteInstanceCommandHandler> logger, IInstanceService instanceService)
+        public DeleteInstanceCommandHandler(IInstanceCommandService instanceCommandService, ILogger<DeleteInstanceCommandHandler> logger)
         {
-            _repository = repository;
+            _instanceCommandService = instanceCommandService;
             _logger = logger;
-            _instanceService = instanceService;
         }
 
         public async Task<InternalHandlerResponse<bool>> Handle(DeleteInstanceCommand request, CancellationToken cancellationToken)
         {
-            InternalServiceResponse<bool> serviceResponse = await _instanceService.DeleteAsync(request.Id, cancellationToken);
+            InternalServiceResponse<bool> serviceResponse = await _instanceCommandService.DeleteAsync(request.Id, cancellationToken);
 
             if (serviceResponse.IsSuccess)
             {

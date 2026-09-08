@@ -1,5 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.CacheServices;
 using MediatR;
 
 namespace Core.WorkflowEngine.Application.Behaviors
@@ -8,11 +8,13 @@ namespace Core.WorkflowEngine.Application.Behaviors
         where TRequest : ICacheableQuery, IRequest<TResponse>
         where TResponse : IInternalCommandResponse
     {
-        private readonly ICacheProvider _cacheProvider;
+        private readonly ICacheQueryProvider _cacheQueryProvider;
+        private readonly ICacheCommandProvider _cacheCommandProvider;
 
-        public CachingBehavior(ICacheProvider cacheProvider)
+        public CachingBehavior(ICacheQueryProvider cacheQueryProvider, ICacheCommandProvider cacheCommandProvider)
         {
-            _cacheProvider = cacheProvider;
+            _cacheQueryProvider = cacheQueryProvider;
+            _cacheCommandProvider = cacheCommandProvider;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -20,18 +22,18 @@ namespace Core.WorkflowEngine.Application.Behaviors
 
             string cacheKey = request.CacheKey;
 
-            bool isCachedDataExists = await _cacheProvider.IsKeyExistsAsync(cacheKey);
+            bool isCachedDataExists = await _cacheQueryProvider.IsKeyExistsAsync(cacheKey);
 
             if (isCachedDataExists)
             {
-                var cacheResult = await _cacheProvider.GetCacheDataAsync<TResponse>(cacheKey);
+                var cacheResult = await _cacheQueryProvider.GetCacheDataAsync<TResponse>(cacheKey);
 
                 return cacheResult;
             }
 
             TResponse response = await next();
 
-            bool cacheSetResult = await _cacheProvider.SetCacheDataAsync(cacheKey, response, request.ExpirationTime);
+            bool cacheSetResult = await _cacheCommandProvider.SetCacheDataAsync(cacheKey, response, request.ExpirationTime);
 
             return response;
         }

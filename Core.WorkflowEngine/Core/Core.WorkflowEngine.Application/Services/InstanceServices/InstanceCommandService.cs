@@ -3,23 +3,24 @@ using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
 
-namespace Core.WorkflowEngine.Application.Services
+namespace Core.WorkflowEngine.Application.Services.InstanceServices
 {
-    public class InstanceService : IInstanceService
+    public class InstanceCommandService : IInstanceCommandService
     {
         private readonly IRepository<Instance> _repository;
         private readonly IRepository<WorkItem> _wiRepository;
-        private readonly ILogger<InstanceService> _logger;
+        private readonly ILogger<InstanceQueryService> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IInstanceBusinessRule _businessRule;
-        private readonly IProcessTaskService _processTaskService;
+        private readonly IProcessTaskQueryService _processTaskService;
 
-        public InstanceService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule businessRule, IProcessTaskService processTaskService)
+        public InstanceCommandService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceQueryService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule businessRule, IProcessTaskQueryService processTaskService)
         {
             _repository = repository;
             _wiRepository = wiRepository;
@@ -27,6 +28,17 @@ namespace Core.WorkflowEngine.Application.Services
             _unitOfWork = unitOfWork;
             _businessRule = businessRule;
             _processTaskService = processTaskService;
+        }
+        public async Task<Instance> GetWorkItemForUpdateAsync(Guid id)
+        {
+            DBQueryOptions<Instance> dBQueryOptions = new DBQueryOptions<Instance>();
+
+            Expression<Func<Instance, bool>> filter = x => x.Id == id;
+            dBQueryOptions.filter = filter;
+
+            Instance result = await _repository.GetDataAsync(dBQueryOptions);
+
+            return result;
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(Instance entity, CancellationToken cancellationToken)
@@ -59,7 +71,7 @@ namespace Core.WorkflowEngine.Application.Services
                 await _unitOfWork.CommitTransactionAsync();
 
                 _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(InstanceService),
+                        nameof(InstanceQueryService),
                         LogConstants.SuccessMessages.DataCreatedSuccessfully);
 
                 return InternalServiceResponse<Guid>.Success(instanceId);
@@ -70,7 +82,7 @@ namespace Core.WorkflowEngine.Application.Services
                 await _unitOfWork.RollbackTransactionAsync();
 
                 _logger.LogError(LogConstants.LogMessageTemplate,
-                        nameof(InstanceService),
+                        nameof(InstanceQueryService),
                         ex);
 
                 return InternalServiceResponse<Guid>.Failure();
@@ -94,14 +106,14 @@ namespace Core.WorkflowEngine.Application.Services
                 await _repository.UpdateDataAsync(entity);
 
                 _logger.LogInformation(LogConstants.LogMessageTemplate,
-                            nameof(InstanceService),
+                            nameof(InstanceQueryService),
                             LogConstants.SuccessMessages.DataUpdatedSuccessfully);
 
                 return InternalServiceResponse<DateTimeOffset>.Success(DateTimeOffset.UtcNow);
             }
 
             _logger.LogError(LogConstants.LogMessageTemplate,
-                        nameof(InstanceService),
+                        nameof(InstanceQueryService),
                         LogConstants.ErrorMessages.DataUpdateFailed);
 
             return InternalServiceResponse<DateTimeOffset>.Failure();
@@ -122,14 +134,14 @@ namespace Core.WorkflowEngine.Application.Services
                 await _repository.DeleteDataAsync(existingData);
 
                 _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(InstanceService),
+                        nameof(InstanceQueryService),
                         LogConstants.SuccessMessages.DataDeletedSuccessfully);
 
                 return InternalServiceResponse<bool>.Success(true);
             }
 
             _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(InstanceService),
+                        nameof(InstanceQueryService),
                         LogConstants.ErrorMessages.DataNotFound);
 
             return InternalServiceResponse<bool>.Failure();

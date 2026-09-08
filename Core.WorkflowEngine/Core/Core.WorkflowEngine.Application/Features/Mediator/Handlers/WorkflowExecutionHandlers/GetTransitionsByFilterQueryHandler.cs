@@ -3,7 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkflowExecutionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkflowExecutionResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
@@ -12,10 +12,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
 {
     public class GetTransitionsByFilterQueryHandler : IRequestHandler<GetTransitionsByFilterQuery, InternalHandlerResponse<IReadOnlyCollection<GetTransitionsByFilterQueryResult>>>
     {
-        private readonly ITaskTransitionService _taskTransitionService;
+        private readonly ITaskTransitionQueryService _taskTransitionService;
         private readonly IMapper _mapper;
 
-        public GetTransitionsByFilterQueryHandler(ITaskTransitionService taskTransitionService, IMapper mapper)
+        public GetTransitionsByFilterQueryHandler(ITaskTransitionQueryService taskTransitionService, IMapper mapper)
         {
             _taskTransitionService = taskTransitionService;
             _mapper = mapper;

@@ -3,7 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 
@@ -11,10 +11,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 {
     public class CreateProcessTaskTransitionCommandHandler : IRequestHandler<CreateProcessTaskTransitionCommand, InternalHandlerResponse<Guid>>
     {
-        private readonly ITaskTransitionService _service;
+        private readonly ITaskTransitionCommandService _service;
         private readonly IMapper _mapper;
 
-        public CreateProcessTaskTransitionCommandHandler(ITaskTransitionService service, IMapper mapper)
+        public CreateProcessTaskTransitionCommandHandler(ITaskTransitionCommandService service, IMapper mapper)
         {
             _service = service;
             _mapper = mapper;

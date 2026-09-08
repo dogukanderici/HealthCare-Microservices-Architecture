@@ -2,23 +2,23 @@
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
 using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
     public class DeleteWorkItemCommandHandler : IRequestHandler<DeleteWorkItemCommand, InternalHandlerResponse<bool>>
     {
-        private readonly IWorkItemService _workItemService;
+        private readonly IWorkItemCommandService _workItemCommandService;
 
-        public DeleteWorkItemCommandHandler(IWorkItemService workItemService)
+        public DeleteWorkItemCommandHandler(IWorkItemCommandService workItemCommandService)
         {
-            _workItemService = workItemService;
+            _workItemCommandService = workItemCommandService;
         }
 
         public async Task<InternalHandlerResponse<bool>> Handle(DeleteWorkItemCommand request, CancellationToken cancellationToken)
         {
-            InternalServiceResponse<bool> result = await _workItemService.DeleteAsync(request.Id, cancellationToken);
+            InternalServiceResponse<bool> result = await _workItemCommandService.DeleteAsync(request.Id, cancellationToken);
 
             if (result.IsSuccess)
             {

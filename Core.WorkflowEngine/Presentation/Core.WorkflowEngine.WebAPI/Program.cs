@@ -79,29 +79,11 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddHttpContextAccessor();
 
-// Postgre SQL Configuration
-builder.Services.AddDbContext<DBContext>(
-    opt => opt.UseNpgsql(builder.Configuration.GetConnectionString("DBConnectionSettings"))
-    );
-
-// Repository Configuration
-builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-
-// UnitOfWork Configuration
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+// DB Configuration
+builder.Services.AddDbConfiguration(builder.Configuration);
 
 // Redis Configuration
-var redisConnection = builder.Configuration.GetConnectionString("RedisConnectionSettings");
-builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
-{
-    return ConnectionMultiplexer.Connect(redisConnection);
-});
-builder.Services.AddScoped<IDatabase>(sp =>
-{
-    var multiplexer = sp.GetRequiredService<IConnectionMultiplexer>();
-    return multiplexer.GetDatabase();
-});
-builder.Services.AddScoped(typeof(ICacheProvider), typeof(CacheProvider));
+builder.Services.AddRedisConfiguration(builder.Configuration);
 
 // AutoMApper Registration
 builder.Services.AddAutoMapperServiceRegistration();
@@ -123,7 +105,7 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Dogukan",
+        Title = "Workflow Engine",
         Version = "Version 1.0.0"
     });
 

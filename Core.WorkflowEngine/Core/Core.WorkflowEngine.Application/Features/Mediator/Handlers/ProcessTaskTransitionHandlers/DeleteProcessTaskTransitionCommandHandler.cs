@@ -2,16 +2,16 @@
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
     public class DeleteProcessTaskTransitionCommandHandler : IRequestHandler<DeleteProcessTaskTransitionCommand, InternalHandlerResponse<bool>>
     {
-        private readonly ITaskTransitionService _service;
+        private readonly ITaskTransitionCommandService _service;
 
-        public DeleteProcessTaskTransitionCommandHandler(ITaskTransitionService service)
+        public DeleteProcessTaskTransitionCommandHandler(ITaskTransitionCommandService service)
         {
             _service = service;
         }

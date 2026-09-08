@@ -1,11 +1,7 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Core.WorkflowEngine.Application.Features.Mappings.Configurations;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.WorkflowEngine.Application.Features.Mappings.Configurations
+namespace Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions
 {
     public static class AutoMapperServiceRegistration
     {

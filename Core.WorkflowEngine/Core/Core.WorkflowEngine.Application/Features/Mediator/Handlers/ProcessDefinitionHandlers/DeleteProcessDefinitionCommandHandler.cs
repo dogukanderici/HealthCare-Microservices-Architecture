@@ -2,7 +2,7 @@
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
 using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefinitionHandlers
@@ -10,16 +10,16 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
     public class DeleteProcessDefinitionCommandHandler : IRequestHandler<DeleteProcessDefinitionCommand, InternalHandlerResponse<bool>>
     {
 
-        private readonly IProcessDefinitionService _processDefinitionService;
+        private readonly IProcessDefinitionCommandService _processDefinitionCommandService;
 
-        public DeleteProcessDefinitionCommandHandler(IProcessDefinitionService processDefinitionService)
+        public DeleteProcessDefinitionCommandHandler(IProcessDefinitionCommandService processDefinitionCommandService)
         {
-            _processDefinitionService = processDefinitionService;
+            _processDefinitionCommandService = processDefinitionCommandService;
         }
 
         public async Task<InternalHandlerResponse<bool>> Handle(DeleteProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
-            InternalServiceResponse<bool> serviceResult = await _processDefinitionService.DeleteAsync(request.Id, cancellationToken);
+            InternalServiceResponse<bool> serviceResult = await _processDefinitionCommandService.DeleteAsync(request.Id, cancellationToken);
 
             return InternalHandlerResponse<bool>.Success(serviceResult.Data, InternalHandlerConstants.SuccessProcessDefinitionDeleting);
         }

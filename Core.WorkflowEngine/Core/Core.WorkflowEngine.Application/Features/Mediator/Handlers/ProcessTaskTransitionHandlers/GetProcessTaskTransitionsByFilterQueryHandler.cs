@@ -3,7 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces.Services;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
@@ -14,11 +14,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
     public class GetProcessTaskTransitionsByFilterQueryHandler : IRequestHandler<GetProcessTaskTransitionsByFilterQuery,
         InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsByFilterQueryResult>>>
     {
-        private readonly ITaskTransitionService _taskTransitionService;
+        private readonly ITaskTransitionQueryService _taskTransitionService;
         private readonly IMapper _mapper;
         private readonly ILogger<GetProcessTaskTransitionsByFilterQueryHandler> _logger;
 
-        public GetProcessTaskTransitionsByFilterQueryHandler(ITaskTransitionService taskTransitionService, IMapper mapper, ILogger<GetProcessTaskTransitionsByFilterQueryHandler> logger)
+        public GetProcessTaskTransitionsByFilterQueryHandler(ITaskTransitionQueryService taskTransitionService, IMapper mapper, ILogger<GetProcessTaskTransitionsByFilterQueryHandler> logger)
         {
             _taskTransitionService = taskTransitionService;
             _mapper = mapper;
