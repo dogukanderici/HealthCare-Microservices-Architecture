@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HealthCare.Descriptions.Application.Features.Mediators.Cities.Commands;
 using HealthCare.Descriptions.Application.Features.Mediators.Cities.Results;
+using HealthCare.Descriptions.Application.Features.Mediators.Cities.Results.Shared;
 using HealthCare.Descriptions.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,9 @@ namespace HealthCare.Descriptions.Application.Features.Mappings.CityMappings
             CreateMap<City, CreateCityCommand>().ReverseMap();
             CreateMap<City, UpdateCityCommand>().ReverseMap();
             CreateMap<City, RemoveCityCommand>().ReverseMap();
+
+            // For Relation
+            CreateMap<City, CitySharedResult>().ReverseMap();
         }
     }
 }
