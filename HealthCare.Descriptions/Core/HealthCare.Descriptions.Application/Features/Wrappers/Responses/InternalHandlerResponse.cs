@@ -16,7 +16,7 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Responses
         public string InternalMessage { get; set; }
 
         [JsonProperty]
-        public T Data { get; private set; }
+        public T? Data { get; private set; }
 
         public List<string>? ValidationErrors { get; set; }
 
@@ -24,7 +24,7 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Responses
         [JsonConstructor]
         private InternalHandlerResponse()
         {
-            
+
         }
 
         public static InternalHandlerResponse<T> Success(T data, string message = "Success")

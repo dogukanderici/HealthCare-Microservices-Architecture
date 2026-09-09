@@ -1,9 +1,7 @@
 ﻿using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Commands;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Queries;
-using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Results;
-using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthCare.Descriptions.WebAPI.Controllers
@@ -13,75 +11,52 @@ namespace HealthCare.Descriptions.WebAPI.Controllers
     public class AppointmentStatusesController : BaseController
     {
         private readonly IMediator _mediator;
+        private readonly IControllerHelper<AppointmentStatusesController> _controllerHelper;
 
-        public AppointmentStatusesController(IMediator mediator)
+        public AppointmentStatusesController(IMediator mediator, IControllerHelper<AppointmentStatusesController> controllerHelper)
         {
             _mediator = mediator;
+            _controllerHelper = controllerHelper;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAppointmentStatuses()
         {
-            InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>> handlerResponse = await _mediator.Send(new GetAppointmentStatusesQuery());
-
-            if (handlerResponse.IsSuccess)
-            {
-                return Ok(handlerResponse.Data);
-            }
-
-            return BadRequest(handlerResponse.InternalMessage);
+            return await _controllerHelper.ExecuteAsync(
+                () => _mediator.Send(new GetAppointmentStatusesQuery()),
+                nameof(GetAppointmentStatuses));
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetAppointmentStatusById(Guid id)
         {
-            InternalHandlerResponse<GetAppointmentStatusByIdResult> handlerResponse = await _mediator.Send(new GetAppointmentStatusByIdQuery(id));
-
-            if (handlerResponse.IsSuccess)
-            {
-                return Ok(handlerResponse.Data);
-            }
-
-            return BadRequest(handlerResponse.InternalMessage);
+            return await _controllerHelper.ExecuteAsync(
+                () => _mediator.Send(new GetAppointmentStatusByIdQuery(id)),
+                nameof(GetAppointmentStatusById));
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateAppointmentStatus(CreateAppointmentStatusCommand command)
         {
-            InternalHandlerResponse<Guid> handlerResponse = await _mediator.Send(command);
-
-            if (handlerResponse.IsSuccess)
-            {
-                return Ok(handlerResponse.Data);
-            }
-
-            return BadRequest(handlerResponse.InternalMessage);
+            return await _controllerHelper.ExecuteAsync(
+                () => _mediator.Send(command),
+                nameof(CreateAppointmentStatus));
         }
 
         [HttpPut]
         public async Task<IActionResult> UpdateAppointmentStatus(UpdateAppointmentStatusCommand command)
         {
-            InternalHandlerResponse<DateTimeOffset> handlerResponse = await _mediator.Send(command);
-
-            if (handlerResponse.IsSuccess)
-            {
-                return Ok(handlerResponse.Data);
-            }
-
-            return BadRequest(handlerResponse.InternalMessage);
+            return await _controllerHelper.ExecuteAsync(
+                () => _mediator.Send(command),
+                nameof(UpdateAppointmentStatus));
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAppointmentStatus(Guid id)
         {
-            InternalHandlerResponse<bool> handlerResponse = await _mediator.Send(new RemoveAppointmentStatusCommand(id));
-
-            if (handlerResponse.IsSuccess)
-            {
-                return Ok(handlerResponse.Data);
-            }
-
-            return BadRequest(handlerResponse.InternalMessage);
+            return await _controllerHelper.ExecuteAsync(
+                () => _mediator.Send(new RemoveAppointmentStatusCommand(id)),
+                nameof(DeleteAppointmentStatus));
         }
     }
 }

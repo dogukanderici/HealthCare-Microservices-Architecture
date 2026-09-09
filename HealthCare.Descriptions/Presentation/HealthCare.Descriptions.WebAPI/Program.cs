@@ -1,5 +1,6 @@
 using HealthCare.Descriptions.Application.Features.Mappings;
 using HealthCare.Descriptions.Configuration.Extentions;
+using HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -38,6 +39,9 @@ builder.Services.AddMediatorRegistration();
 
 // Service Registration
 builder.Services.AddServiceRegistration();
+
+// Controller Response Configuration
+builder.Services.AddScoped(typeof(IControllerHelper<>), typeof(ControllerHelper<>));
 
 builder.Services.AddSwaggerGen(options =>
 {
