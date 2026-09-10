@@ -30,11 +30,11 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Cities
             Expression<Func<City, bool>> filter = x => x.Id == id;
             options.filter = filter;
 
-            City result = await _repository.GetByIdAsync(options);
+            City existedData = await _repository.GetByIdAsync(options);
 
-            if (result != null)
+            if (existedData != null)
             {
-                return InternalServiceResponse<City>.Success(result);
+                return InternalServiceResponse<City>.Success(existedData);
             }
 
             return InternalServiceResponse<City>.Failure();

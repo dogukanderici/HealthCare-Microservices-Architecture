@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Domain.Entities
 {
-    public class ServiceType : IEntity
+    public class ServicingType : IEntity
     {
         [Key]
         [Column("Id")]

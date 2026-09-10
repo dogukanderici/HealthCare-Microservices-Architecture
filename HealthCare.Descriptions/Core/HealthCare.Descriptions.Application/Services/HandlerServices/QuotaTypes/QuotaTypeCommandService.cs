@@ -2,7 +2,7 @@
 using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
 using HealthCare.Descriptions.Application.Interfaces;
-using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Hospitals;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.QuotaTypes;
 using HealthCare.Descriptions.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,43 +11,41 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Application.Services.HandlerServices.Hospitals
+namespace HealthCare.Descriptions.Application.Services.HandlerServices.QuotaTypes
 {
-    public class HospitalCommandService : IHospitalCommandService
+    public class QuotaTypeCommandService : IQuotaTypeCommandService
     {
-        private readonly IRepository<Hospital> _repository;
-        private readonly IMapper _mapper;
+        private readonly IRepository<QuotaType> _repository;
 
-        public HospitalCommandService(IRepository<Hospital> repository, IMapper mapper)
+        public QuotaTypeCommandService(IRepository<QuotaType> repository)
         {
             _repository = repository;
-            _mapper = mapper;
         }
 
-        public async Task<InternalServiceResponse<Hospital>> GetDataForUpdateAsync(Guid id)
+        public async Task<InternalServiceResponse<QuotaType>> GetDataForUpdateAsync(Guid id)
         {
-            DBQueryOptions<Hospital> dBQueryOptions = new DBQueryOptions<Hospital>();
-            Expression<Func<Hospital, bool>> filter = x => x.Id == id;
+            DBQueryOptions<QuotaType> dBQueryOptions = new DBQueryOptions<QuotaType>();
+            Expression<Func<QuotaType, bool>> filter = x => x.Id == id;
             dBQueryOptions.filter = filter;
 
-            Hospital existedData = await _repository.GetByIdAsync(dBQueryOptions);
+            QuotaType existedData = await _repository.GetByIdAsync(dBQueryOptions);
 
             if (existedData == null)
             {
-                return InternalServiceResponse<Hospital>.Failure();
+                return InternalServiceResponse<QuotaType>.Failure();
             }
 
-            return InternalServiceResponse<Hospital>.Success(existedData);
+            return InternalServiceResponse<QuotaType>.Success(existedData);
         }
 
-        public async Task<InternalServiceResponse<Guid>> CreateAsync(Hospital entity)
+        public async Task<InternalServiceResponse<Guid>> CreateAsync(QuotaType entity)
         {
             Guid id = await _repository.CreateAsync(entity);
 
             return InternalServiceResponse<Guid>.Success(id);
         }
 
-        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(Hospital entity)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(QuotaType entity)
         {
             DateTimeOffset updatedDate = await _repository.UpdateAsync(entity);
 
@@ -56,7 +54,7 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Hospitals
 
         public async Task<InternalServiceResponse<bool>> RemoveAsync(Guid id)
         {
-            InternalServiceResponse<Hospital> existedData = await GetDataForUpdateAsync(id);
+            InternalServiceResponse<QuotaType> existedData = await GetDataForUpdateAsync(id);
 
             if (existedData.Data != null)
             {

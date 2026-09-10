@@ -33,6 +33,6 @@ namespace HealthCare.Descriptions.Domain.Entities
         public Hospital Hospital { get; set; }
 
         [ForeignKey(nameof(ServiceId))]
-        public ServiceType ServiceType { get; set; }
+        public ServicingType ServiceType { get; set; }
     }
 }

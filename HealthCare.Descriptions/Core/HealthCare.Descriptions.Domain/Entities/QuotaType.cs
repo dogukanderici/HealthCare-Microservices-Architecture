@@ -24,6 +24,7 @@ namespace HealthCare.Descriptions.Domain.Entities
         // QuotaType Property
 
         public string QuotaTypeName { get; set; }
+        public string QuotaTypeCode { get; set; }
 
         // Relations
 

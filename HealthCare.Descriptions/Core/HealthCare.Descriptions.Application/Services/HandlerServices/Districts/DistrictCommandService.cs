@@ -32,6 +32,11 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Districts
 
             District existedData = await _repository.GetByIdAsync(options);
 
+            if (existedData == null)
+            {
+                return InternalServiceResponse<District>.Failure();
+            }
+
             return InternalServiceResponse<District>.Success(existedData);
         }
 

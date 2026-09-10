@@ -34,7 +34,7 @@ namespace HealthCare.Descriptions.Persistence.DBContexts
         public DbSet<HospitalPoliclinic> HospitalPoliclinics { get; set; }
         public DbSet<QuotaType> QuotaTypes { get; set; }
         public DbSet<HospitalPoliclinicQuota> HospitalPoliclinicQuotas { get; set; }
-        public DbSet<ServiceType> ServiceTypes { get; set; }
+        public DbSet<ServicingType> ServicingTypes { get; set; }
         public DbSet<HospitalService> HospitalServices { get; set; }
     }
 }

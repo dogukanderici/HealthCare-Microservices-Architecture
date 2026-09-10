@@ -30,9 +30,14 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Appointme
 
             options.filter = filter;
 
-            AppointmentStatus result = await _repository.GetByIdAsync(options);
+            AppointmentStatus existedData = await _repository.GetByIdAsync(options);
 
-            return InternalServiceResponse<AppointmentStatus>.Success(result);
+            if (existedData == null)
+            {
+                return InternalServiceResponse<AppointmentStatus>.Failure();
+            }
+
+            return InternalServiceResponse<AppointmentStatus>.Success(existedData);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(AppointmentStatus entity)

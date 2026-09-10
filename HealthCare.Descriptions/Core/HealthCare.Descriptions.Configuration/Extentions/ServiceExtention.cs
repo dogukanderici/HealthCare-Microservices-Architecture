@@ -4,11 +4,15 @@ using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Cities;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Districts;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Hospitals;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Policlinics;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.QuotaTypes;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.ServiceType;
 using HealthCare.Descriptions.Application.Services.HandlerServices.AppointmentStatuses;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Cities;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Districts;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Hospitals;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Policlinics;
+using HealthCare.Descriptions.Application.Services.HandlerServices.QuotaTypes;
+using HealthCare.Descriptions.Application.Services.HandlerServices.ServiceTypes;
 using HealthCare.Descriptions.Persistence.Services.CurrentUserService;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,6 +38,12 @@ namespace HealthCare.Descriptions.Configuration.Extentions
 
             services.AddScoped(typeof(IPoliclinicQueryService), typeof(PoliclinicQueryService));
             services.AddScoped(typeof(IPoliclinicCommandService), typeof(PoliclinicCommandService));
+
+            services.AddScoped(typeof(IQuotaTypeQueryService), typeof(QuotaTypeQueryService));
+            services.AddScoped(typeof(IQuotaTypeCommandService), typeof(QuotaTypeCommandService));
+
+            services.AddScoped(typeof(IServiceTypeQueryService), typeof(ServiceTypeQueryService));
+            services.AddScoped(typeof(IServiceTypeCommandService), typeof(ServiceTypeCommandService));
 
             return services;
         }
