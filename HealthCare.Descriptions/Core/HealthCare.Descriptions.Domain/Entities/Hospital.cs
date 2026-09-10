@@ -23,7 +23,7 @@ namespace HealthCare.Descriptions.Domain.Entities
 
         // Hospital Property
 
-        public int HospitalCode { get; set; }
+        public string HospitalCode { get; set; }
         public string HospitalName { get; set; }
         public Guid HospitalCity { get; set; }
         public Guid HospitalDistrict { get; set; }

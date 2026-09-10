@@ -23,7 +23,7 @@ namespace HealthCare.Descriptions.Domain.Entities
 
         // Policlinic Property
 
-        public int PoliclinicCode { get; set; }
+        public string PoliclinicCode { get; set; }
         public string PoliclinicName { get; set; }
         public List<HospitalPoliclinic> HospitalPoliclinic { get; set; }
     }

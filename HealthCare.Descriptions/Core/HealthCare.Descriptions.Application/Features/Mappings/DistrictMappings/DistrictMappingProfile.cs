@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HealthCare.Descriptions.Application.Features.Mediators.Districts.Commands;
 using HealthCare.Descriptions.Application.Features.Mediators.Districts.Results;
+using HealthCare.Descriptions.Application.Features.Mediators.Districts.Results.Shared;
 using HealthCare.Descriptions.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,9 @@ namespace HealthCare.Descriptions.Application.Features.Mappings.DistrictMappings
             CreateMap<District, CreateDistrictCommand>().ReverseMap();
             CreateMap<District, UpdateDistrictCommand>().ReverseMap();
             CreateMap<District, RemoveDistrictCommand>().ReverseMap();
+
+            //For Relations
+            CreateMap<District, DistrictSharedResult>().ReverseMap();
         }
     }
 }
