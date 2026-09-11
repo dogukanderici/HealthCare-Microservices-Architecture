@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Commands;
 using HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Results;
+using HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Results.Shared;
 using HealthCare.Descriptions.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,9 @@ namespace HealthCare.Descriptions.Application.Features.Mappings.PoliclinicMappin
             CreateMap<Policlinic, CreatePoliclinicCommand>().ReverseMap();
             CreateMap<Policlinic, UpdatePoliclinicCommand>().ReverseMap();
             CreateMap<Policlinic, RemovePoliclinicCommand>().ReverseMap();
+
+            //For Relations
+            CreateMap<Policlinic, PoliclinicSharedResult>().ReverseMap();
         }
     }
 }
