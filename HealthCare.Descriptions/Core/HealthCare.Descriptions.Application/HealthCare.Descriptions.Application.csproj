@@ -25,10 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Validations\Cities\" />
-    <Folder Include="Features\Validations\Districts\" />
-    <Folder Include="Features\Validations\Hospitals\" />
-    <Folder Include="Features\Validations\Policlinics\" />
+    <Folder Include="Features\Validations\HospitalPoliclinics\" />
+    <Folder Include="Features\Validations\HospitalPoliclinicQuotas\" />
   </ItemGroup>
 
 </Project>

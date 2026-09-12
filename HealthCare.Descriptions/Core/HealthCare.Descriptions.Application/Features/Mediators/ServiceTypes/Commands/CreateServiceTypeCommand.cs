@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.ServiceTypes.Commands
 {
-    public class CreateServiceTypeCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
+    public class CreateServiceTypeCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest, IValidationRequest
     {
         public string ServiceCode { get; set; }
         public string ServiceName { get; set; }

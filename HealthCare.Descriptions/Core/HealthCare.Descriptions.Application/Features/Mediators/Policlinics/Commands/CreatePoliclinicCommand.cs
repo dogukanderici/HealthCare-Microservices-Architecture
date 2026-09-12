@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Commands
 {
-    public class CreatePoliclinicCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
+    public class CreatePoliclinicCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest, IValidationRequest
     {
         public string PoliclinicCode { get; set; }
         public string PoliclinicName { get; set; }

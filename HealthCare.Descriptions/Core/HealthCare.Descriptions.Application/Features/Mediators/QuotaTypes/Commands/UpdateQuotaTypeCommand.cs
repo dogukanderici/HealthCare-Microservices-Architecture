@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.QuotaTypes.Commands
 {
-    public class UpdateQuotaTypeCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest
+    public class UpdateQuotaTypeCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest, IValidationRequest
     {
         public Guid Id { get; set; }
         public string QuotaTypeCode { get; set; }

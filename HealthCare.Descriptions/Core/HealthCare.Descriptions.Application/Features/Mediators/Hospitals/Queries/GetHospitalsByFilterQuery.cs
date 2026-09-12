@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Features.Mediators.Hospitals.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.Hospitals.Queries
 {
-    public class GetHospitalsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetHospitalsByFilterQueryResult>>>
+    public class GetHospitalsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetHospitalsByFilterQueryResult>>>, IValidationRequest
     {
         public Guid? CityId { get; set; }
         public Guid? DistrictId { get; set; }

@@ -46,6 +46,8 @@ namespace HealthCare.Descriptions.Application.Behaviors
                     var response = TResponse.WithValidationErrors(failures);
 
                     return (TResponse)response;
+
+                    // TODO - Global Exception Middleware ile throw yapısına güncellenecek.
                 }
             }
 

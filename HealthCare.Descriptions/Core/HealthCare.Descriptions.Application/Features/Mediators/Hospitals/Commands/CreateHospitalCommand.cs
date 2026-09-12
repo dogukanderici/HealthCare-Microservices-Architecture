@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.Hospitals.Commands
 {
-    public class CreateHospitalCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
+    public class CreateHospitalCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest, IValidationRequest
     {
         public string HospitalCode { get; set; }
         public string HospitalName { get; set; }

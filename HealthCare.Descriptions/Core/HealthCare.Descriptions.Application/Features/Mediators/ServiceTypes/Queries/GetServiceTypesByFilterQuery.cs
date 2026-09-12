@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Features.Mediators.ServiceTypes.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.ServiceTypes.Queries
 {
-    public class GetServiceTypesByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetServiceTypesByFilterQueryResult>>>
+    public class GetServiceTypesByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetServiceTypesByFilterQueryResult>>>, IValidationRequest
     {
         public string? ServiceCode { get; set; }
         public string? ServiceName { get; set; }

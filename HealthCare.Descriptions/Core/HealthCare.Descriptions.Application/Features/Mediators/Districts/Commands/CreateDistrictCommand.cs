@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.Districts.Commands
 {
-    public class CreateDistrictCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
+    public class CreateDistrictCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest, IValidationRequest
     {
         public Guid CityId { get; set; }
         public int Plate { get; set; }
