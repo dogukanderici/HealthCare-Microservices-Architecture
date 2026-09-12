@@ -1,6 +1,9 @@
+using FluentValidation;
 using HealthCare.Descriptions.Application.Features.Mappings;
+using HealthCare.Descriptions.Application.Features.Validations;
 using HealthCare.Descriptions.Configuration.Extentions;
 using HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers;
+using HealthCare.Descriptions.WebAPI.Common.Helpers.ValidationHelper;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -42,12 +45,15 @@ builder.Services.AddServiceRegistration();
 
 // Controller Response Configuration
 builder.Services.AddScoped(typeof(IControllerHelper<>), typeof(ControllerHelper<>));
+builder.Services.AddScoped(typeof(IValidationHelper<>), typeof(ValidationHelper<>));
+
+builder.Services.AddValidatorsFromAssembly(typeof(ValidatorAssemblyMarker).Assembly);
 
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "Dogukan",
+        Title = "Description Servcice",
         Version = "Version 1.0.0"
     });
 

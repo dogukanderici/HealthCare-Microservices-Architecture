@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="16.2.0" />
+    <PackageReference Include="FluentValidation" Version="12.1.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="MediatR" Version="14.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
@@ -20,6 +22,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HealthCare.Descriptions.Domain\HealthCare.Descriptions.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Validations\Cities\" />
+    <Folder Include="Features\Validations\Districts\" />
+    <Folder Include="Features\Validations\Hospitals\" />
+    <Folder Include="Features\Validations\Policlinics\" />
   </ItemGroup>
 
 </Project>

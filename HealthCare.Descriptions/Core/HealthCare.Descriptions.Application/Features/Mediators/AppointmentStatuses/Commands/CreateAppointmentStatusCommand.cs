@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Commands
 {
-    public class CreateAppointmentStatusCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
+    public class CreateAppointmentStatusCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest, IValidationRequest
     {
         public string StatusName { get; set; }
         public bool IsAvailable { get; set; }

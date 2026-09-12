@@ -6,7 +6,7 @@ namespace HealthCare.Descriptions.WebAPI.Common.Wrappers.Responses
     {
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
-        public  DateTimeOffset TimeStamp { get; private set; }
+        public DateTimeOffset TimeStamp { get; private set; }
 
         [JsonProperty]
         public T Data { get; private set; }
@@ -32,7 +32,7 @@ namespace HealthCare.Descriptions.WebAPI.Common.Wrappers.Responses
         {
             return new APIResponse<T>
             {
-                IsSuccess = true,
+                IsSuccess = false,
                 Message = message,
                 TimeStamp = DateTimeOffset.UtcNow,
                 Data = default

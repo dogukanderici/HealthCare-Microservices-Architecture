@@ -1,4 +1,5 @@
 ﻿using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.WebAPI.Common.Helpers.ValidationHelper;
 using HealthCare.Descriptions.WebAPI.Common.Wrappers.Responses;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,10 +11,12 @@ namespace HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers
     public class ControllerHelper<TController> : IControllerHelper<TController>
     {
         private ILogger<ControllerHelper<TController>> _logger;
+        private readonly IValidationHelper<TController> _validationHelper;
 
-        public ControllerHelper(ILogger<ControllerHelper<TController>> logger)
+        public ControllerHelper(ILogger<ControllerHelper<TController>> logger, IValidationHelper<TController> validationHelper)
         {
             _logger = logger;
+            _validationHelper = validationHelper;
         }
 
         public async Task<IActionResult> ExecuteAsync<TData>(Func<Task<InternalHandlerResponse<TData>>> action, string actionName)
@@ -27,7 +30,7 @@ namespace HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers
 
                     if (handlerResponse.ValidationErrors.Any())
                     {
-                        // TODO - ValidationHelper ile validasyon hataları döndürülecek.
+                        return _validationHelper.ExecuteValidationErrors(handlerResponse.ValidationErrors, typeof(TController).Name, actionName);
                     }
 
                     _logger.LogError(LogMessageTemplate,

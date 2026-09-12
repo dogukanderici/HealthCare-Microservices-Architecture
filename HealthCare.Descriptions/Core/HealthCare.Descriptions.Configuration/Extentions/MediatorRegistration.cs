@@ -18,9 +18,10 @@ namespace HealthCare.Descriptions.Configuration.Extentions
         {
             services.AddMediatR(cfg =>
             {
+                cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
 
-                cfg.RegisterServicesFromAssembly(typeof(CreateAppointmentStatusCommandHandler).Assembly);
+                cfg.RegisterServicesFromAssembly(typeof(MediatorAssemblyMarker).Assembly);
             });
 
 

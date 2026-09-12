@@ -2,6 +2,7 @@
 using HealthCare.Descriptions.Application.Common.Wrappers;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Commands;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.Application.Interfaces;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.AppointmentStatutes;
 using HealthCare.Descriptions.Domain.Entities;
 using MediatR;

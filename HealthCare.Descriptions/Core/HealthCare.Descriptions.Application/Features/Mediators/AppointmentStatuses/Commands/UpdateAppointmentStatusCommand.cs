@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Commands
 {
-    public class UpdateAppointmentStatusCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest
+    public class UpdateAppointmentStatusCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest, IValidationRequest
     {
         public Guid Id { get; set; }
         public string StatusName { get; set; }

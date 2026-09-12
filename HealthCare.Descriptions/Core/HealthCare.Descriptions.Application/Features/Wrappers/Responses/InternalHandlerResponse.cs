@@ -10,16 +10,14 @@ using JsonConstructorAttribute = System.Text.Json.Serialization.JsonConstructorA
 
 namespace HealthCare.Descriptions.Application.Features.Wrappers.Responses
 {
-    public class InternalHandlerResponse<T> : IInternalHandlerResponse
+    public class InternalHandlerResponse<T> : IInternalHandlerResponse, IValidationResult
     {
         public bool IsSuccess { get; set; }
         public string InternalMessage { get; set; }
 
         [JsonProperty]
         public T? Data { get; private set; }
-
         public List<string>? ValidationErrors { get; set; }
-
 
         [JsonConstructor]
         private InternalHandlerResponse()
@@ -43,6 +41,17 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Responses
             {
                 IsSuccess = false,
                 InternalMessage = message,
+                Data = default
+            };
+        }
+
+        public static IValidationResult WithValidationErrors(List<string> errors)
+        {
+            return new InternalHandlerResponse<T>
+            {
+                IsSuccess = false,
+                InternalMessage = "Validation Error",
+                ValidationErrors = errors,
                 Data = default
             };
         }
