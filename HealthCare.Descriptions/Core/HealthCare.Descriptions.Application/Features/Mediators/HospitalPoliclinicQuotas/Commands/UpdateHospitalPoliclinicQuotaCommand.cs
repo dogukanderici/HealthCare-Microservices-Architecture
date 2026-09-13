@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.HospitalPoliclinicQuotas.Commands
 {
-    public class UpdateHospitalPoliclinicQuotaCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest
+    public class UpdateHospitalPoliclinicQuotaCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest, IValidationRequest
     {
         public Guid Id { get; set; }
         public Guid HospitalPoliclinicId { get; set; }

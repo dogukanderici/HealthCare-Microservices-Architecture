@@ -25,8 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Validations\HospitalPoliclinics\" />
-    <Folder Include="Features\Validations\HospitalPoliclinicQuotas\" />
+    <Folder Include="Features\BusinessRules\HospitalPoliclinicQuotas\" />
+    <Folder Include="Features\BusinessRules\HospitalPoliclinics\" />
+    <Folder Include="Features\BusinessRules\ServiceTypes\" />
+    <Folder Include="Features\BusinessRules\QuotaTypes\" />
+    <Folder Include="Features\BusinessRules\Policlinics\" />
   </ItemGroup>
 
 </Project>

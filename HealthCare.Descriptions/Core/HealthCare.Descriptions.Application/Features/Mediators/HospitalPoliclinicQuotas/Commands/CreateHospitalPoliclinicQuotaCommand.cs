@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.HospitalPoliclinicQuotas.Commands
 {
-    public class CreateHospitalPoliclinicQuotaCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
+    public class CreateHospitalPoliclinicQuotaCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest, IValidationRequest
     {
         public Guid HospitalPoliclinicId { get; set; }
         public Guid QuotaTypeId { get; set; }

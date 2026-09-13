@@ -43,6 +43,9 @@ builder.Services.AddMediatorRegistration();
 // Service Registration
 builder.Services.AddServiceRegistration();
 
+// Business Rule Registration
+builder.Services.AddBusinessRules();
+
 // Controller Response Configuration
 builder.Services.AddScoped(typeof(IControllerHelper<>), typeof(ControllerHelper<>));
 builder.Services.AddScoped(typeof(IValidationHelper<>), typeof(ValidationHelper<>));

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.AppointmentStatuses;
 using HealthCare.Descriptions.Application.Interfaces;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.AppointmentStatutes;
 using HealthCare.Descriptions.Domain.Entities;
@@ -16,10 +17,12 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Appointme
     public class AppointmentStatusCommandService : IAppointmentStatusCommandService
     {
         private readonly IRepository<AppointmentStatus> _repository;
+        private readonly IAppointmentStatusPolicy _policy;
 
-        public AppointmentStatusCommandService(IRepository<AppointmentStatus> repository)
+        public AppointmentStatusCommandService(IRepository<AppointmentStatus> repository, IAppointmentStatusPolicy policy)
         {
             _repository = repository;
+            _policy = policy;
         }
 
         public async Task<InternalServiceResponse<AppointmentStatus>> GetDataForUpdateAsync(Guid id)
@@ -42,6 +45,13 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Appointme
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(AppointmentStatus entity)
         {
+            IInternalPolicyResponse policyResponse = await _policy.ExecuteAllRulesAsync(entity);
+
+            if (!policyResponse.IsSuccess)
+            {
+                InternalServiceResponse<Guid>.Failure(string.Join(",", policyResponse?.BusinessRuleErrors?.ToString()));
+            }
+
             Guid createdId = await _repository.CreateAsync(entity);
 
             return InternalServiceResponse<Guid>.Success(createdId);
