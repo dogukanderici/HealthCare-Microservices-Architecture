@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Helpers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Cities;
 using HealthCare.Descriptions.Domain.Entities;
@@ -12,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.BusinessRules.Cities
 {
-    public class CityPolicy : PolicyRule<City>, ICityPolicy
+    public class CityCreatePolicy : PolicyRule<City>, ICityCreatePolicy
     {
         private readonly ICityQueryService _queryService;
 
-        public CityPolicy(ICityQueryService queryService)
+        public CityCreatePolicy(ICityQueryService queryService)
         {
             _queryService = queryService;
         }
@@ -39,18 +40,14 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Cities
 
         public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(City entity)
         {
-            List<string> errorMessages = new List<string>();
-
-            InternalPolicyResponse dataCount = await CountExistingDataAsync(entity);
-
-            if (dataCount.IsSuccess)
+            // Çalıştırılacak iş kuralları metotları liste içine eklenir.
+            // Hangi metotta hata alınırsa deva edilmez ve alınan hata döndürülür.
+            PolicyResponseHelper createRules = new PolicyResponseHelper
             {
-                return InternalPolicyResponse.Success();
-            }
+                ()=>CountExistingDataAsync(entity)
+            };
 
-            errorMessages.AddRange(dataCount.BusinessRuleError);
-
-            return InternalPolicyResponse.Failure(errorMessages);
+            return await createRules.ToPolicyResponseAsync();
         }
     }
 }

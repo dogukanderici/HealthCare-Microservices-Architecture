@@ -15,10 +15,10 @@ namespace HealthCare.Descriptions.Configuration.Extentions
     {
         public static IServiceCollection AddBusinessRules(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IAppointmentStatusPolicy), typeof(AppointmentStatusCreatePolicy));
-            services.AddScoped(typeof(ICityPolicy), typeof(CityPolicy));
-            services.AddScoped(typeof(IDistrictPolicy), typeof(DistrictPolicy));
-            services.AddScoped(typeof(IHospitalPolicy), typeof(HospitalPolicy));
+            services.AddScoped(typeof(IAppointmentStatusCreatePolicy), typeof(AppointmentStatusCreatePolicy));
+            services.AddScoped(typeof(ICityCreatePolicy), typeof(CityCreatePolicy));
+            services.AddScoped(typeof(IDistrictCreatePolicy), typeof(DistrictCreatePolicy));
+            services.AddScoped(typeof(IHospitalCreatePolicy), typeof(HospitalCreatePolicy));
 
             return services;
         }

@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Application.Features.BusinessRules.Hospitals
+namespace HealthCare.Descriptions.Application.Features.BusinessRules.Districts
 {
-    public interface IHospitalPolicy : IPolicyRule<Hospital>
+    public interface IDistrictUpdatePolicy : IPolicyRule<District>
     {
     }
 }

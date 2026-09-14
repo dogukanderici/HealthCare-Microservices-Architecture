@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.BusinessRules.AppointmentStatuses
 {
-    public interface IAppointmentStatusPolicy : IPolicyRule<AppointmentStatus>
+    public interface IAppointmentStatusUpdatePolicy : IPolicyRule<AppointmentStatus>
     {
-        // IAppointmentStatusPolicy _appointmentStatusPolicy; ile çağrılınca ExecuteAllRulesAsync() kullanmak için. Özel metotlar private olarak class'a yazılabilir.
     }
 }

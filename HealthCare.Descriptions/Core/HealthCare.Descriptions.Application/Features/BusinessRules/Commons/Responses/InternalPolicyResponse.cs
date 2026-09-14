@@ -12,7 +12,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Res
     {
         public bool IsSuccess { get; set; }
         public string? BusinessRuleError { get; set; }
-        public List<string>? BusinessRuleErrors { get; set; }
+        //public List<string>? BusinessRuleErrors { get; set; }
 
         [JsonConstructor]
         private InternalPolicyResponse()
@@ -24,25 +24,21 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Res
             new InternalPolicyResponse
             {
                 IsSuccess = isSucess,
-                BusinessRuleError = businessRuleError,
-                BusinessRuleErrors = default
+                BusinessRuleError = businessRuleError
             };
 
         public static InternalPolicyResponse Success() =>
             new InternalPolicyResponse
             {
                 IsSuccess = true,
-                BusinessRuleError = default,
-                BusinessRuleErrors = default
+                BusinessRuleError = default
             };
 
-        public static InternalPolicyResponse Failure(List<string>? businessRuleErrors) =>
+        public static InternalPolicyResponse Failure(string businessRuleError) =>
             new InternalPolicyResponse
             {
                 IsSuccess = false,
-                BusinessRuleError = default,
-                BusinessRuleErrors = businessRuleErrors
+                BusinessRuleError = businessRuleError
             };
-
     }
 }

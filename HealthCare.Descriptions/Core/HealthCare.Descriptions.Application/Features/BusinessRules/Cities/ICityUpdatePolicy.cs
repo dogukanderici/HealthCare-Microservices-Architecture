@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.BusinessRules.Cities
 {
-    public interface ICityPolicy : IPolicyRule<City>
+    public interface ICityUpdatePolicy : IPolicyRule<City>
     {
-        // ICityPolicy _cityPolicy; ile çağrılınca ExecuteAllRulesAsync() kullanmak için. Özel metotlar private olarak class'a yazılabilir.
     }
 }

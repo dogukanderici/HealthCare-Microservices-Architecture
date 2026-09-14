@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.BusinessRules.AppointmentStatuses
 {
-    public class AppointmentStatusCreatePolicy : PolicyRule<AppointmentStatus>, IAppointmentStatusPolicy
+    public class AppointmentStatusCreatePolicy : PolicyRule<AppointmentStatus>, IAppointmentStatusCreatePolicy
     {
         private readonly IAppointmentStatusQueryService _queryService;
 
@@ -26,7 +26,10 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Appointment
         protected override async Task<InternalPolicyResponse> CountExistingDataAsync(AppointmentStatus entity)
         {
             DBQueryOptions<AppointmentStatus> dBQueryOptions = new DBQueryOptions<AppointmentStatus>();
-            Expression<Func<AppointmentStatus, bool>> filter = x => x.StatusName == entity.StatusName;
+            Expression<Func<AppointmentStatus, bool>> filter = x => (
+                (x.StatusName == entity.StatusName) &&
+                (x.Id != entity.Id)
+            );
             dBQueryOptions.filter = filter;
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);
@@ -42,18 +45,14 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Appointment
 
         public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(AppointmentStatus entity)
         {
-            List<string> errorMessages = new List<string>();
-
-            InternalPolicyResponse dataCount = await CountExistingDataAsync(entity);
-
-            if (dataCount.IsSuccess)
+            // Çalıştırılacak iş kuralları metotları liste içine eklenir.
+            // Hangi metotta hata alınırsa deva edilmez ve alınan hata döndürülür.
+            PolicyResponseHelper createRules = new PolicyResponseHelper
             {
-                return InternalPolicyResponse.Success();
-            }
+                ()=>CountExistingDataAsync(entity)
+            };
 
-            errorMessages.AddRange(dataCount.BusinessRuleError);
-
-            return InternalPolicyResponse.Failure(errorMessages);
+            return await createRules.ToPolicyResponseAsync();
         }
     }
 }

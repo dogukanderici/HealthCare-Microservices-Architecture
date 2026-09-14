@@ -2,6 +2,7 @@
 using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.AppointmentStatuses;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
 using HealthCare.Descriptions.Application.Interfaces;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.AppointmentStatutes;
 using HealthCare.Descriptions.Domain.Entities;
@@ -17,12 +18,14 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Appointme
     public class AppointmentStatusCommandService : IAppointmentStatusCommandService
     {
         private readonly IRepository<AppointmentStatus> _repository;
-        private readonly IAppointmentStatusPolicy _policy;
+        private readonly IAppointmentStatusCreatePolicy _createPolicy;
+        private readonly IAppointmentStatusUpdatePolicy _updatePolicy;
 
-        public AppointmentStatusCommandService(IRepository<AppointmentStatus> repository, IAppointmentStatusPolicy policy)
+        public AppointmentStatusCommandService(IRepository<AppointmentStatus> repository, IAppointmentStatusCreatePolicy createPolicy, IAppointmentStatusUpdatePolicy updatePolicy)
         {
             _repository = repository;
-            _policy = policy;
+            _createPolicy = createPolicy;
+            _updatePolicy = updatePolicy;
         }
 
         public async Task<InternalServiceResponse<AppointmentStatus>> GetDataForUpdateAsync(Guid id)
@@ -45,11 +48,11 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Appointme
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(AppointmentStatus entity)
         {
-            IInternalPolicyResponse policyResponse = await _policy.ExecuteAllRulesAsync(entity);
+            InternalPolicyResponse policyResponse = await _createPolicy.ExecuteAllRulesAsync(entity);
 
             if (!policyResponse.IsSuccess)
             {
-                InternalServiceResponse<Guid>.Failure(string.Join(",", policyResponse?.BusinessRuleErrors?.ToString()));
+                InternalServiceResponse<Guid>.Failure(policyResponse?.BusinessRuleError ?? "");
             }
 
             Guid createdId = await _repository.CreateAsync(entity);
@@ -59,6 +62,13 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.Appointme
 
         public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(AppointmentStatus entity)
         {
+            InternalPolicyResponse policyResponse = await _updatePolicy.ExecuteAllRulesAsync(entity);
+
+            if (!policyResponse.IsSuccess)
+            {
+                return InternalServiceResponse<DateTimeOffset>.Failure(policyResponse?.BusinessRuleError ?? "");
+            }
+
             DateTimeOffset updatedDate = await _repository.UpdateAsync(entity);
 
             return InternalServiceResponse<DateTimeOffset>.Success(updatedDate);

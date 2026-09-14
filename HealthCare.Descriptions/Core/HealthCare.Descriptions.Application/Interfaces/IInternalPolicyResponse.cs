@@ -10,6 +10,6 @@ namespace HealthCare.Descriptions.Application.Interfaces
     {
         bool IsSuccess { get; set; }
         string? BusinessRuleError { get; set; }
-        List<string>? BusinessRuleErrors { get; set; }
+        //List<string>? BusinessRuleErrors { get; set; }
     }
 }

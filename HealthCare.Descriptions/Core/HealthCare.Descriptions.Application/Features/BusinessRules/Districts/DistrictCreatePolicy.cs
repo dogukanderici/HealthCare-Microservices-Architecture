@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Helpers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Districts;
 using HealthCare.Descriptions.Domain.Entities;
@@ -12,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.BusinessRules.Districts
 {
-    public class DistrictPolicy : PolicyRule<District>, IDistrictPolicy
+    public class DistrictCreatePolicy : PolicyRule<District>, IDistrictCreatePolicy
     {
         private readonly IDistrictQueryService _queryService;
 
-        public DistrictPolicy(IDistrictQueryService queryService)
+        public DistrictCreatePolicy(IDistrictQueryService queryService)
         {
             _queryService = queryService;
         }
@@ -43,18 +44,14 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Districts
 
         public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(District entity)
         {
-            List<string> errorMessages = new List<string>();
-
-            InternalPolicyResponse dataCount = await CountExistingDataAsync(entity);
-
-            if (dataCount.IsSuccess)
+            // Çalıştırılacak iş kuralları metotları liste içine eklenir.
+            // Hangi metotta hata alınırsa deva edilmez ve alınan hata döndürülür.
+            PolicyResponseHelper createRules = new PolicyResponseHelper
             {
-                return InternalPolicyResponse.Success();
-            }
+                () => CountExistingDataAsync(entity)
+            };
 
-            errorMessages.AddRange(dataCount.BusinessRuleError);
-
-            return InternalPolicyResponse.Failure(errorMessages);
+            return await createRules.ToPolicyResponseAsync();
         }
     }
 }

@@ -2,7 +2,7 @@
 using HealthCare.Descriptions.Application.Common.Wrappers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Helpers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
-using HealthCare.Descriptions.Application.Interfaces.HandlerServices.AppointmentStatutes;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Hospitals;
 using HealthCare.Descriptions.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -11,37 +11,38 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Application.Features.BusinessRules.AppointmentStatuses
+namespace HealthCare.Descriptions.Application.Features.BusinessRules.Hospitals
 {
-    public class AppointmentStatusUpdatePolicy : PolicyRule<AppointmentStatus>, IAppointmentStatusUpdatePolicy
+    public class HospitalUpdatePolicy : PolicyRule<Hospital>, IHospitalUpdatePolicy
     {
-        private readonly IAppointmentStatusQueryService _queryService;
-        private readonly IAppointmentStatusCreatePolicy _createPolicy;
+        private readonly IHospitalQueryService _queryService;
+        private readonly IHospitalCreatePolicy _createPolicy;
 
-        public AppointmentStatusUpdatePolicy(IAppointmentStatusQueryService queryService, IAppointmentStatusCreatePolicy createPolicy)
+        public HospitalUpdatePolicy(IHospitalQueryService queryService, IHospitalCreatePolicy createPolicy)
         {
             _queryService = queryService;
             _createPolicy = createPolicy;
         }
 
-        protected override async Task<InternalPolicyResponse> CountExistingDataAsync(AppointmentStatus entity)
+        protected override async Task<InternalPolicyResponse> CountExistingDataAsync(Hospital entity)
         {
-            DBQueryOptions<AppointmentStatus> dBQueryOptions = new DBQueryOptions<AppointmentStatus>();
-            Expression<Func<AppointmentStatus, bool>> filter = x => x.StatusName == entity.StatusName;
+            DBQueryOptions<Hospital> dBQueryOptions = new DBQueryOptions<Hospital>();
+            Expression<Func<Hospital, bool>> filter = x => (x.Id == entity.Id);
             dBQueryOptions.filter = filter;
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);
 
-            if (serviceResponse.Data != 1)
+            if (serviceResponse.Data < 1)
             {
-                return InternalPolicyResponse.Response(false, "Gönderilen Id'ye Ait Randevu Durumu Verisi Bulunamadı!");
+                return InternalPolicyResponse.Response(false, "Güncellenecek Id'ye Ait Hastane Bilgisi Bulunamadı!");
             }
 
             return InternalPolicyResponse.Success();
         }
 
-        public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(AppointmentStatus entity)
+        public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(Hospital entity)
         {
+
             // Çalıştırılacak iş kuralları metotları liste içine eklenir.
             // İlk önce Create kuralları çalıştırılır. Update kuralları için kendi içinde öncelik verilir.
             // Hangi metotta hata alınırsa deva edilmez ve alınan hata döndürülür.
