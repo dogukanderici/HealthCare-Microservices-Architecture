@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Extensions;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Helpers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Cities;
@@ -30,12 +31,8 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Cities
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);
 
-            if (serviceResponse.Data > 0)
-            {
-                return InternalPolicyResponse.Response(false, "Aynı Şehirden Birden Fazla Olamaz!");
-            }
-
-            return InternalPolicyResponse.Success();
+            // Extension metota kontrol kuralı ve kontrolden geçmemesi halinde dönecek mesaj gönderilir.
+            return serviceResponse.ToPolicyResponse(x => x > 0, "Aynı Şehirden Birden Fazla Olamaz!");
         }
 
         public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(City entity)

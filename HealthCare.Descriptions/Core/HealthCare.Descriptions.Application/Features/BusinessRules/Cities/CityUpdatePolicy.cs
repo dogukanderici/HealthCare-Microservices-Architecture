@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Extensions;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Helpers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Cities;
@@ -32,12 +33,8 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Cities
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);
 
-            if (serviceResponse.Data != 1)
-            {
-                return InternalPolicyResponse.Response(false, "Güncellenecek Id'ye Ait Şehir Bilgisi Bulunamadı!");
-            }
-
-            return InternalPolicyResponse.Success();
+            // Extension metota kontrol kuralı ve kontrolden geçmemesi halinde dönecek mesaj gönderilir.
+            return serviceResponse.ToPolicyResponse(x => x != 1, "Güncellenecek Id'ye Ait Şehir Bilgisi Bulunamadı!");
         }
 
         public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(City entity)

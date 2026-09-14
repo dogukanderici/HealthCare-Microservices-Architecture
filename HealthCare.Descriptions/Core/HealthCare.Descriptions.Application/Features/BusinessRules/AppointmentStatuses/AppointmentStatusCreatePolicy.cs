@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Extensions;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Helpers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.AppointmentStatutes;
@@ -34,13 +35,8 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Appointment
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);
 
-            if (serviceResponse.Data > 0)
-            {
-                return InternalPolicyResponse.Response(false, "Aynı Randevu Durumundan Birden Fazla Olamaz!");
-            }
-
-            return InternalPolicyResponse.Success();
-
+            // Extension metota kontrol kuralı ve kontrolden geçmemesi halinde dönecek mesaj gönderilir.
+            return serviceResponse.ToPolicyResponse(x => x > 0, "Aynı Randevu Durumundan Birden Fazla Olamaz!");
         }
 
         public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(AppointmentStatus entity)

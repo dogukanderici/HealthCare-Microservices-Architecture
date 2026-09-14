@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Extensions;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Helpers;
 using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Districts;
@@ -32,12 +33,8 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Districts
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);
 
-            if (serviceResponse.Data < 1)
-            {
-                return InternalPolicyResponse.Response(false, "Güncellenecek İlçeye Ait Id Bilgisi Bulunamadı!");
-            }
-
-            return InternalPolicyResponse.Success();
+            // Extension metota kontrol kuralı ve kontrolden geçmemesi halinde dönecek mesaj gönderilir.
+            return serviceResponse.ToPolicyResponse(x => x < 1, "Güncellenecek İlçeye Ait Id Bilgisi Bulunamadı!");
         }
 
         public override async Task<InternalPolicyResponse> ExecuteAllRulesAsync(District entity)
