@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
+using HealthCare.Descriptions.Application.Features.BusinessRules.QuotaTypes;
 using HealthCare.Descriptions.Application.Interfaces;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.QuotaTypes;
 using HealthCare.Descriptions.Domain.Entities;
@@ -16,10 +18,14 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.QuotaType
     public class QuotaTypeCommandService : IQuotaTypeCommandService
     {
         private readonly IRepository<QuotaType> _repository;
+        private readonly IQuotaTypeCreatePolicy _createPolicy;
+        private readonly IQuotaTypeUpdatePolicy _updatePolicy;
 
-        public QuotaTypeCommandService(IRepository<QuotaType> repository)
+        public QuotaTypeCommandService(IRepository<QuotaType> repository, IQuotaTypeCreatePolicy createPolicy, IQuotaTypeUpdatePolicy updatePolicy)
         {
             _repository = repository;
+            _createPolicy = createPolicy;
+            _updatePolicy = updatePolicy;
         }
 
         public async Task<InternalServiceResponse<QuotaType>> GetDataForUpdateAsync(Guid id)
@@ -40,6 +46,13 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.QuotaType
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(QuotaType entity)
         {
+            InternalPolicyResponse policyResult = await _createPolicy.ExecuteAllRulesAsync(entity);
+
+            if (!policyResult.IsSuccess)
+            {
+                return InternalServiceResponse<Guid>.Failure(policyResult.BusinessRuleError);
+            }
+
             Guid id = await _repository.CreateAsync(entity);
 
             return InternalServiceResponse<Guid>.Success(id);
@@ -47,6 +60,13 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.QuotaType
 
         public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(QuotaType entity)
         {
+            InternalPolicyResponse policyResult = await _updatePolicy.ExecuteAllRulesAsync(entity);
+
+            if (!policyResult.IsSuccess)
+            {
+                return InternalServiceResponse<DateTimeOffset>.Failure(policyResult.BusinessRuleError);
+            }
+
             DateTimeOffset updatedDate = await _repository.UpdateAsync(entity);
 
             return InternalServiceResponse<DateTimeOffset>.Success(updatedDate);

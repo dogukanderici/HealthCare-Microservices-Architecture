@@ -24,10 +24,4 @@
     <ProjectReference Include="..\HealthCare.Descriptions.Domain\HealthCare.Descriptions.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\BusinessRules\HospitalPoliclinicQuotas\" />
-    <Folder Include="Features\BusinessRules\HospitalPoliclinics\" />
-    <Folder Include="Features\BusinessRules\ServiceTypes\" />
-  </ItemGroup>
-
 </Project>

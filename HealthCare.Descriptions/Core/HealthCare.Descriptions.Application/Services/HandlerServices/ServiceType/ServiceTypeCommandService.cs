@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
+using HealthCare.Descriptions.Application.Features.BusinessRules.ServiceTypes;
 using HealthCare.Descriptions.Application.Interfaces;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.ServiceType;
 using HealthCare.Descriptions.Domain.Entities;
@@ -16,10 +18,14 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.ServiceTy
     public class ServiceTypeCommandService : IServiceTypeCommandService
     {
         private readonly IRepository<ServicingType> _repository;
+        private readonly IServiceTypeCreatePolicy _createPolicy;
+        private readonly IServiceTypeUpdatePolicy _updatePolicy;
 
-        public ServiceTypeCommandService(IRepository<ServicingType> repository)
+        public ServiceTypeCommandService(IRepository<ServicingType> repository, IServiceTypeCreatePolicy createPolicy, IServiceTypeUpdatePolicy updatePolicy)
         {
             _repository = repository;
+            _createPolicy = createPolicy;
+            _updatePolicy = updatePolicy;
         }
 
         public async Task<InternalServiceResponse<ServicingType>> GetDataForUpdateAsync(Guid id)
@@ -40,6 +46,13 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.ServiceTy
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(ServicingType entity)
         {
+            InternalPolicyResponse policyResult = await _createPolicy.ExecuteAllRulesAsync(entity);
+
+            if (!policyResult.IsSuccess)
+            {
+                return InternalServiceResponse<Guid>.Failure(policyResult.BusinessRuleError);
+            }
+
             Guid id = await _repository.CreateAsync(entity);
 
             return InternalServiceResponse<Guid>.Success(id);
@@ -47,6 +60,13 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.ServiceTy
 
         public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ServicingType entity)
         {
+            InternalPolicyResponse policyResult = await _updatePolicy.ExecuteAllRulesAsync(entity);
+
+            if (!policyResult.IsSuccess)
+            {
+                return InternalServiceResponse<DateTimeOffset>.Failure(policyResult.BusinessRuleError);
+            }
+
             DateTimeOffset updatedDate = await _repository.UpdateAsync(entity);
 
             return InternalServiceResponse<DateTimeOffset>.Success(updatedDate);
