@@ -16,7 +16,7 @@ namespace HealthCare.Descriptions.Application.Common.Wrappers
         public string ServiceMessage { get; set; }
 
         [JsonProperty]
-        public T Data { get; private set; }
+        public T Data { get; set; }
 
         [JsonConstructor]
         private InternalServiceResponse()
