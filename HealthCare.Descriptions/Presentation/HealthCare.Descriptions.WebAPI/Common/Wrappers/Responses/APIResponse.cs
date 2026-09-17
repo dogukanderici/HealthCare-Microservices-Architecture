@@ -11,20 +11,25 @@ namespace HealthCare.Descriptions.WebAPI.Common.Wrappers.Responses
         [JsonProperty]
         public T Data { get; private set; }
 
+        public string PagingToken { get; set; }
+        public bool IsLastPage { get; set; }
+
         [JsonConstructor]
         private APIResponse()
         {
 
         }
 
-        public static APIResponse<T> Success<T>(T data, string message = "Success")
+        public static APIResponse<T> Success<T>(T data, string message = "Success", string pagingToken = "", bool isLastPage = true)
         {
             return new APIResponse<T>
             {
                 IsSuccess = true,
                 Message = message,
                 TimeStamp = DateTimeOffset.UtcNow,
-                Data = data
+                Data = data,
+                PagingToken = pagingToken,
+                IsLastPage = isLastPage
             };
         }
 

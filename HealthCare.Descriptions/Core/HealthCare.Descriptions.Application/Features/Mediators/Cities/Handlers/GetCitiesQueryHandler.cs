@@ -33,8 +33,11 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
             Expression<Func<City, object>> orderBy = x => x.Plate;
             CursorTokenPayload<int, GetCitiesQueryHandler> tokenPayload = new CursorTokenPayload<int, GetCitiesQueryHandler>();
             bool isForward = true;
+            bool isLastPage = false;
+            string pagingToken = "";
 
-            dBQueryOptions.DataTakeNumber = 10;
+            // Son sayfada olup olunmadığını anlamak için N+1 taktiği uygulanır.
+            dBQueryOptions.DataTakeNumber = tokenPayload.TakenCount + 1;
 
             if (request.Token != null)
             {
@@ -62,8 +65,6 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
                     dBQueryOptions.filter = filter;
                     dBQueryOptions.sortingType = 0;
                 }
-
-                dBQueryOptions.DataTakeNumber = tokenData.TakenCount;
             }
             else
             {
@@ -80,17 +81,32 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
 
             tokenPayload.IsForward = isForward;
             tokenPayload.FirstData = serviceResult.Data.First().Plate;
-            tokenPayload.LastData = serviceResult.Data.Last().Plate;
-            tokenPayload.LastCreatedAt = serviceResult.Data.Last().CreatedAt;
 
-            string pagingToken = EncryptionHelper.EncryptToken(tokenPayload, "12345678abcdefgh87654321ABCDEFGH");
+            // Örneğin 10 veri almak istenirse 11 tane veri getir sorgusu yazılır. Eğer 11 veri dönerse en az bir sayfa daha veri var demektir.
+            // Eğer 10 veya daha az dönerse son sayfada olunduğu anlaşılır.
+            if (serviceResult.Data.Count > tokenPayload.TakenCount)
+            {
+                isLastPage = false;
+                List<GetCitiesQueryResult> dataList = serviceResult.Data.ToList();
+                dataList.RemoveAt(serviceResult.Data.Count - 1);
+                serviceResult.Data = dataList;
+
+                tokenPayload.LastData = serviceResult.Data.Last().Plate;
+                tokenPayload.LastCreatedAt = serviceResult.Data.Last().CreatedAt;
+
+                pagingToken = EncryptionHelper.EncryptToken(tokenPayload, "12345678abcdefgh87654321ABCDEFGH");
+            }
+            else
+            {
+                isLastPage = true;
+            }
 
             if (!isForward)
             {
                 serviceResult.Data = serviceResult.Data.Reverse().ToList();
             }
 
-            return serviceResult.ToHandlerResponse(pagingToken, true);
+            return serviceResult.ToHandlerResponse(pagingToken, isLastPage);
         }
     }
 }

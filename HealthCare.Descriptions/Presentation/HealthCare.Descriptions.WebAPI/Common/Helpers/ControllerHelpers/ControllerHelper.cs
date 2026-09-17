@@ -44,7 +44,8 @@ namespace HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers
                     typeof(TController).Name,
                     actionName);
 
-                return new OkObjectResult(APIResponse<TData>.Success(handlerResponse.Data));
+                return new OkObjectResult(APIResponse<TData>
+                    .Success(handlerResponse.Data, handlerResponse.InternalMessage, handlerResponse.PagingToken, handlerResponse.IsLastPage));
             }
             catch (Exception ex)
             {
