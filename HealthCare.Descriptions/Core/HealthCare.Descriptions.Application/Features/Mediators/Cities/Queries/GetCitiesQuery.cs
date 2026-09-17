@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Queries
 {
-    public class GetCitiesQuery : PagedQueryBase, IRequest<InternalHandlerResponse<IReadOnlyCollection<GetCitiesQueryResult>>>
+    public class GetCitiesQuery : IPagedQueryBase, IRequest<InternalHandlerResponse<IReadOnlyCollection<GetCitiesQueryResult>>>
     {
-        public string? PaginationToken { get; set; } = null;
+        public string? Token { get; set; } = null;
     }
 }

@@ -19,19 +19,24 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Responses
         public T? Data { get; private set; }
         public List<string>? ValidationErrors { get; set; }
 
+        public string? PagingToken { get; set; }
+        public bool? IsLastPage { get; set; }
+
         [JsonConstructor]
         private InternalHandlerResponse()
         {
 
         }
 
-        public static InternalHandlerResponse<T> Success(T data, string message = "Success")
+        public static InternalHandlerResponse<T> Success(T data, string message = "Success", string? pagingToken = "", bool? isLastPage = true)
         {
             return new InternalHandlerResponse<T>
             {
                 IsSuccess = true,
                 InternalMessage = message,
-                Data = data
+                Data = data,
+                PagingToken = pagingToken,
+                IsLastPage = isLastPage
             };
         }
 

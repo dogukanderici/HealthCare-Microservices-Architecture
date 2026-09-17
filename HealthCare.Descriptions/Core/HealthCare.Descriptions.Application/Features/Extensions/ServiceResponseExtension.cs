@@ -10,11 +10,11 @@ namespace HealthCare.Descriptions.Application.Features.Extensions
 {
     public static class ServiceResponseExtension
     {
-        public static InternalHandlerResponse<T> ToHandlerResponse<T>(this InternalServiceResponse<T> serviceResponse)
+        public static InternalHandlerResponse<T> ToHandlerResponse<T>(this InternalServiceResponse<T> serviceResponse, string? token = null, bool? isLast = true)
         {
             if (serviceResponse.IsSuccess)
             {
-                return InternalHandlerResponse<T>.Success(serviceResponse.Data);
+                return InternalHandlerResponse<T>.Success(serviceResponse.Data, "Sucess", token, isLast);
             }
 
             return InternalHandlerResponse<T>.Failure();

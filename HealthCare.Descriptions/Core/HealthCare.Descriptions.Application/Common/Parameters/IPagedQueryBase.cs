@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Common.Parameters
 {
-    public class PagedQueryBase
+    public interface IPagedQueryBase
     {
         public string? Token { get; set; }
-        public int TakeCount { get; set; } = 10;
     }
 }

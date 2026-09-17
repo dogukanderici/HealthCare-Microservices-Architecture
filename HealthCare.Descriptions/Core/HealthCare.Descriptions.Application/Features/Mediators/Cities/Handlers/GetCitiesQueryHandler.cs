@@ -31,14 +31,16 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
         {
             DBQueryOptions<City> dBQueryOptions = new DBQueryOptions<City>();
             Expression<Func<City, object>> orderBy = x => x.Plate;
+            CursorTokenPayload<int, GetCitiesQueryHandler> tokenPayload = new CursorTokenPayload<int, GetCitiesQueryHandler>();
             bool isForward = true;
 
             dBQueryOptions.DataTakeNumber = 10;
 
-            if (request.PaginationToken != null)
+            if (request.Token != null)
             {
                 // TODO - Secret Key appsetting'ten alınmalı.
-                CursorTokenPayload<int> tokenData = DecryptionHelper.DecryptToken<CursorTokenPayload<int>>(request.PaginationToken, "12345678abcdefgh87654321ABCDEFGH");
+                CursorTokenPayload<int, GetCitiesQueryHandler> tokenData =
+                    DecryptionHelper.DecryptToken<CursorTokenPayload<int, GetCitiesQueryHandler>>(request.Token, "12345678abcdefgh87654321ABCDEFGH");
 
                 isForward = tokenData.IsForward;
 
@@ -63,17 +65,32 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
 
                 dBQueryOptions.DataTakeNumber = tokenData.TakenCount;
             }
+            else
+            {
+                // Paging Token yoksa toplam veriyi bir kez olmak üzere bulur.
+                InternalServiceResponse<int> totalCount = await _cityQueryService.GetDataCountAsync();
+                tokenPayload.TotalCount = totalCount.Data;
+            }
 
             dBQueryOptions.orderBy = orderBy;
+            dBQueryOptions.sortingType = 0;
 
-            InternalServiceResponse<IReadOnlyCollection<GetCitiesQueryResult>> serviceResult = await _cityQueryService.GetDatasAsync<GetCitiesQueryResult>(dBQueryOptions);
+            InternalServiceResponse<IReadOnlyCollection<GetCitiesQueryResult>> serviceResult =
+                await _cityQueryService.GetDatasAsync<GetCitiesQueryResult>(dBQueryOptions);
+
+            tokenPayload.IsForward = isForward;
+            tokenPayload.FirstData = serviceResult.Data.First().Plate;
+            tokenPayload.LastData = serviceResult.Data.Last().Plate;
+            tokenPayload.LastCreatedAt = serviceResult.Data.Last().CreatedAt;
+
+            string pagingToken = EncryptionHelper.EncryptToken(tokenPayload, "12345678abcdefgh87654321ABCDEFGH");
 
             if (!isForward)
             {
                 serviceResult.Data = serviceResult.Data.Reverse().ToList();
             }
 
-            return ServiceResponseExtension.ToHandlerResponse(serviceResult);
+            return serviceResult.ToHandlerResponse(pagingToken, true);
         }
     }
 }
