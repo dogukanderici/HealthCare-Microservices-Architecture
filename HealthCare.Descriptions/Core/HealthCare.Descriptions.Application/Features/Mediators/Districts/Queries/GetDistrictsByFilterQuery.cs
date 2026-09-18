@@ -1,4 +1,5 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.Districts.Results;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Features.Mediators.Districts.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
@@ -11,9 +12,10 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.Districts.Queries
 {
-    public class GetDistrictsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetDistrictsByFilterQueryResult>>>, IValidationRequest
+    public class GetDistrictsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetDistrictsByFilterQueryResult>>>, IValidationRequest, IPagedQueryBase
     {
         public int? Plate { get; set; }
+        public string? Token { get; set; }
 
         [JsonConstructor]
         private GetDistrictsByFilterQuery()

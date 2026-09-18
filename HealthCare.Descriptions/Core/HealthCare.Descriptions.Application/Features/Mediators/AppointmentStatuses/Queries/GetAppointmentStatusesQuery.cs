@@ -1,4 +1,5 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Results;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
@@ -10,7 +11,8 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Queries
 {
-    public class GetAppointmentStatusesQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>>
+    public class GetAppointmentStatusesQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>>, IPagedQueryBase
     {
+        public string? Token { get; set; }
     }
 }

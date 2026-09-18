@@ -10,11 +10,15 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
     public static class TokenBasedPaginationHelper
     {
         public static async Task<InternalHandlerResponse<IReadOnlyCollection<TDto>>>
-            PaginationResult<T, THandler, TDto, TPropType>(TokenPayloadConfig<T, THandler, TDto, TPropType> config)
+            PaginationResultAsync<T, THandler, TDto, TPropType>(TokenPayloadConfig<T, THandler, TDto, TPropType> config, DBQueryOptions<T>? dBQueryOptions = null)
             where T : class, IEntity
             where THandler : class
         {
-            DBQueryOptions<T> dBQueryOptions = new DBQueryOptions<T>();
+            if (dBQueryOptions == null)
+            {
+                dBQueryOptions = new DBQueryOptions<T>();
+            }
+
             CursorTokenPayload<TPropType, THandler> tokenPayload = new CursorTokenPayload<TPropType, THandler>(); // Sonraki sayfa için gerekli bilgiler.
 
             if (string.IsNullOrEmpty(config.Token))

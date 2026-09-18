@@ -47,7 +47,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
                 }
             };
 
-            return await TokenBasedPaginationHelper.PaginationResult(config);
+            return await TokenBasedPaginationHelper.PaginationResultAsync(config);
         }
     }
 }
