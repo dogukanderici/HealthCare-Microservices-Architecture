@@ -17,7 +17,7 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Responses
 
         [JsonProperty]
         public T? Data { get; private set; }
-        public List<string>? ValidationErrors { get; set; }
+        public List<string>? ValidationErrors { get; set; } = [];
 
         public string PagingToken { get; set; }
         public bool IsLastPage { get; set; }

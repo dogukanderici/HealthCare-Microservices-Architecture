@@ -37,7 +37,7 @@ namespace HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers
                         typeof(TController).Name,
                         actionName);
 
-                    return new BadRequestObjectResult(APIResponse<TData>.Failure());
+                    return new BadRequestObjectResult(APIResponse<TData>.Failure(handlerResponse.InternalMessage));
                 }
 
                 _logger.LogInformation(LogMessageTemplate,

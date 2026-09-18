@@ -17,7 +17,7 @@ namespace HealthCare.Descriptions.Application.Features.Extensions
                 return InternalHandlerResponse<T>.Success(serviceResponse.Data, "Sucess", token, isLast);
             }
 
-            return InternalHandlerResponse<T>.Failure();
+            return InternalHandlerResponse<T>.Failure(serviceResponse.ServiceMessage);
         }
     }
 }
