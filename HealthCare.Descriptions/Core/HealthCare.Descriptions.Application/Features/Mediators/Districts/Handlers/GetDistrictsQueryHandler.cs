@@ -35,15 +35,15 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Districts.Handl
                 ];
             dBQueryOptions.includes = includes;
 
-            var config = new TokenPayloadConfig<District, GetDistrictsQueryHandler, GetDistrictsQueryResult, DateTimeOffset>
+            var config = new TokenPayloadConfig<District, GetDistrictsQueryHandler, GetDistrictsQueryResult, string>
             {
                 Token = request.Token,
 
                 OrderBy = x => x.DistrictName,
-                ForwardFilter = lastDate => x => x.CreatedAt > lastDate,
-                BackwardFilter = firstDate => x => x.CreatedAt < firstDate,
+                ForwardFilter = lastName => x => string.Compare(x.DistrictName, lastName) > 0,
+                BackwardFilter = firstName => x => string.Compare(x.DistrictName, firstName) < 0,
 
-                CursorSelector = x => x.CreatedAt,
+                CursorSelector = x => x.DistrictName,
                 CreatedAtSelector = x => x.CreatedAt,
 
                 GetTotalCountAsync = async () =>

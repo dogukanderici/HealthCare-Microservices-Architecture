@@ -27,15 +27,15 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>> Handle(GetAppointmentStatusesQuery request, CancellationToken cancellationToken)
         {
-            var config = new TokenPayloadConfig<AppointmentStatus, GetAppointmentStatusesQueryHandler, GetAppointmentStatusesResult, DateTimeOffset>
+            var config = new TokenPayloadConfig<AppointmentStatus, GetAppointmentStatusesQueryHandler, GetAppointmentStatusesResult, string>
             {
                 Token = request.Token,
 
                 OrderBy = x => x.StatusName,
-                ForwardFilter = lastCreatedDate => x => x.CreatedAt > lastCreatedDate,
-                BackwardFilter = firstCreatedDate => x => x.CreatedAt < firstCreatedDate,
+                ForwardFilter = lastName => x => string.Compare(x.StatusName, lastName) > 0,
+                BackwardFilter = firstName => x => string.Compare(x.StatusName, firstName) < 0,
 
-                CursorSelector = x => x.CreatedAt,
+                CursorSelector = x => x.StatusName,
                 CreatedAtSelector = x => x.CreatedAt,
 
                 GetTotalCountAsync = async () =>
