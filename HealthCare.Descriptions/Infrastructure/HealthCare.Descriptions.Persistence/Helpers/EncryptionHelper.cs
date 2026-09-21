@@ -1,19 +1,32 @@
-﻿using Newtonsoft.Json;
+﻿using HealthCare.Descriptions.Application.Common.Settings;
+using HealthCare.Descriptions.Application.Interfaces;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Application.Common.Helpers
+namespace HealthCare.Descriptions.Persistence.Helpers
 {
-    public static class EncryptionHelper
+    public class EncryptionHelper : IEncryptionHelper
     {
-        public static string EncryptToken<T>(T payload, string encryptionKey)
+        private readonly string _secretKey;
+        public EncryptionHelper(IOptions<CursorTokenSettings> options)
+        {
+            _secretKey = options.Value.SecretKey;
+        }
+
+        public string EncryptToken<T>(T payload)
         {
             // Gelen payload string'e çevrilir.
             string jsonString = JsonConvert.SerializeObject(payload);
 
             // Secret Key değeri byte array'e çevirilir.
             // AES-256 için 32 byte uzunluğunda key gerekir. Bu key 32 karakterden kısaysa PadRight() ile sona boşluk eklenir, uzun ise Substring() ile 32 karakteri alınır.
-            byte[] keyBytes = Encoding.UTF8.GetBytes(encryptionKey.PadRight(32).Substring(0, 32));
+            byte[] keyBytes = Encoding.UTF8.GetBytes(_secretKey.PadRight(32).Substring(0, 32));
 
             using Aes aes = Aes.Create();
             aes.Key = keyBytes;

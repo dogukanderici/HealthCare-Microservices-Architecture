@@ -1,4 +1,5 @@
 using FluentValidation;
+using HealthCare.Descriptions.Application.Common.Settings;
 using HealthCare.Descriptions.Application.Features.Mappings;
 using HealthCare.Descriptions.Application.Features.Validations;
 using HealthCare.Descriptions.Configuration.Extentions;
@@ -45,6 +46,12 @@ builder.Services.AddServiceRegistration();
 
 // Business Rule Registration
 builder.Services.AddBusinessRules();
+
+// Helpers Configuration
+builder.Services.AddHelperConfiguration();
+
+builder.Services.Configure<CursorTokenSettings>(
+    builder.Configuration.GetSection("CursorTokenSettings"));
 
 // Controller Response Configuration
 builder.Services.AddScoped(typeof(IControllerHelper<>), typeof(ControllerHelper<>));

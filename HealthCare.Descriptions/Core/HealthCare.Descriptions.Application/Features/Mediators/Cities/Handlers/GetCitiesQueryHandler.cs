@@ -13,10 +13,12 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
     public class GetCitiesQueryHandler : IRequestHandler<GetCitiesQuery, InternalHandlerResponse<IReadOnlyCollection<GetCitiesQueryResult>>>
     {
         private readonly ICityQueryService _cityQueryService;
+        private readonly ITokenBasedPaginationHelper<City, GetCitiesQueryHandler, GetCitiesQueryResult, int> _paginationHelper;
 
-        public GetCitiesQueryHandler(ICityQueryService cityQueryService)
+        public GetCitiesQueryHandler(ICityQueryService cityQueryService, ITokenBasedPaginationHelper<City, GetCitiesQueryHandler, GetCitiesQueryResult, int> paginationHelper)
         {
             _cityQueryService = cityQueryService;
+            _paginationHelper = paginationHelper;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetCitiesQueryResult>>> Handle(GetCitiesQuery request, CancellationToken cancellationToken)
@@ -47,7 +49,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
                 }
             };
 
-            return await TokenBasedPaginationHelper.PaginationResultAsync(config);
+            return await _paginationHelper.PaginationResultAsync(config);
         }
     }
 }

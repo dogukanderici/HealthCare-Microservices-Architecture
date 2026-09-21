@@ -20,6 +20,7 @@ namespace HealthCare.Descriptions.Configuration.Extentions
             {
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 cfg.AddOpenBehavior(typeof(TransactionBehavior<,>));
+                cfg.AddOpenBehavior(typeof(TokenDecryptionBehavior<,>));
 
                 cfg.RegisterServicesFromAssembly(typeof(MediatorAssemblyMarker).Assembly);
             });

@@ -21,10 +21,12 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Districts.Handl
     public class GetDistrictsQueryHandler : IRequestHandler<GetDistrictsQuery, InternalHandlerResponse<IReadOnlyCollection<GetDistrictsQueryResult>>>
     {
         private readonly IDistrictQueryService _queryService;
+        private readonly ITokenBasedPaginationHelper<District, GetDistrictsQueryHandler, GetDistrictsQueryResult, string> _paginationHelper;
 
-        public GetDistrictsQueryHandler(IDistrictQueryService queryService)
+        public GetDistrictsQueryHandler(IDistrictQueryService queryService, ITokenBasedPaginationHelper<District, GetDistrictsQueryHandler, GetDistrictsQueryResult, string> paginationHelper)
         {
             _queryService = queryService;
+            _paginationHelper = paginationHelper;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetDistrictsQueryResult>>> Handle(GetDistrictsQuery request, CancellationToken cancellationToken)
@@ -62,7 +64,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Districts.Handl
                 }
             };
 
-            return await TokenBasedPaginationHelper.PaginationResultAsync(config, dBQueryOptions);
+            return await _paginationHelper.PaginationResultAsync(config, dBQueryOptions);
 
 
             //InternalServiceResponse<IReadOnlyCollection<GetDistrictsQueryResult>> serviceResult = await _queryService.GetDatasAsync<GetDistrictsQueryResult>(dBQueryOptions);

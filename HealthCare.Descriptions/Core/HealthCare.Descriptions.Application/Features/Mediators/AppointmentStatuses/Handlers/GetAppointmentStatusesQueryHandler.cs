@@ -19,10 +19,12 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
     public class GetAppointmentStatusesQueryHandler : IRequestHandler<GetAppointmentStatusesQuery, InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>>
     {
         private readonly IAppointmentStatusQueryService _service;
+        private readonly ITokenBasedPaginationHelper<AppointmentStatus, GetAppointmentStatusesQueryHandler, GetAppointmentStatusesResult, string> _paginationHelper;
 
-        public GetAppointmentStatusesQueryHandler(IAppointmentStatusQueryService service)
+        public GetAppointmentStatusesQueryHandler(IAppointmentStatusQueryService service, ITokenBasedPaginationHelper<AppointmentStatus, GetAppointmentStatusesQueryHandler, GetAppointmentStatusesResult, string> paginationHelper)
         {
             _service = service;
+            _paginationHelper = paginationHelper;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetAppointmentStatusesResult>>> Handle(GetAppointmentStatusesQuery request, CancellationToken cancellationToken)
@@ -53,7 +55,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
                 }
             };
 
-            return await TokenBasedPaginationHelper.PaginationResultAsync(config);
+            return await _paginationHelper.PaginationResultAsync(config);
 
             //DBQueryOptions<AppointmentStatus> dBQueryOptions = new DBQueryOptions<AppointmentStatus>();
 

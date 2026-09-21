@@ -1,18 +1,27 @@
-﻿using HealthCare.Descriptions.Application.Common.Helpers;
-using HealthCare.Descriptions.Application.Common.Parameters;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
 using HealthCare.Descriptions.Application.Features.Extensions;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.Application.Interfaces;
 using HealthCare.Descriptions.Domain.Abstracts;
 
 namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
 {
-    public static class TokenBasedPaginationHelper
+    public class TokenBasedPaginationHelper<T, THandler, TDto, TPropType> : ITokenBasedPaginationHelper<T, THandler, TDto, TPropType>
+        where T : class
+        where THandler : class
     {
-        public static async Task<InternalHandlerResponse<IReadOnlyCollection<TDto>>>
-            PaginationResultAsync<T, THandler, TDto, TPropType>(TokenPayloadConfig<T, THandler, TDto, TPropType> config, DBQueryOptions<T>? dBQueryOptions = null)
-            where T : class, IEntity
-            where THandler : class
+        private readonly IDecryptionHelper _decryptionHelper;
+        private readonly IEncryptionHelper _encryptionHelper;
+
+        public TokenBasedPaginationHelper(IDecryptionHelper decryptionHelper, IEncryptionHelper encryptionHelper)
+        {
+            _decryptionHelper = decryptionHelper;
+            _encryptionHelper = encryptionHelper;
+        }
+
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<TDto>>>
+            PaginationResultAsync(TokenPayloadConfig<T, THandler, TDto, TPropType> config, DBQueryOptions<T>? dBQueryOptions = null)
         {
             if (dBQueryOptions == null)
             {
@@ -41,21 +50,28 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
             if (!string.IsNullOrEmpty(config.Token))
             {
                 // İstekten gelen token bilgisi çözülür.
-                CursorTokenPayload<TPropType, THandler> cursorTokenPayload =
-                    DecryptionHelper.DecryptToken<CursorTokenPayload<TPropType, THandler>>(config.Token, config.SecretKey);
+                CryptionResponse<CursorTokenPayload<TPropType, THandler>> cryptionResponse =
+                    _decryptionHelper.DecryptToken<CursorTokenPayload<TPropType, THandler>>(config.Token);
 
-                isForward = cursorTokenPayload.IsForward;
+                //if (cryptionResponse.IsSuccess)
+                //{
+                isForward = cryptionResponse.TokenPayload.IsForward;
 
                 // ileri ve Geri yönlü sayfalamadaki filtre ve sıralama yapısı.
-                if (cursorTokenPayload.IsForward) // İleri yönlü
+                if (cryptionResponse.TokenPayload.IsForward) // İleri yönlü
                 {
-                    dBQueryOptions.filter = config.ForwardFilter(cursorTokenPayload.LastData);
+                    dBQueryOptions.filter = config.ForwardFilter(cryptionResponse.TokenPayload.LastData);
                 }
                 else
                 {
-                    dBQueryOptions.filter = config.BackwardFilter(cursorTokenPayload.FirstData);
+                    dBQueryOptions.filter = config.BackwardFilter(cryptionResponse.TokenPayload.FirstData);
                     dBQueryOptions.sortingType = 1;
                 }
+                //}
+                //else
+                //{
+                //    throw new Exception(cryptionResponse.Message);
+                //}
             }
 
             InternalServiceResponse<IReadOnlyCollection<TDto>> serviceResult = await config.FetchDataAsync(dBQueryOptions);
@@ -75,7 +91,7 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
                 tokenPayload.LastData = config.CursorSelector(serviceResult.Data.Last());
                 tokenPayload.LastCreatedAt = config.CreatedAtSelector(serviceResult.Data.Last());
 
-                pagingToken = EncryptionHelper.EncryptToken(tokenPayload, config.SecretKey);
+                pagingToken = _encryptionHelper.EncryptToken(tokenPayload);
 
             }
             else

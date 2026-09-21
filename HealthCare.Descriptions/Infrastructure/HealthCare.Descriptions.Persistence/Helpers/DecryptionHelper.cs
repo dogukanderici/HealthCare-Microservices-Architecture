@@ -1,14 +1,43 @@
-﻿using Newtonsoft.Json;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Common.Settings;
+using HealthCare.Descriptions.Application.Interfaces;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.IO;
-using System;
+using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Application.Common.Helpers
+namespace HealthCare.Descriptions.Persistence.Helpers
 {
-    public static class DecryptionHelper
+    public class DecryptionHelper : IDecryptionHelper
     {
-        public static T DecryptToken<T>(string encryptedToken, string encryptionKey)
+        private readonly string _secretKey;
+
+        public DecryptionHelper(IOptions<CursorTokenSettings> options)
+        {
+            _secretKey = options.Value.SecretKey;
+        }
+
+        public CryptionResponse<T> DecryptToken<T>(string encryptedToken)
+        {
+            try
+            {
+                CryptionResponse<string> cryptionResponse = DecryptTokenForString(encryptedToken);
+                string jsonString = cryptionResponse.TokenPayload;
+
+                // T tipindeki veriye dönüştürülür.
+                return CryptionResponse<T>.Success(JsonConvert.DeserializeObject<T>(jsonString));
+            }
+            catch (Exception ex)
+            {
+                return CryptionResponse<T>.Fail(ex.Message);
+            }
+        }
+
+        public CryptionResponse<string> DecryptTokenForString(string encryptedToken)
         {
             try
             {
@@ -16,7 +45,7 @@ namespace HealthCare.Descriptions.Application.Common.Helpers
                 byte[] fullCipher = Convert.FromBase64String(encryptedToken); // fullCipher = [16 byte IV] + [Şifreli Veri]
 
                 // Secret Key (encryptionKey) byte array'e çevrilir.
-                byte[] keyBytes = Encoding.UTF8.GetBytes(encryptionKey.PadRight(32).Substring(0, 32));
+                byte[] keyBytes = Encoding.UTF8.GetBytes(_secretKey.PadRight(32).Substring(0, 32));
 
                 using Aes aes = Aes.Create();
 
@@ -43,11 +72,11 @@ namespace HealthCare.Descriptions.Application.Common.Helpers
                 string jsonString = sr.ReadToEnd();
 
                 // T tipindeki veriye dönüştürülür.
-                return JsonConvert.DeserializeObject<T>(jsonString);
+                return CryptionResponse<string>.Success(jsonString);
             }
             catch (Exception ex)
             {
-                throw ex;
+                return CryptionResponse<string>.Success(ex.Message);
             }
         }
     }

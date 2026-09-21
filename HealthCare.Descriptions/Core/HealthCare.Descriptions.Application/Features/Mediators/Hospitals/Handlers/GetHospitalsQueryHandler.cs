@@ -22,10 +22,12 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Hospitals.Handl
     public class GetHospitalsQueryHandler : IRequestHandler<GetHospitalsQuery, InternalHandlerResponse<IReadOnlyCollection<GetHospitalsQueryResult>>>
     {
         private readonly IHospitalQueryService _queryService;
+        private readonly ITokenBasedPaginationHelper<Hospital, GetHospitalsQueryHandler, GetHospitalsQueryResult, string> _paginationHelper;
 
-        public GetHospitalsQueryHandler(IHospitalQueryService queryService)
+        public GetHospitalsQueryHandler(IHospitalQueryService queryService, ITokenBasedPaginationHelper<Hospital, GetHospitalsQueryHandler, GetHospitalsQueryResult, string> paginationHelper)
         {
             _queryService = queryService;
+            _paginationHelper = paginationHelper;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetHospitalsQueryResult>>> Handle(GetHospitalsQuery request, CancellationToken cancellationToken)
@@ -72,7 +74,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Hospitals.Handl
                 }
             };
 
-            return await TokenBasedPaginationHelper.PaginationResultAsync(config, dBQueryOptions);
+            return await _paginationHelper.PaginationResultAsync(config, dBQueryOptions);
 
             //InternalServiceResponse<IReadOnlyCollection<GetHospitalsQueryResult>> serviceResult = await _queryService.GetDatasAsync<GetHospitalsQueryResult>(dBQueryOptions);
 

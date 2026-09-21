@@ -8,7 +8,6 @@ namespace HealthCare.Descriptions.Application.Common.Parameters
     {
         public string Token { get; set; }
         public int Take { get; set; } = 10;
-        public string SecretKey { get; set; } = "12345678abcdefgh87654321ABCDEFGH";
 
         // Doğru şekilde sayfalama yapılabilmesi için OrderBy ile Cursor aynı tipte olmalı. (int-uuid olamaz. int-int veya uuid-uuid olmalı.)
         public Expression<Func<T, object>> OrderBy { get; set; } // Sıralama yapılacak sütun.
