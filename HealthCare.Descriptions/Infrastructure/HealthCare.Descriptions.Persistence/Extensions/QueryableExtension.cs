@@ -45,7 +45,7 @@ namespace HealthCare.Descriptions.Persistence.Extensions
                     }
                 }
 
-                if (queryOptions.orderBy != null)
+                if (queryOptions.orderBy != null && queryOptions.thenOrderBy == null)
                 {
                     // 0 -> Ascending, 1 -> Descending
                     if (queryOptions.sortingType == 0)
@@ -55,6 +55,26 @@ namespace HealthCare.Descriptions.Persistence.Extensions
                     else
                     {
                         query = query.OrderByDescending(queryOptions.orderBy);
+                    }
+                }
+
+                if (queryOptions.thenOrderBy != null)
+                {
+                    bool checkSortingType = queryOptions.thenBySortingType == 0;
+
+                    foreach (var item in queryOptions.thenOrderBy)
+                    {
+                        var orderByQuery = checkSortingType ? query.OrderBy(item.Key) : query.OrderByDescending(item.Key);
+
+                        if (queryOptions.thenOrderBy?.ContainsKey(item.Key) == true)
+                        {
+                            foreach (var thenItem in queryOptions.thenOrderBy[item.Key])
+                            {
+                                orderByQuery = checkSortingType ? orderByQuery.ThenBy(thenItem) : orderByQuery.ThenByDescending(thenItem);
+                            }
+                        }
+
+                        query = orderByQuery;
                     }
                 }
 
