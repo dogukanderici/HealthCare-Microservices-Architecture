@@ -64,12 +64,14 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
                 if (cryptionResponse.TokenPayload.IsForward) // İleri yönlü
                 {
                     // Extension sınıf ile yeni filtre ekler.
-                    mainFilter = mainFilter.And(config.ForwardFilter(cryptionResponse.TokenPayload.LastData));
+                    mainFilter = (mainFilter == null) ? config.ForwardFilter(cryptionResponse.TokenPayload.LastData) :
+                        mainFilter.And(config.ForwardFilter(cryptionResponse.TokenPayload.LastData));
                 }
                 else
                 {
                     // Extension sınıf ile yeni filtre ekler.
-                    mainFilter = mainFilter.And(config.BackwardFilter(cryptionResponse.TokenPayload.FirstData));
+                    mainFilter = (mainFilter == null) ? config.BackwardFilter(cryptionResponse.TokenPayload.FirstData) :
+                        mainFilter.And(config.BackwardFilter(cryptionResponse.TokenPayload.FirstData));
 
                     dBQueryOptions.sortingType = 1;
                 }
@@ -80,7 +82,6 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
             InternalServiceResponse<IReadOnlyCollection<TDto>> serviceResult = await config.FetchDataAsync(dBQueryOptions);
 
             tokenPayload.IsForward = isForward;
-
 
             // Örneğin 10 veri almak istenirse 11 tane veri getir sorgusu yazılır. Eğer 11 veri dönerse en az bir sayfa daha veri var demektir.
             // Eğer 10 veya daha az dönerse son sayfada olunduğu anlaşılır.
@@ -96,7 +97,6 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
                 tokenPayload.LastCreatedAt = config.CreatedAtSelector(serviceResult.Data.LastOrDefault());
 
                 pagingToken = _encryptionHelper.EncryptToken(tokenPayload);
-
             }
             else
             {

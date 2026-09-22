@@ -53,7 +53,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Hospitals
 
             InternalServiceResponse<int> serviceResponse = await _districtQueryService.GetDataCountAsync(dBQueryOptions);
 
-            if (serviceResponse.Data > 0)
+            if (serviceResponse.Data == 0)
             {
                 return InternalPolicyResponse.Response(false, "Hastaneye Ait Şehir ve İlçe Bilgileri Uyuşmuyor!");
             }
