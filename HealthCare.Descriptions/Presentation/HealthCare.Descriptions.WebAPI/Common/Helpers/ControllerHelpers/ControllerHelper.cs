@@ -52,7 +52,7 @@ namespace HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers
                 _logger.LogError(LogMessageTemplate,
                     typeof(TController).Name,
                     actionName,
-                    $"{ErrorMessage.CallingRequest} - {ex}");
+                    $"{ErrorMessage.CallingRequest} - {ex.Message}");
 
                 return new BadRequestObjectResult(APIResponse<TData>.Failure());
             }

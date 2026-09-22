@@ -20,7 +20,7 @@ namespace HealthCare.Descriptions.WebAPI.Controllers
             _controllerHelper = controllerHelper;
         }
 
-        [HttpPost("cities/paging")]
+        [HttpPost("paging")]
         public async Task<IActionResult> GetCities(GetCitiesQuery query)
         {
             return await _controllerHelper.ExecuteAsync(

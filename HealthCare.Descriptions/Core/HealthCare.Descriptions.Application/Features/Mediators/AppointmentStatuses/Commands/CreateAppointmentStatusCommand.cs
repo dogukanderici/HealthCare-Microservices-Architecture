@@ -11,6 +11,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
 {
     public class CreateAppointmentStatusCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest, IValidationRequest
     {
+        public string StatusCode { get; set; }
         public string StatusName { get; set; }
         public bool IsAvailable { get; set; }
     }

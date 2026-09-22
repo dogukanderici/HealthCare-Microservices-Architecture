@@ -28,7 +28,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Appointment
         protected override async Task<InternalPolicyResponse> CountExistingDataAsync(AppointmentStatus entity)
         {
             DBQueryOptions<AppointmentStatus> dBQueryOptions = new DBQueryOptions<AppointmentStatus>();
-            Expression<Func<AppointmentStatus, bool>> filter = x => x.StatusName == entity.StatusName;
+            Expression<Func<AppointmentStatus, bool>> filter = x => x.Id == entity.Id;
             dBQueryOptions.filter = filter;
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);

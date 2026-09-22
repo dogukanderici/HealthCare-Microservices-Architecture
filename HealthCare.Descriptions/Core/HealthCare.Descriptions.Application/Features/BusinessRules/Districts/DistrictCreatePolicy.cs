@@ -29,7 +29,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Districts
             Expression<Func<District, bool>> filter = x => (
                 ((x.CityId == entity.CityId) && (x.Plate == entity.Plate) && (x.DistrictName == entity.DistrictName)) ||
                 ((x.CityId == entity.CityId) && (x.DistrictName == entity.DistrictName)) ||
-                ((x.DistrictName == entity.DistrictName))
+                ((x.Plate == entity.Plate) && (x.DistrictName == entity.DistrictName))
             );
             dBQueryOptions.filter = filter;
 

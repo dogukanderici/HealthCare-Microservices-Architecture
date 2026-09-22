@@ -1,4 +1,5 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Results;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using MediatR;
 using System;
@@ -9,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Queries
 {
-    public class GetPoliclinicsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetPoliclinicsQueryResult>>>
+    public class GetPoliclinicsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetPoliclinicsQueryResult>>>, IPagedQueryBase
     {
+        public string? Token { get; set; }
     }
 }

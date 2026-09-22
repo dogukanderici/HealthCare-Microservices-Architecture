@@ -21,11 +21,11 @@ namespace HealthCare.Descriptions.WebAPI.Controllers
             _controllerHelper = controllerHelper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetDistrictsAsync()
+        [HttpPost("paging")]
+        public async Task<IActionResult> GetDistrictsAsync(GetDistrictsQuery query)
         {
             return await _controllerHelper.ExecuteAsync(
-                () => _mediator.Send(new GetDistrictsQuery()),
+                () => _mediator.Send(query),
                 nameof(GetDistrictsAsync)
                 );
         }

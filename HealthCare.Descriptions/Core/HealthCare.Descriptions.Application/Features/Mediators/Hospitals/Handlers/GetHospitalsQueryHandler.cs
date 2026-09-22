@@ -34,6 +34,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Hospitals.Handl
         {
             DBQueryOptions<Hospital> dBQueryOptions = new DBQueryOptions<Hospital>();
 
+            // Hastane verilerine il-ilçe bilgisinin gelmesi için ilişki ekler.
             dBQueryOptions = HospitalQueryOptionExtension.AddCityWithDistrict(dBQueryOptions);
 
             dBQueryOptions.thenOrderBy = new Dictionary<Expression<Func<Hospital, object>>, List<Expression<Func<Hospital, object>>>>

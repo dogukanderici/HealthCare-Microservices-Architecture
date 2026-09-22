@@ -1,4 +1,5 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Results;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
@@ -11,10 +12,13 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.Policlinics.Queries
 {
-    public class GetPoliclinicsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetPoliclinicsByFilterQueryResult>>>, IValidationRequest
+    public class GetPoliclinicsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetPoliclinicsByFilterQueryResult>>>,
+        IValidationRequest,
+        IPagedQueryBase
     {
         public string? Code { get; set; }
         public bool? IsActive { get; set; }
+        public string? Token { get; set; }
 
         [JsonConstructor]
         private GetPoliclinicsByFilterQuery()

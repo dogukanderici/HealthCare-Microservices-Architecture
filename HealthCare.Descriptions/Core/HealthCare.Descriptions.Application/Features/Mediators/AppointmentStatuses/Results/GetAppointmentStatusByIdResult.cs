@@ -10,8 +10,8 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
     public class GetAppointmentStatusByIdResult : ISingleResult
     {
         public Guid Id { get; set; }
+        public string StatusCode { get; set; }
         public string StatusName { get; set; }
-
         public bool IsAvailable { get; set; } = true;
         public DateTimeOffset CreatedAt { get; set; }
         public Guid CreatedBy { get; set; }

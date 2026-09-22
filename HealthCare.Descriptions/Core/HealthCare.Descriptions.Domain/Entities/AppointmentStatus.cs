@@ -23,6 +23,7 @@ namespace HealthCare.Descriptions.Domain.Entities
 
         // AppointmentStatus Property
 
+        public string StatusCode { get; set; }
         public string StatusName { get; set; }
     }
 }

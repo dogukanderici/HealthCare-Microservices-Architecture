@@ -20,7 +20,7 @@ namespace HealthCare.Descriptions.WebAPI.Controllers
             _controllerHelper = controllerHelper;
         }
 
-        [HttpGet]
+        [HttpPost("paging")]
         public async Task<IActionResult> GetQuotaTypesAsync()
         {
             return await _controllerHelper.ExecuteAsync(

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.Extensions;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Commands;
 using HealthCare.Descriptions.Application.Features.Mediators.AppointmentStatuses.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
@@ -31,11 +32,16 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
         {
             InternalServiceResponse<AppointmentStatus> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
 
+            if(existedData.Data == null)
+            {
+                InternalHandlerResponse<DateTimeOffset>.Failure(existedData.ServiceMessage);
+            }
+
             _mapper.Map(request, existedData.Data);
 
             InternalServiceResponse<DateTimeOffset> serviceResponse = await _commandService.UpdateAsync(existedData.Data);
 
-            return InternalHandlerResponse<DateTimeOffset>.Success(serviceResponse.Data);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

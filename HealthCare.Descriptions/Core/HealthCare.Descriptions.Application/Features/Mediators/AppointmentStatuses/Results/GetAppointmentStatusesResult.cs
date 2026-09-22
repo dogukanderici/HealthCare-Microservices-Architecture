@@ -11,6 +11,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
     public class GetAppointmentStatusesResult : IGenericAuditResult, IListResult
     {
         public Guid Id { get; set; }
+        public string StatusCode { get; set; }
         public string StatusName { get; set; }
         public DateTimeOffset CreatedAt { get; set; }
         public Guid CreatedBy { get; set; }

@@ -1,4 +1,5 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.ServiceTypes.Results;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Features.Mediators.ServiceTypes.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
@@ -11,10 +12,13 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.ServiceTypes.Queries
 {
-    public class GetServiceTypesByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetServiceTypesByFilterQueryResult>>>, IValidationRequest
+    public class GetServiceTypesByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetServiceTypesByFilterQueryResult>>>,
+        IValidationRequest,
+        IPagedQueryBase
     {
         public string? ServiceCode { get; set; }
         public string? ServiceName { get; set; }
+        public string? Token { get; set; }
 
         [JsonConstructor]
         private GetServiceTypesByFilterQuery()

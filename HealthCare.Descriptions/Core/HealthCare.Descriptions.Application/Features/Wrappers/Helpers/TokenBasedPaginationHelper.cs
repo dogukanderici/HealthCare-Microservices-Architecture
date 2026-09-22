@@ -1,9 +1,11 @@
-﻿using HealthCare.Descriptions.Application.Common.Parameters;
+﻿using HealthCare.Descriptions.Application.Common.Extensions.ExpressionExtensions;
+using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Wrappers;
 using HealthCare.Descriptions.Application.Features.Extensions;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using HealthCare.Descriptions.Application.Interfaces;
 using HealthCare.Descriptions.Domain.Abstracts;
+using System.Linq.Expressions;
 
 namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
 {
@@ -53,31 +55,32 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
                 CryptionResponse<CursorTokenPayload<TPropType, THandler>> cryptionResponse =
                     _decryptionHelper.DecryptToken<CursorTokenPayload<TPropType, THandler>>(config.Token);
 
-                //if (cryptionResponse.IsSuccess)
-                //{
+
                 isForward = cryptionResponse.TokenPayload.IsForward;
+
+                Expression<Func<T, bool>> mainFilter = dBQueryOptions.filter;
 
                 // ileri ve Geri yönlü sayfalamadaki filtre ve sıralama yapısı.
                 if (cryptionResponse.TokenPayload.IsForward) // İleri yönlü
                 {
-                    dBQueryOptions.filter = config.ForwardFilter(cryptionResponse.TokenPayload.LastData);
+                    // Extension sınıf ile yeni filtre ekler.
+                    mainFilter = mainFilter.And(config.ForwardFilter(cryptionResponse.TokenPayload.LastData));
                 }
                 else
                 {
-                    dBQueryOptions.filter = config.BackwardFilter(cryptionResponse.TokenPayload.FirstData);
+                    // Extension sınıf ile yeni filtre ekler.
+                    mainFilter = mainFilter.And(config.BackwardFilter(cryptionResponse.TokenPayload.FirstData));
+
                     dBQueryOptions.sortingType = 1;
                 }
-                //}
-                //else
-                //{
-                //    throw new Exception(cryptionResponse.Message);
-                //}
+
+                dBQueryOptions.filter = mainFilter;
             }
 
             InternalServiceResponse<IReadOnlyCollection<TDto>> serviceResult = await config.FetchDataAsync(dBQueryOptions);
 
             tokenPayload.IsForward = isForward;
-            tokenPayload.FirstData = config.CursorSelector(serviceResult.Data.First());
+
 
             // Örneğin 10 veri almak istenirse 11 tane veri getir sorgusu yazılır. Eğer 11 veri dönerse en az bir sayfa daha veri var demektir.
             // Eğer 10 veya daha az dönerse son sayfada olunduğu anlaşılır.
@@ -88,15 +91,16 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
                 resultList.RemoveAt(serviceResult.Data.Count - 1);
                 serviceResult.Data = resultList;
 
-                tokenPayload.LastData = config.CursorSelector(serviceResult.Data.Last());
-                tokenPayload.LastCreatedAt = config.CreatedAtSelector(serviceResult.Data.Last());
+                tokenPayload.FirstData = config.CursorSelector(serviceResult.Data.FirstOrDefault());
+                tokenPayload.LastData = config.CursorSelector(serviceResult.Data.LastOrDefault());
+                tokenPayload.LastCreatedAt = config.CreatedAtSelector(serviceResult.Data.LastOrDefault());
 
                 pagingToken = _encryptionHelper.EncryptToken(tokenPayload);
 
             }
             else
             {
-                isLastPage = false;
+                isLastPage = true;
             }
 
             if (!isForward)

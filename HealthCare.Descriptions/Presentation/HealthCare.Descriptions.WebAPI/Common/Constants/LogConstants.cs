@@ -3,7 +3,7 @@
     public static class LogConstants
     {
         public static readonly string ServiceName = "HealthCare.Descriptions";
-        public static string LogMessageTemplate = "Controller: {Controller}, Action: {Action}";
+        public static string LogMessageTemplate = "Controller: {Controller}, Action: {Action}, Message: {Message}";
         public static string ValidationTemplate = "Invalid Validation Rules - Errors: {Errors}";
 
         public static class SuccessMessage
