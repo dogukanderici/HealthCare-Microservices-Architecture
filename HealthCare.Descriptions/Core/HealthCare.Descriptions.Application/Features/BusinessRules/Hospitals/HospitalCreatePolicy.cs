@@ -32,8 +32,9 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Hospitals
         {
             DBQueryOptions<Hospital> dBQueryOptions = new DBQueryOptions<Hospital>();
             Expression<Func<Hospital, bool>> filter = x => (
-                ((x.HospitalName == entity.HospitalName) || (x.HospitalCode == entity.HospitalCode)) &&
-                (((x.HospitalName == entity.HospitalName) || (x.HospitalCode == entity.HospitalCode)) && (x.HospitalCity == entity.HospitalCity))
+                (((x.HospitalName == entity.HospitalName) || (x.HospitalCode == entity.HospitalCode)) &&
+                (((x.HospitalName == entity.HospitalName) || (x.HospitalCode == entity.HospitalCode)) && (x.HospitalCity == entity.HospitalCity))) &&
+                (x.Id != entity.Id)
             );
             dBQueryOptions.filter = filter;
 

@@ -26,7 +26,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Cities
         protected override async Task<InternalPolicyResponse> CountExistingDataAsync(City entity)
         {
             DBQueryOptions<City> dBQueryOptions = new DBQueryOptions<City>();
-            Expression<Func<City, bool>> filter = x => ((x.Plate == entity.Plate) || (x.CityName == entity.CityName));
+            Expression<Func<City, bool>> filter = x => (((x.Plate == entity.Plate) || (x.CityName == entity.CityName)) && (x.Id != entity.Id));
             dBQueryOptions.filter = filter;
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);

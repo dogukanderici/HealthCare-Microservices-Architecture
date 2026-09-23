@@ -27,9 +27,10 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Districts
         {
             DBQueryOptions<District> dBQueryOptions = new DBQueryOptions<District>();
             Expression<Func<District, bool>> filter = x => (
-                ((x.CityId == entity.CityId) && (x.Plate == entity.Plate) && (x.DistrictName == entity.DistrictName)) ||
+                (((x.CityId == entity.CityId) && (x.Plate == entity.Plate) && (x.DistrictName == entity.DistrictName)) ||
                 ((x.CityId == entity.CityId) && (x.DistrictName == entity.DistrictName)) ||
-                ((x.Plate == entity.Plate) && (x.DistrictName == entity.DistrictName))
+                ((x.Plate == entity.Plate) && (x.DistrictName == entity.DistrictName)) &&
+                (x.Id != entity.Id))
             );
             dBQueryOptions.filter = filter;
 

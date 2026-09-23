@@ -27,7 +27,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.QuotaTypes
         {
             DBQueryOptions<QuotaType> dBQueryOptions = new DBQueryOptions<QuotaType>();
             Expression<Func<QuotaType, bool>> filter = x => (
-                (x.QuotaTypeCode == entity.QuotaTypeCode) || (x.QuotaTypeName == entity.QuotaTypeName)
+                ((x.QuotaTypeCode == entity.QuotaTypeCode) || (x.QuotaTypeName == entity.QuotaTypeName)) && (x.Id != entity.Id)
             );
             dBQueryOptions.filter = filter;
 

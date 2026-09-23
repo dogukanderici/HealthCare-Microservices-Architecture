@@ -61,7 +61,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.HospitalPol
         {
             DBQueryOptions<HospitalPoliclinic> dBQueryOptions = new DBQueryOptions<HospitalPoliclinic>();
             Expression<Func<HospitalPoliclinic, bool>> filter = x => (
-                (x.HospitalId == entity.HospitalId) && (x.PoliclinicId == entity.PoliclinicId)
+                (x.HospitalId == entity.HospitalId) && (x.PoliclinicId == entity.PoliclinicId) && (x.Id != entity.Id)
             );
             dBQueryOptions.filter = filter;
 
@@ -74,8 +74,8 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.HospitalPol
         {
             PolicyResponseHelper createPolicy = new PolicyResponseHelper
             {
-                ()=>CheckHospitalByIdAsync(entity.Id),
-                ()=>CheckPoliclinicByIdAsync(entity.Id),
+                ()=>CheckHospitalByIdAsync(entity.HospitalId),
+                ()=>CheckPoliclinicByIdAsync(entity.PoliclinicId),
                 ()=>CountExistingDataAsync(entity)
             };
 

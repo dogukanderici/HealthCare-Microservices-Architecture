@@ -27,7 +27,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Policlinics
         {
             DBQueryOptions<Policlinic> dBQueryOptions = new DBQueryOptions<Policlinic>();
             Expression<Func<Policlinic, bool>> filter = x => (
-                (x.PoliclinicCode == entity.PoliclinicCode) || (x.PoliclinicName == entity.PoliclinicName)
+                ((x.PoliclinicCode == entity.PoliclinicCode) || (x.PoliclinicName == entity.PoliclinicName)) && (x.Id != entity.Id)
             );
             dBQueryOptions.filter = filter;
 

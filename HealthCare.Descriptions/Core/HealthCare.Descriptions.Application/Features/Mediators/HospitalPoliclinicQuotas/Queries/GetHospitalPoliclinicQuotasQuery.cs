@@ -1,15 +1,33 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.HospitalPoliclinicQuotas.Results;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Features.Mediators.HospitalPoliclinicQuotas.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.HospitalPoliclinicQuotas.Queries
 {
-    public class GetHospitalPoliclinicQuotasQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetHospitalPoliclinicQuotasQueryResult>>>
+    public class GetHospitalPoliclinicQuotasQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetHospitalPoliclinicQuotasQueryResult>>>,
+        IPagedQueryBase
     {
+        public string? HospitalCode { get; set; }
+        public string? Token { get; set; }
+
+
+        [JsonConstructor]
+        private GetHospitalPoliclinicQuotasQuery()
+        {
+
+        }
+
+        public static GetHospitalPoliclinicQuotasQuery Filter(string? hospitalCode) =>
+            new GetHospitalPoliclinicQuotasQuery
+            {
+                HospitalCode = hospitalCode
+            };
     }
 }

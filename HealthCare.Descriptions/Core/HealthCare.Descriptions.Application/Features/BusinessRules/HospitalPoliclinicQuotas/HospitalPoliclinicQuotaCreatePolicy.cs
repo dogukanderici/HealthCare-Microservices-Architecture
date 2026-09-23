@@ -62,7 +62,8 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.HospitalPol
                 (x.HospitalPoliclinicId == entity.HospitalPoliclinicId) &&
                 (x.QuotaTypeId == entity.QuotaTypeId) &&
                 (x.Quota == entity.Quota) &&
-                (x.ValidityDate == entity.ValidityDate)
+                (x.ValidityDate == entity.ValidityDate) &&
+                (x.Id != entity.Id)
             );
             dBQueryOptions.filter = filter;
 

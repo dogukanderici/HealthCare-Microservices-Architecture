@@ -10,7 +10,7 @@ namespace HealthCare.Descriptions.Application.Features.Validations.ServiceTypes
     public static class ServiceTypeValidationRules
     {
         public const int MinNameLength = 5;
-        public const int MaxNameLength = 50;
+        public const int MaxNameLength = 100;
         public const int CodeLength = 5;
         public const string CodeMessage = "Kota Tipi kodu ST ile başlamalı ve kalan 3 karakterin her biri bir rakam olmalıdır!";
 

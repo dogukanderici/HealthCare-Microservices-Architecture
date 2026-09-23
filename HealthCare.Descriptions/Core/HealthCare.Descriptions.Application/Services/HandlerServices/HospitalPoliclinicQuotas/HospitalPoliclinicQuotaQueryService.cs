@@ -28,7 +28,7 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.HospitalP
         public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasAsync<TResult>(DBQueryOptions<HospitalPoliclinicQuota>? options = null)
             where TResult : IListResult
         {
-            IReadOnlyCollection<HospitalPoliclinicQuota> result = await _repository.GetAllAsync();
+            IReadOnlyCollection<HospitalPoliclinicQuota> result = await _repository.GetAllAsync(options);
 
             return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(result));
         }

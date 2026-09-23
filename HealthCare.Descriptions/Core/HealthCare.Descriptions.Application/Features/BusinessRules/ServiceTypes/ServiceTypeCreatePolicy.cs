@@ -27,8 +27,9 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.ServiceType
         {
             DBQueryOptions<ServicingType> dBQueryOptions = new DBQueryOptions<ServicingType>();
             Expression<Func<ServicingType, bool>> filter = x => (
-                (x.ServiceCode == entity.ServiceCode) || (x.ServiceName == entity.ServiceName)
+                ((x.ServiceCode == entity.ServiceCode) || (x.ServiceName == entity.ServiceName)) && (x.Id != entity.Id)
             );
+            dBQueryOptions.filter = filter;
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(dBQueryOptions);
 
