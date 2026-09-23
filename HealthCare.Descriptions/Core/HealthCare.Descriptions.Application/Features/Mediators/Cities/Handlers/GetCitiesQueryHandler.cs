@@ -34,9 +34,9 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.Cities.Handlers
                 CursorSelector = x => x.Plate,
                 CreatedAtSelector = x => x.CreatedAt,
 
-                GetTotalCountAsync = async () =>
+                GetTotalCountAsync = async (options) =>
                 {
-                    InternalServiceResponse<int> serviceResult = await _cityQueryService.GetDataCountAsync();
+                    InternalServiceResponse<int> serviceResult = await _cityQueryService.GetDataCountAsync(options);
                     return serviceResult.Data;
                 },
 

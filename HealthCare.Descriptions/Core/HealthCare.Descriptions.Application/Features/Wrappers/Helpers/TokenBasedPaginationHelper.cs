@@ -35,7 +35,8 @@ namespace HealthCare.Descriptions.Application.Features.Wrappers.Helpers
             if (string.IsNullOrEmpty(config.Token))
             {
                 // Paging Token yoksa toplam veriyi bir kez olmak üzere bulur.
-                tokenPayload.TotalCount = await config.GetTotalCountAsync();
+                // FilterQuery'den gelen filtreye göre toplam sayıyı bulmak için dBQueryOptions eklenir. Aksi halde tüm kayıt sayısını verir.
+                tokenPayload.TotalCount = await config.GetTotalCountAsync(dBQueryOptions);
                 tokenPayload.TakenCount = config.Take;
             }
 

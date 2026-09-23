@@ -17,7 +17,7 @@ namespace HealthCare.Descriptions.Application.Common.Parameters
         public Func<TDto, TPropType> CursorSelector { get; set; } // ilk veri ve son veriyi bulmak için.
         public Func<TDto, DateTimeOffset>? CreatedAtSelector { get; set; } // Son verinin createdat değerini bulmak için.
 
-        public Func<Task<int>> GetTotalCountAsync { get; set; } // parametre almayan sadece int değer dönen toplam veri sayısının bulan metot.
+        public Func<DBQueryOptions<T>?, Task<int>> GetTotalCountAsync { get; set; } // parametre almayan sadece int değer dönen toplam veri sayısının bulan metot.
 
         // DBQueryOptions alıp geriye bu query'e ait sonucu dönen metot.
         public Func<DBQueryOptions<T>, Task<InternalServiceResponse<IReadOnlyCollection<TDto>>>> FetchDataAsync { get; set; }

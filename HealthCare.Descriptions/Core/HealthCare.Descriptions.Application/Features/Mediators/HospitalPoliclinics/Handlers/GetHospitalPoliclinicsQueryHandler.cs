@@ -78,9 +78,9 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.HospitalPolicli
                 CursorSelector = x => x.Hospital.HospitalName,
                 CreatedAtSelector = x => x.CreatedAt,
 
-                GetTotalCountAsync = async () =>
+                GetTotalCountAsync = async (options) =>
                 {
-                    InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync();
+                    InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(options);
 
                     return serviceResponse.Data;
                 },

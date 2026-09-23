@@ -48,9 +48,9 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.ServiceTypes.Ha
                 CursorSelector = x => x.ServiceName,
                 CreatedAtSelector = x => x.CreatedAt,
 
-                GetTotalCountAsync = async () =>
+                GetTotalCountAsync = async (options) =>
                 {
-                    InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync();
+                    InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCountAsync(options);
 
                     return serviceResponse.Data;
                 },

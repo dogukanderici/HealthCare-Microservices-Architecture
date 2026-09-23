@@ -40,9 +40,9 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.AppointmentStat
                 CursorSelector = x => x.StatusName,
                 CreatedAtSelector = x => x.CreatedAt,
 
-                GetTotalCountAsync = async () =>
+                GetTotalCountAsync = async (options) =>
                 {
-                    InternalServiceResponse<int> serviceResult = await _service.GetDataCountAsync();
+                    InternalServiceResponse<int> serviceResult = await _service.GetDataCountAsync(options);
                     return serviceResult.Data;
                 },
 

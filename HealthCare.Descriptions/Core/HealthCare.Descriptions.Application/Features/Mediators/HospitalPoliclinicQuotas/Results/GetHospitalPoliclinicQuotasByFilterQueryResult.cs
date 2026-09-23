@@ -1,4 +1,5 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.HospitalPoliclinics.Results.Shared;
+﻿using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Features.Mediators.HospitalPoliclinics.Results.Shared;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.HospitalPoliclinicQuotas.Results
 {
-    public class GetHospitalPoliclinicQuotasByFilterQueryResult : IListResult
+    public class GetHospitalPoliclinicQuotasByFilterQueryResult : IListResult, IGenericAuditResult
     {
         public Guid Id { get; set; }
         public Guid HospitalPoliclinicId { get; set; }
@@ -16,6 +17,10 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.HospitalPolicli
         public int Quota { get; set; }
         public DateTimeOffset ValidityDate { get; set; }
         public bool IsAvailable { get; set; }
+        public DateTimeOffset CreatedAt { get; set; }
+        public Guid CreatedBy { get; set; }
+        public DateTimeOffset UpdatedAt { get; set; }
+        public Guid UpdatedBy { get; set; }
 
         public HospitalPoliclinicSharedResult HospitalPoliclinic { get; set; }
     }
