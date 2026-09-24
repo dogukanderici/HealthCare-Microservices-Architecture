@@ -1,4 +1,5 @@
 ﻿using HealthCare.Descriptions.Application.Common.Constants;
+using HealthCare.Descriptions.Application.Common.CustomExceptions;
 using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static HealthCare.Descriptions.Application.Common.Constants.ExceptionConstants;
 
 namespace HealthCare.Descriptions.Application.Behaviors
 {
@@ -42,16 +44,17 @@ namespace HealthCare.Descriptions.Application.Behaviors
 
                 return response;
             }
+            catch (BusinessRuleException)
+            {
+                await _unitOfWork.RollbackTransactionAsync();
+
+                throw;
+            }
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
 
-                _logger.LogError(LogConstant.MessageTemplate,
-                    typeof(TRequest).Name,
-                    ex
-                    );
-
-                throw;
+                throw new TransactionException($"{TransactionExMessage} {typeof(TRequest).Name}, Message: {ex}");
             }
         }
     }

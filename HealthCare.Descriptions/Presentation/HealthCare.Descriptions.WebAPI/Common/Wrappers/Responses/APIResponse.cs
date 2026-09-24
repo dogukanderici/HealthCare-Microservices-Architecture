@@ -7,6 +7,7 @@ namespace HealthCare.Descriptions.WebAPI.Common.Wrappers.Responses
         public bool IsSuccess { get; set; }
         public string Message { get; set; }
         public DateTimeOffset TimeStamp { get; private set; }
+        public List<string>? Errors { get; set; }
 
         [JsonProperty]
         public T Data { get; private set; }
@@ -29,7 +30,8 @@ namespace HealthCare.Descriptions.WebAPI.Common.Wrappers.Responses
                 TimeStamp = DateTimeOffset.UtcNow,
                 Data = data,
                 PagingToken = pagingToken,
-                IsLastPage = isLastPage
+                IsLastPage = isLastPage,
+                Errors = []
             };
         }
 
@@ -40,7 +42,8 @@ namespace HealthCare.Descriptions.WebAPI.Common.Wrappers.Responses
                 IsSuccess = false,
                 Message = message,
                 TimeStamp = DateTimeOffset.UtcNow,
-                Data = default
+                Data = default,
+                Errors = default
             };
         }
     }

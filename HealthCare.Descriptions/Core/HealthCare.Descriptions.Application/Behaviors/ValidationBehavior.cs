@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using HealthCare.Descriptions.Application.Common.CustomExceptions;
 using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static HealthCare.Descriptions.Application.Common.Constants.ExceptionConstants;
 
 namespace HealthCare.Descriptions.Application.Behaviors
 {
@@ -15,12 +18,11 @@ namespace HealthCare.Descriptions.Application.Behaviors
         where TResponse : IValidationResult
     {
         private readonly IEnumerable<IValidator<TRequest>> _validator;
-        private readonly ILogger<ValidationBehavior<TRequest, TResponse>> _logger;
+        //private readonly ILogger<ValidationBehavior<TRequest, TResponse>> _logger;
 
-        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validator, ILogger<ValidationBehavior<TRequest, TResponse>> logger)
+        public ValidationBehavior(IEnumerable<IValidator<TRequest>> validator)
         {
             _validator = validator;
-            _logger = logger;
         }
 
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -41,13 +43,9 @@ namespace HealthCare.Descriptions.Application.Behaviors
 
                 if (failures.Count() > 0)
                 {
-                    _logger.LogError("VALIDATION FAILED. REQUEST: {@Request}, ERRORS: {@Errors}", request, failures);
-
-                    var response = TResponse.WithValidationErrors(failures);
-
-                    return (TResponse)response;
-
-                    // TODO - Global Exception Middleware ile throw yapısına güncellenecek.
+                    // Log işlemleri middleware içerisinde yapılıyor.
+                    // Global Exception Middleware ile validasyona özel cevap döndürülür.
+                    throw new ValidationRuleException($"{ValidationExMessage} {request}", failures);
                 }
             }
 

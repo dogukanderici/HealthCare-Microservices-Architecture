@@ -1,4 +1,6 @@
-﻿using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
+﻿using HealthCare.Descriptions.Application.Common.CustomExceptions;
+using HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Responses;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +19,7 @@ namespace HealthCare.Descriptions.Application.Features.BusinessRules.Commons.Hel
 
                 if (!policyResult.IsSuccess)
                 {
-                    return InternalPolicyResponse.Failure(policyResult.BusinessRuleError);
+                    throw new BusinessRuleException($"BUSINESS RULE ERROR! RULE MESSAGE: {policyResult.BusinessRuleError}", policyResult.BusinessRuleError);
                 }
             }
 

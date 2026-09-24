@@ -1,4 +1,5 @@
-﻿using HealthCare.Descriptions.Application.Common.Parameters;
+﻿using HealthCare.Descriptions.Application.Common.CustomExceptions;
+using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Interfaces;
 using MediatR;
 using System;
@@ -35,7 +36,7 @@ namespace HealthCare.Descriptions.Application.Behaviors
             if (!isValidToken)
             {
                 // Token Geçersizse
-                throw new Exception(decryptionResult.Message);
+                throw new TokenDecryptionException(decryptionResult.Message);
             }
             else
             {

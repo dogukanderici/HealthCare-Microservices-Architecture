@@ -5,6 +5,7 @@ using HealthCare.Descriptions.Application.Features.Validations;
 using HealthCare.Descriptions.Configuration.Extentions;
 using HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers;
 using HealthCare.Descriptions.WebAPI.Common.Helpers.ValidationHelper;
+using HealthCare.Descriptions.WebAPI.Common.Middlewares;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -17,11 +18,12 @@ var logPath = "/app/logs/descriptions";
 Directory.CreateDirectory(logPath);
 
 Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
+    .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
     .WriteTo.Debug()
     .WriteTo.File(
         Path.Combine(logPath, "log-.txt"),
-        rollingInterval: RollingInterval.Day)
+        rollingInterval: RollingInterval.Day,
+        outputTemplate: "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}")
     .CreateLogger();
 
 builder.Host.UseSerilog();
@@ -104,6 +106,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.UseAuthorization();
 

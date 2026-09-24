@@ -54,7 +54,7 @@ namespace HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers
                     actionName,
                     $"{ErrorMessage.CallingRequest} - {ex.Message}");
 
-                return new BadRequestObjectResult(APIResponse<TData>.Failure());
+                throw;
             }
         }
     }
