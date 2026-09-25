@@ -16,6 +16,7 @@ using HealthCare.Descriptions.Application.Services.HandlerServices.HospitalPolic
 using HealthCare.Descriptions.Application.Services.HandlerServices.Hospitals;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Policlinics;
 using HealthCare.Descriptions.Application.Services.HandlerServices.QuotaTypes;
+using HealthCare.Descriptions.Application.Services.HandlerServices.RabbitMQ;
 using HealthCare.Descriptions.Application.Services.HandlerServices.ServiceTypes;
 using HealthCare.Descriptions.Persistence.Services.CurrentUserService;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,6 +55,8 @@ namespace HealthCare.Descriptions.Configuration.Extentions
 
             services.AddScoped(typeof(IHospitalPoliclinicQuotaQueryService), typeof(HospitalPoliclinicQuotaQueryService));
             services.AddScoped(typeof(IHospitalPoliclinicQuotaCommandService), typeof(HospitalPoliclinicQuotaCommandService));
+
+            services.AddScoped(typeof(ISyncUserEventCommandService), typeof(SyncUserEventCommandService));
 
             return services;
         }
