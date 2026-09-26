@@ -24,7 +24,7 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefinitonServices
             _businessRule = businessRule;
         }
 
-        public async Task<ProcessDefinition> GetWorkItemForUpdateAsync(Guid id)
+        public async Task<ProcessDefinition> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 

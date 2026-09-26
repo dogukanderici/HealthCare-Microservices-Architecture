@@ -1,3 +1,4 @@
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Features.Configurations;
 using Core.WorkflowEngine.Application.Features.Mappings.Configurations;
 using Core.WorkflowEngine.Application.Interfaces;
@@ -6,6 +7,7 @@ using Core.WorkflowEngine.Application.Services;
 using Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions;
 using Core.WorkflowEngine.Persistence.CacheProvider;
 using Core.WorkflowEngine.Persistence.Context;
+using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ;
 using Core.WorkflowEngine.Persistence.Repositories;
 using Core.WorkflowEngine.Persistence.UnitOfWork;
 using Core.WorkflowEngine.WebAPI.Configurations;
@@ -100,6 +102,13 @@ builder.Services.AddServiceRegistration();
 builder.Services.AddValidatorsFromAssembly(typeof(ValidatorAssemblyMarker).Assembly);
 
 builder.Services.AddHelperServiceConfiguration();
+
+// RabbitMQ Cnfigurations
+builder.Services.Configure<RabbitMQOptions>(
+    builder.Configuration.GetSection("RabbitMQOptions")
+    );
+
+builder.Services.AddHostedService<UserEventConsumer>();
 
 builder.Services.AddSwaggerGen(options =>
 {

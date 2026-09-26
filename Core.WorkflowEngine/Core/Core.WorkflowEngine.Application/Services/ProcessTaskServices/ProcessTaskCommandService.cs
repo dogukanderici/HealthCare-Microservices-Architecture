@@ -21,7 +21,7 @@ namespace Core.WorkflowEngine.Application.Services.ProcessTaskServices
             _repository = repository;
         }
 
-        public async Task<ProcessTask> GetWorkItemForUpdateAsync(Guid id)
+        public async Task<ProcessTask> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
 

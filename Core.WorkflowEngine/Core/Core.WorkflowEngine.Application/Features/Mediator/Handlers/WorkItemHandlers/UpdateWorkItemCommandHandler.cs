@@ -22,7 +22,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateWorkItemCommand request, CancellationToken cancellationToken)
         {
-            WorkItem existedData = await _workItemCommandService.GetWorkItemForUpdateAsync(request.Id);
+            WorkItem existedData = await _workItemCommandService.GetDataForUpdateAsync(request.Id);
 
             _mapper.Map(request, existedData);
 

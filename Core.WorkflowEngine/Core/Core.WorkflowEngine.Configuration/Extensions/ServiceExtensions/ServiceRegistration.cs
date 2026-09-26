@@ -1,11 +1,13 @@
 ﻿using Core.WorkflowEngine.Application.Features.Commons.Utilities;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.IntegrationServices.RabbitMQServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
 using Core.WorkflowEngine.Application.Services.InstanceServices;
+using Core.WorkflowEngine.Application.Services.IntegrationServices.RabbitMQServices;
 using Core.WorkflowEngine.Application.Services.ProcessDefiniitonServices;
 using Core.WorkflowEngine.Application.Services.ProcessDefinitonServices;
 using Core.WorkflowEngine.Application.Services.ProcessTaskServices;
@@ -35,6 +37,7 @@ namespace Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions
             services.AddScoped(typeof(IProcessTaskQueryService), typeof(ProcessTaskQueryService));
             services.AddScoped(typeof(IProcessTaskCommandService), typeof(ProcessTaskCommandService));
 
+            services.AddScoped(typeof(ISyncUserEventCommandService), typeof(SyncUserEventCommandService));
 
             services.AddScoped(typeof(ICurrentUserService), typeof(CurrentUserService));
             services.AddScoped(typeof(IDynamicPropertyJoiner), typeof(DynamicPropertyJoiner));

@@ -27,7 +27,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateInstanceCommand request, CancellationToken cancellationToken)
         {
 
-            Instance existedData = await _instanceCommandService.GetWorkItemForUpdateAsync(request.Id);
+            Instance existedData = await _instanceCommandService.GetDataForUpdateAsync(request.Id);
 
             _mapper.Map(request, existedData);
 

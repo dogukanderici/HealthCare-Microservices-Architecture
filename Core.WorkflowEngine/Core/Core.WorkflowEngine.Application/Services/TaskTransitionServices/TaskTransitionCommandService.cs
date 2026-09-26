@@ -23,7 +23,7 @@ namespace Core.WorkflowEngine.Application.Services.TaskTransitionServices
             _businessRule = businessRule;
         }
 
-        public async Task<ProcessTaskTransition> GetWorkItemForUpdateAsync(Guid id)
+        public async Task<ProcessTaskTransition> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
 

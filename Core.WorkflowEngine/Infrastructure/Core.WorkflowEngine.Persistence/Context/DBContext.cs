@@ -1,4 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Interfaces;
+﻿using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ;
+using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Domain.Abstractions;
 using Core.WorkflowEngine.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -101,5 +102,8 @@ namespace Core.WorkflowEngine.Persistence.Context
         public DbSet<ProcessTask> ProcessTasks { get; set; }
         public DbSet<ProcessTaskAction> ProcessTaskActions { get; set; }
         public DbSet<ProcessTaskTransition> ProcessTaskTransitions { get; set; }
+
+        // RabbitMQ SyncUserEvent
+        public DbSet<SyncUserEvent> SyncUserEvents { get; set; }
     }
 }

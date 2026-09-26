@@ -29,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Services.WorkItemServices
             _businessRule = businessRule;
         }
 
-        public async Task<WorkItem> GetWorkItemForUpdateAsync(Guid id)
+        public async Task<WorkItem> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
 
