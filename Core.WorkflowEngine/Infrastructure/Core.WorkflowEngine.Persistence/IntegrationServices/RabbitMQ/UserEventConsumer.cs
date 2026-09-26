@@ -19,7 +19,8 @@ namespace Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ
         private readonly string _hostName;
         private readonly int _port;
         private readonly string _exchangeName;
-        private readonly string _queueName;
+        private readonly string _queueName; // Her servis için queue ismi kendine özel olmalı.
+        // Aynı işi yapan (örn. aynı tabloya kayıt atan iki ayrı servis varsa) aynı queue ismi kullanılabilir. RabbitMQ aynı queue isminde bir mesajı birine bir mesajı birine atabilir.
 
         private IConnection _connection;
         private IChannel _channel;
@@ -42,7 +43,7 @@ namespace Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _logger.LogInformation("Consumer çalıştı!");
+            _logger.LogInformation("Core.WorkflowEngine SyncUserEvent Consumer is started!");
 
             // Exchange = Ana Dağıtım Merkezi (Publisher'ın yayınladığı mesajlar ilk olarak Exchange'e gelir.)
             // Queue = Posta kutusu
@@ -101,7 +102,7 @@ namespace Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ
                         var message = Encoding.UTF8.GetString(body); // Byte array'in anlamı string'e dönüştürülür.
                         var syncUserEvent = JsonConvert.DeserializeObject<SyncUserEvent>(message); // Oluşturulan SyncUserEvent sınıfına dönüştürülür.
 
-                        _logger.LogInformation("Published data is taken!");
+                        _logger.LogInformation("Core.WorkflowEngine SyncUserEvent Published data is taken!");
 
                         // Gelen verinin db'ye kaydedilmesi için işlem mediator'e devredilir.
                         using (var scoped = _scopeFactory.CreateScope())
@@ -110,13 +111,13 @@ namespace Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ
                             CreateSyncUserEventCommand command = _mapper.Map<CreateSyncUserEventCommand>(syncUserEvent);
 
 
-                            _logger.LogInformation("Data is send mediator!");
+                            _logger.LogInformation("Published Data is send mediator for DB process!");
 
                             await mediator.Send(command);
                         }
 
 
-                        _logger.LogInformation("Data adding is approved!");
+                        _logger.LogInformation("Published data adding is approved!");
 
                         // BasicAckAsync çalıştırılıncaya kadar kuyruktan veriler silinmez. Sisteme verinin onaylandığı bilgisi geçilir.
                         await _channel.BasicAckAsync(deliveryTag: ea.DeliveryTag, multiple: false, cancellationToken: stoppingToken);
@@ -130,7 +131,7 @@ namespace Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ
                     }
                 };
 
-                _logger.LogInformation("Process is completed!");
+                _logger.LogInformation("Core.WorkflowEngine SyncUserEvent Consumer is listening!");
 
                 // Verileri takip eden nesneye yapacağı iş tanımlanır.
                 await _channel.BasicConsumeAsync(
@@ -150,6 +151,7 @@ namespace Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
+
                 throw;
             }
         }

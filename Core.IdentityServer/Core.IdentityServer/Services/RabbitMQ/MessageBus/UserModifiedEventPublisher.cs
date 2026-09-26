@@ -1,4 +1,6 @@
-﻿using Core.IdentityServer.Services.RabbitMQ.Events;
+﻿using Core.IdentityServer.Parameters;
+using Core.IdentityServer.Services.RabbitMQ.Events;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
@@ -7,10 +9,20 @@ namespace Core.IdentityServer.Services.RabbitMQ.MessageBus
 {
     public class UserModifiedEventPublisher
     {
-        private readonly string _hostname = "RabbitMQ";
-        private readonly int _port = 5672;
-        private readonly string _exchangeName = "user_modified_exchange";
-        private readonly string _queueName = "user_modified_queue";
+        private readonly string _hostname;
+        private readonly int _port;
+        private readonly string _exchangeName;
+        private readonly string _userName;
+        private readonly string _password;
+
+        public UserModifiedEventPublisher(IOptions<RabbitMQOptions> options)
+        {
+            _hostname = options.Value.HostName;
+            _port = options.Value.Port;
+            _exchangeName = options.Value.ExchangeName;
+            _userName = options.Value.UserName;
+            _password = options.Value.Password;
+        }
 
         public async Task<bool> PublisherAsync(UserModifiedEvent userModifiedEvent)
         {
@@ -20,8 +32,8 @@ namespace Core.IdentityServer.Services.RabbitMQ.MessageBus
                 {
                     HostName = _hostname,
                     Port = _port,
-                    UserName = "guest",
-                    Password = "guest"
+                    UserName = _userName,
+                    Password = _password
                 };
 
                 using var connection = await factory.CreateConnectionAsync();
@@ -48,18 +60,8 @@ namespace Core.IdentityServer.Services.RabbitMQ.MessageBus
                     durable: true // RabbitMQ yeniden başlatılsa bile route'un kaybolmasını engeller.
                     );
 
-                await channel.QueueDeclareAsync(
-                    queue: _queueName,
-                    durable: true,
-                    exclusive: false,
-                    autoDelete: false
-                    );
-
-                await channel.QueueBindAsync(
-                    queue: _queueName,
-                    exchange: _exchangeName,
-                    routingKey: ""
-                    );
+                // ExchangeType.Fanout ile Exchange'e abone olmuş tüm kuyruklara bu mesajı zaten yayınladığı için Queue tanımı yapılmasına gerewk yok.
+                // Queue tanımı consumer sorumluluğundadır.
 
                 var message = JsonConvert.SerializeObject(userModifiedEvent);
                 var body = Encoding.UTF8.GetBytes(message);

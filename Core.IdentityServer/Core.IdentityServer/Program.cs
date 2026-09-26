@@ -1,9 +1,11 @@
-using Duende.IdentityServer.Validation;
 using Core.IdentityServer;
 using Core.IdentityServer.Context;
 using Core.IdentityServer.Models;
+using Core.IdentityServer.Parameters;
+using Core.IdentityServer.Services.RabbitMQ.MessageBus;
 using Core.IdentityServer.Utilities;
 using Core.IdentityServer.Validators;
+using Duende.IdentityServer.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -60,6 +62,12 @@ builder.Services.AddIdentityServer(opt =>
     .AddProfileService<CustomUserProfileService>(); // Token'a kullanýcý rollerini eklemek için kullanýlýr.
 
 builder.Services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
+
+// RabbitMQ Configurations
+builder.Services.Configure<RabbitMQOptions>(
+        builder.Configuration.GetSection("RabbitMQOptions")
+    );
+builder.Services.AddSingleton<UserModifiedEventPublisher>();
 
 var app = builder.Build();
 

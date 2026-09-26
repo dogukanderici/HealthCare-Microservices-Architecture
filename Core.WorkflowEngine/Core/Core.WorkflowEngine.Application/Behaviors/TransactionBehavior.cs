@@ -7,7 +7,7 @@ namespace Core.WorkflowEngine.Application.Behaviors
 {
     public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : ITransactionalRequest
-        where TResponse : IInternalCommandResponse, new()
+        where TResponse : IInternalCommandResponse
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<TransactionBehavior<TRequest, TResponse>> _logger;
@@ -45,11 +45,7 @@ namespace Core.WorkflowEngine.Application.Behaviors
                     typeof(TRequest).Name,
                     ex);
 
-                return new TResponse
-                {
-                    IsSuccess = false,
-                    InternalMessage = LogConstants.ErrorMessages.TransactionFailed
-                };
+                throw;
             }
         }
     }

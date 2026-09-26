@@ -13,11 +13,13 @@ namespace Core.IdentityServer.Controllers
     [ApiController]
     public class RegistersController : BaseController
     {
+        private readonly UserModifiedEventPublisher _publisher;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegistersController> _logger;
 
-        public RegistersController(UserManager<ApplicationUser> userManager, ILogger<RegistersController> logger)
+        public RegistersController(UserModifiedEventPublisher publisher, UserManager<ApplicationUser> userManager, ILogger<RegistersController> logger)
         {
+            _publisher = publisher;
             _userManager = userManager;
             _logger = logger;
         }
@@ -69,7 +71,6 @@ namespace Core.IdentityServer.Controllers
                     return StatusCode(400, userRoleAssignResult.Errors);
                 }
 
-                var publisher = new UserModifiedEventPublisher();
                 var modifiedUser = new UserModifiedEvent
                 {
                     Id = Guid.TryParse(user.Id, out Guid userId) ? userId : Guid.Empty,
@@ -79,7 +80,7 @@ namespace Core.IdentityServer.Controllers
                     Email = user.Email
                 };
 
-                bool publisherStatus = await publisher.PublisherAsync(modifiedUser);
+                bool publisherStatus = await _publisher.PublisherAsync(modifiedUser);
 
                 _logger.LogInformation(LogConstant.LogMessageTemplate,
                     LogConstant.ServiceName,
