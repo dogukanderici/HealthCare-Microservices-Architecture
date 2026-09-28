@@ -5,9 +5,9 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System.Text;
 
-namespace Core.IdentityServer.Services.RabbitMQ.MessageBus
+namespace Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users
 {
-    public class UserModifiedEventPublisher
+    public class UserModifiedPublisher
     {
         private readonly string _hostname;
         private readonly int _port;
@@ -15,7 +15,7 @@ namespace Core.IdentityServer.Services.RabbitMQ.MessageBus
         private readonly string _userName;
         private readonly string _password;
 
-        public UserModifiedEventPublisher(IOptions<RabbitMQOptions> options)
+        public UserModifiedPublisher(IOptions<RabbitMQOptions> options)
         {
             _hostname = options.Value.HostName;
             _port = options.Value.Port;
@@ -24,7 +24,7 @@ namespace Core.IdentityServer.Services.RabbitMQ.MessageBus
             _password = options.Value.Password;
         }
 
-        public async Task<bool> PublisherAsync(UserModifiedEvent userModifiedEvent)
+        public async Task<bool> PublisherAsync(UserCreatedEvent userModifiedEvent)
         {
             try
             {

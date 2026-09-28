@@ -1,11 +1,12 @@
 using Core.IdentityServer;
 using Core.IdentityServer.Commons.AssemblyMarkers;
+using Core.IdentityServer.Commons.Helpers.RabbitMQ;
 using Core.IdentityServer.Commons.Parameters;
 using Core.IdentityServer.Commons.Utilities;
 using Core.IdentityServer.Commons.Validators;
 using Core.IdentityServer.Context;
 using Core.IdentityServer.Models;
-using Core.IdentityServer.Services.RabbitMQ.MessageBus;
+using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users;
 using Duende.IdentityServer.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -71,7 +72,10 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(AutoMapperAssemblyMarker));
 builder.Services.Configure<RabbitMQOptions>(
         builder.Configuration.GetSection("RabbitMQOptions")
     );
-builder.Services.AddSingleton<UserModifiedEventPublisher>();
+builder.Services.AddSingleton<UserModifiedPublisher>();
+
+builder.Services.AddSingleton(typeof(IRabbitMQConnectionHelper), typeof(RabbitMQConnectionHelper));
+builder.Services.AddScoped(typeof(IRabbitMQPublisherHelper<>), typeof(RabbitMQPublisherHelper<>));
 
 
 var app = builder.Build();

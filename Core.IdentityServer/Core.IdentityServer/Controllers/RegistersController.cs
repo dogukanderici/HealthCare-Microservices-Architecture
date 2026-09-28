@@ -2,7 +2,7 @@
 using Core.IdentityServer.Dtos.UserDtos;
 using Core.IdentityServer.Models;
 using Core.IdentityServer.Services.RabbitMQ.Events;
-using Core.IdentityServer.Services.RabbitMQ.MessageBus;
+using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +13,11 @@ namespace Core.IdentityServer.Controllers
     [ApiController]
     public class RegistersController : BaseController
     {
-        private readonly UserModifiedEventPublisher _publisher;
+        private readonly UserModifiedPublisher _publisher;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ILogger<RegistersController> _logger;
 
-        public RegistersController(UserModifiedEventPublisher publisher, UserManager<ApplicationUser> userManager, ILogger<RegistersController> logger)
+        public RegistersController(UserModifiedPublisher publisher, UserManager<ApplicationUser> userManager, ILogger<RegistersController> logger)
         {
             _publisher = publisher;
             _userManager = userManager;
@@ -71,7 +71,7 @@ namespace Core.IdentityServer.Controllers
                     return StatusCode(400, userRoleAssignResult.Errors);
                 }
 
-                var modifiedUser = new UserModifiedEvent
+                var modifiedUser = new UserCreatedEvent
                 {
                     Id = Guid.TryParse(user.Id, out Guid userId) ? userId : Guid.Empty,
                     Name = user.Name,

@@ -1,6 +1,6 @@
 ﻿namespace Core.IdentityServer.Services.RabbitMQ.Events
 {
-    public class UserModifiedEvent
+    public class UserUpdatedEvent : IRabbitMQEvent
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
