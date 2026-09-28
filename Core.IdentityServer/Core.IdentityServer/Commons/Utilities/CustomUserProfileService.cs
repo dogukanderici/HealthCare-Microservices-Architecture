@@ -5,7 +5,7 @@ using Core.IdentityServer.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 
-namespace Core.IdentityServer.Utilities
+namespace Core.IdentityServer.Commons.Utilities
 {
     public class CustomUserProfileService : IProfileService
     {

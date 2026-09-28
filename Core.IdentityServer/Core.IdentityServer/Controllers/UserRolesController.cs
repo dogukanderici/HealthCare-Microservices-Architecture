@@ -1,4 +1,4 @@
-﻿using Core.IdentityServer.Constants;
+﻿using Core.IdentityServer.Commons.Constants;
 using Core.IdentityServer.Dtos.UserRoleDtos;
 using Core.IdentityServer.Models;
 using Microsoft.AspNetCore.Authorization;

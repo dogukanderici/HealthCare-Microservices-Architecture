@@ -1,5 +1,5 @@
-﻿using Core.IdentityServer.Constants;
-using Core.IdentityServer.Dtos;
+﻿using Core.IdentityServer.Commons.Constants;
+using Core.IdentityServer.Dtos.UserDtos;
 using Core.IdentityServer.Models;
 using Core.IdentityServer.Services.RabbitMQ.Events;
 using Core.IdentityServer.Services.RabbitMQ.MessageBus;

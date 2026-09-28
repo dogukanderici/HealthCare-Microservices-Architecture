@@ -1,4 +1,4 @@
-﻿namespace Core.IdentityServer.Constants
+﻿namespace Core.IdentityServer.Commons.Constants
 {
     public static class ValidationConstants
     {

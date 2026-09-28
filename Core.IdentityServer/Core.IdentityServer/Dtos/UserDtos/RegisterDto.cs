@@ -1,4 +1,4 @@
-﻿namespace Core.IdentityServer.Dtos
+﻿namespace Core.IdentityServer.Dtos.UserDtos
 {
     public class RegisterDto
     {

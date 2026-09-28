@@ -1,4 +1,4 @@
-﻿namespace Core.IdentityServer.Parameters
+﻿namespace Core.IdentityServer.Commons.Parameters
 {
     public class RabbitMQOptions
     {

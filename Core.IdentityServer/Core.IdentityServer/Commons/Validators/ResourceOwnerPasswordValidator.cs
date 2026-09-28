@@ -3,7 +3,7 @@ using Duende.IdentityServer.Validation;
 using Core.IdentityServer.Models;
 using Microsoft.AspNetCore.Identity;
 
-namespace Core.IdentityServer.Validators
+namespace Core.IdentityServer.Commons.Validators
 {
     public class ResourceOwnerPasswordValidator : IResourceOwnerPasswordValidator
     {

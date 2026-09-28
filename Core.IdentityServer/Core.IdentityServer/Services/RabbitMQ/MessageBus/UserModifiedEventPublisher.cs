@@ -1,4 +1,4 @@
-﻿using Core.IdentityServer.Parameters;
+﻿using Core.IdentityServer.Commons.Parameters;
 using Core.IdentityServer.Services.RabbitMQ.Events;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;

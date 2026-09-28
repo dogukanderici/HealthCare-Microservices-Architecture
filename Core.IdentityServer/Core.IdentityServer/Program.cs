@@ -1,10 +1,11 @@
 using Core.IdentityServer;
+using Core.IdentityServer.Commons.AssemblyMarkers;
+using Core.IdentityServer.Commons.Parameters;
+using Core.IdentityServer.Commons.Utilities;
+using Core.IdentityServer.Commons.Validators;
 using Core.IdentityServer.Context;
 using Core.IdentityServer.Models;
-using Core.IdentityServer.Parameters;
 using Core.IdentityServer.Services.RabbitMQ.MessageBus;
-using Core.IdentityServer.Utilities;
-using Core.IdentityServer.Validators;
 using Duende.IdentityServer.Validation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -63,11 +64,15 @@ builder.Services.AddIdentityServer(opt =>
 
 builder.Services.AddTransient<IResourceOwnerPasswordValidator, ResourceOwnerPasswordValidator>();
 
+// AutoMapper Configuration
+builder.Services.AddAutoMapper(cfg => { }, typeof(AutoMapperAssemblyMarker));
+
 // RabbitMQ Configurations
 builder.Services.Configure<RabbitMQOptions>(
         builder.Configuration.GetSection("RabbitMQOptions")
     );
 builder.Services.AddSingleton<UserModifiedEventPublisher>();
+
 
 var app = builder.Build();
 
