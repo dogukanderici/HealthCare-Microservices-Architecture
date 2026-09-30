@@ -13,7 +13,8 @@ namespace HealthCare.Descriptions.Application.Features.Mappings.RabbitMQMappings
     {
         public SyncUserEventMappingProfile()
         {
-            CreateMap<SyncUserEvent, CreateSyncUserEventCommand>().ReverseMap();
+            CreateMap<SyncUserEvent, CreateUserEventCommand>().ReverseMap();
+            CreateMap<SyncUserEvent, UpdateUserEventCommand>().ReverseMap();
         }
     }
 }

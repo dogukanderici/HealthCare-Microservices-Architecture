@@ -72,10 +72,11 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(AutoMapperAssemblyMarker));
 builder.Services.Configure<RabbitMQOptions>(
         builder.Configuration.GetSection("RabbitMQOptions")
     );
-builder.Services.AddSingleton<UserModifiedPublisher>();
 
 builder.Services.AddSingleton(typeof(IRabbitMQConnectionHelper), typeof(RabbitMQConnectionHelper));
 builder.Services.AddScoped(typeof(IRabbitMQPublisherHelper<>), typeof(RabbitMQPublisherHelper<>));
+builder.Services.AddScoped<UserCreateEventPublisher>();
+builder.Services.AddScoped<UserUpdateEventPublisher>();
 
 
 var app = builder.Build();

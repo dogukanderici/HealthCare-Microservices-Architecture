@@ -1,4 +1,5 @@
-﻿using Core.IdentityServer.Commons.Constants;
+﻿using AutoMapper;
+using Core.IdentityServer.Commons.Constants;
 using Core.IdentityServer.Dtos.UserDtos;
 using Core.IdentityServer.Models;
 using Core.IdentityServer.Services.RabbitMQ.Events;
@@ -13,14 +14,16 @@ namespace Core.IdentityServer.Controllers
     [ApiController]
     public class RegistersController : BaseController
     {
-        private readonly UserModifiedPublisher _publisher;
+        private readonly UserCreateEventPublisher _publisher;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper _mapper;
         private readonly ILogger<RegistersController> _logger;
 
-        public RegistersController(UserModifiedPublisher publisher, UserManager<ApplicationUser> userManager, ILogger<RegistersController> logger)
+        public RegistersController(UserCreateEventPublisher publisher, UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<RegistersController> logger)
         {
             _publisher = publisher;
             _userManager = userManager;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -71,16 +74,18 @@ namespace Core.IdentityServer.Controllers
                     return StatusCode(400, userRoleAssignResult.Errors);
                 }
 
-                var modifiedUser = new UserCreatedEvent
-                {
-                    Id = Guid.TryParse(user.Id, out Guid userId) ? userId : Guid.Empty,
-                    Name = user.Name,
-                    Surname = user.Surname,
-                    Username = user.UserName,
-                    Email = user.Email
-                };
+                //var modifiedUser = new UserCreatedEvent
+                //{
+                //    Id = Guid.TryParse(user.Id, out Guid userId) ? userId : Guid.Empty,
+                //    Name = user.Name,
+                //    Surname = user.Surname,
+                //    Username = user.UserName,
+                //    Email = user.Email
+                //};
 
-                bool publisherStatus = await _publisher.PublisherAsync(modifiedUser);
+                UserCreatedEvent modifiedUser = _mapper.Map<UserCreatedEvent>(user);
+
+                bool publisherStatus = await _publisher.PublishEventAsync(modifiedUser);
 
                 _logger.LogInformation(LogConstant.LogMessageTemplate,
                     LogConstant.ServiceName,

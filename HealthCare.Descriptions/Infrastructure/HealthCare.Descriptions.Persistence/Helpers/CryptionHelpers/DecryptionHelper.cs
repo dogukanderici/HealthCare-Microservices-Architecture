@@ -10,7 +10,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Persistence.Helpers
+namespace HealthCare.Descriptions.Persistence.Helpers.CryptionHelpers
 {
     public class DecryptionHelper : IDecryptionHelper
     {

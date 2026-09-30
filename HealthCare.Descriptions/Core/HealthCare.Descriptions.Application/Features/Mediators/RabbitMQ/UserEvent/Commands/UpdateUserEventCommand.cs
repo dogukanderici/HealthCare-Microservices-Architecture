@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.UserEvent.Commands
 {
-    public class CreateSyncUserEventCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
+    public class UpdateUserEventCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -82,7 +82,7 @@ namespace Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ
                 // Exchange tanımlanır.
                 // ExchangeType.Fanout => Ana Dağıtım Merkezine gelen tüm veriler bu merkeze bağlı tüm kuyruklara kopyalanır.
                 // durable: true => RabbitMQ kapatıldığında exchange silinmemesini sağlar.
-                await _channel.ExchangeDeclareAsync(_exchangeName, ExchangeType.Fanout, durable: true, cancellationToken: stoppingToken);
+                await _channel.ExchangeDeclareAsync(_exchangeName, ExchangeType.Topic, durable: true, cancellationToken: stoppingToken);
 
                 // Queue tanımlanır.
                 await _channel.QueueDeclareAsync(_queueName, durable: true, exclusive: false, autoDelete: false, cancellationToken: stoppingToken);

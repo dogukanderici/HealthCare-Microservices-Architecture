@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Core.IdentityServer.Commons.Helpers.RabbitMQ;
 using Core.IdentityServer.Dtos.UserDtos;
 using Core.IdentityServer.Models;
+using Core.IdentityServer.Services.RabbitMQ.Events;
+using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -10,14 +13,16 @@ namespace Core.IdentityServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserUpdates : BaseController
+    public class UserUpdatesController : BaseController
     {
+        private readonly UserUpdateEventPublisher _publisher;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly ILogger<UserUpdates> _logger;
+        private readonly ILogger<UserUpdatesController> _logger;
 
-        public UserUpdates(UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<UserUpdates> logger)
+        public UserUpdatesController(UserUpdateEventPublisher publisher, UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<UserUpdatesController> logger)
         {
+            _publisher = publisher;
             _userManager = userManager;
             _mapper = mapper;
             _logger = logger;
@@ -54,6 +59,8 @@ namespace Core.IdentityServer.Controllers
                 if (updatedUser.Succeeded)
                 {
                     _logger.LogInformation($"Email: {oldEmail} Message: User updated successfully!");
+
+                    bool publisherResponse = await _publisher.PublishEventAsync(_mapper.Map<UserUpdatedEvent>(userCheck));
 
                     return StatusCode(200, "User updated successfully!");
                 }

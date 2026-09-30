@@ -1,10 +1,8 @@
 using FluentValidation;
-using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Common.Settings;
 using HealthCare.Descriptions.Application.Features.Mappings;
 using HealthCare.Descriptions.Application.Features.Validations;
 using HealthCare.Descriptions.Configuration.Extentions;
-using HealthCare.Descriptions.Persistence.IntegrationServices.RabbitMQ;
 using HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers;
 using HealthCare.Descriptions.WebAPI.Common.Helpers.ValidationHelper;
 using HealthCare.Descriptions.WebAPI.Common.Middlewares;
@@ -58,10 +56,7 @@ builder.Services.Configure<CursorTokenSettings>(
     builder.Configuration.GetSection("CursorTokenSettings"));
 
 // RabbitMQ Option Configuration
-builder.Services.Configure<RabbitMQOptions>(
-        builder.Configuration.GetSection("RabbitMQOptions")
-    );
-builder.Services.AddHostedService<UserEventConsumer>();
+builder.Services.AddRabbitMQConfiguration(builder.Configuration);
 
 // Controller Response Configuration
 builder.Services.AddScoped(typeof(IControllerHelper<>), typeof(ControllerHelper<>));
