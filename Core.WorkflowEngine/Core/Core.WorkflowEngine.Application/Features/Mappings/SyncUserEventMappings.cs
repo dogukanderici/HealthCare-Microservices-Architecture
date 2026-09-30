@@ -14,6 +14,7 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
         public SyncUserEventMappings()
         {
             CreateMap<SyncUserEvent, CreateSyncUserEventCommand>().ReverseMap();
+            CreateMap<SyncUserEvent, UpdateSyncUserEventCommand>().ReverseMap();
         }
     }
 }

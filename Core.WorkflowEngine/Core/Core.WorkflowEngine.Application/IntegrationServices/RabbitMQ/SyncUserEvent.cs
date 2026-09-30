@@ -16,8 +16,6 @@ namespace Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ
         public string UserName { get; set; }
         public string Email { get; set; }
         public bool IsAvailable { get; set; } = true;
-
-
         public DateTimeOffset CreatedAt { get; set; }
         public Guid CreatedBy { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }

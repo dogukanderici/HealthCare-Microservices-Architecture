@@ -104,11 +104,7 @@ builder.Services.AddValidatorsFromAssembly(typeof(ValidatorAssemblyMarker).Assem
 builder.Services.AddHelperServiceConfiguration();
 
 // RabbitMQ Cnfigurations
-builder.Services.Configure<RabbitMQOptions>(
-    builder.Configuration.GetSection("RabbitMQOptions")
-    );
-
-builder.Services.AddHostedService<UserEventConsumer>();
+builder.Services.AddRabbitMQConfiguration(builder.Configuration);
 
 builder.Services.AddSwaggerGen(options =>
 {
