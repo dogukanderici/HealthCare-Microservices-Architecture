@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
@@ -11,12 +11,12 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 {
     public class CreateWorkItemCommandHandler : IRequestHandler<CreateWorkItemCommand, InternalHandlerResponse<Guid>>
     {
-        private readonly IWorkItemCommandService _workItemCommandService;
+        private readonly IWorkItemCommandService _commandService;
         private readonly IMapper _mapper;
 
-        public CreateWorkItemCommandHandler(IWorkItemCommandService workItemCommandService, IMapper mapper)
+        public CreateWorkItemCommandHandler(IWorkItemCommandService commandService, IMapper mapper)
         {
-            _workItemCommandService = workItemCommandService;
+            _commandService = commandService;
             _mapper = mapper;
         }
 
@@ -24,14 +24,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
         {
             WorkItem dataFromDto = _mapper.Map<WorkItem>(request);
 
-            InternalServiceResponse<Guid> result = await _workItemCommandService.CreateAsync(dataFromDto, cancellationToken);
+            InternalServiceResponse<Guid> serviceResponse = await _commandService.CreateAsync(dataFromDto, cancellationToken);
 
-            if (result.IsSuccess)
-            {
-                return InternalHandlerResponse<Guid>.Success(result.Data, InternalHandlerConstants.SuccessWorkItemCreating);
-            }
-
-            return InternalHandlerResponse<Guid>.Failure(InternalHandlerConstants.ErrorWorkItemCreating);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

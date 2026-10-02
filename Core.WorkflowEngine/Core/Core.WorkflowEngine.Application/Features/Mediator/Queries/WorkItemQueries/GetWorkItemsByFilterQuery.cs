@@ -10,6 +10,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQuer
     public class GetWorkItemsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetWorkItemsByFilterQueryResult>>>, ICacheableQuery
     {
         public Guid? InstanceId { get; set; }
+        public Guid? WorkItemId { get; set; }
         public Guid? AssignedUserId { get; set; }
         public int? Status { get; set; }
         public DateTimeOffset? CreatedAt { get; set; }
@@ -18,6 +19,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQuer
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey([
             typeof(GetWorkItemsQuery).Name,
             (InstanceId.ToString()),
+            (WorkItemId.ToString()),
             (AssignedUserId.ToString()),
             (CreatedAt.ToString()),
             (CreatedBy.ToString())
@@ -32,10 +34,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQuer
         }
 
         public static GetWorkItemsByFilterQuery Filter(
-            Guid? instanceId, Guid? assignedUserId, int? status, DateTimeOffset? createdAt, Guid? createdBy) =>
+            Guid? instanceId, Guid? workItemId, Guid? assignedUserId, int? status, DateTimeOffset? createdAt, Guid? createdBy) =>
             new GetWorkItemsByFilterQuery()
             {
                 InstanceId = instanceId,
+                WorkItemId = workItemId,
                 AssignedUserId = assignedUserId,
                 Status = status,
                 CreatedAt = createdAt,

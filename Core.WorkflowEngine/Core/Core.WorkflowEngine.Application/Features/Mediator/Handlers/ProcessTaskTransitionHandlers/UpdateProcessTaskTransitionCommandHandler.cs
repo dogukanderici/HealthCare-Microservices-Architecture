@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
@@ -11,27 +11,27 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 {
     public class UpdateProcessTaskTransitionCommandHandler : IRequestHandler<UpdateProcessTaskTransitionCommand, InternalHandlerResponse<DateTimeOffset>>
     {
-        private readonly ITaskTransitionCommandService _service;
+        private readonly ITaskTransitionCommandService _commandService;
         private readonly IMapper _mapper;
 
-        public UpdateProcessTaskTransitionCommandHandler(ITaskTransitionCommandService service, IMapper mapper)
+        public UpdateProcessTaskTransitionCommandHandler(ITaskTransitionCommandService commandService, IMapper mapper)
         {
-            _service = service;
+            _commandService = commandService;
             _mapper = mapper;
         }
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateProcessTaskTransitionCommand request, CancellationToken cancellationToken)
         {
-            ProcessTaskTransition dataFromDto = _mapper.Map<ProcessTaskTransition>(request);
+            InternalServiceResponse<ProcessTaskTransition> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
 
-            InternalServiceResponse<DateTimeOffset> result = await _service.UpdateAsync(dataFromDto, cancellationToken);
+            if (!existedData.IsSuccess)
+                return InternalHandlerResponse<DateTimeOffset>.Failure(existedData.ServiceMessage);
 
-            if (result.IsSuccess)
-            {
-                return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalHandlerConstants.SuccessProcessTaskTransitionUpdating);
-            }
+            _mapper.Map(request, existedData.Data);
 
-            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalHandlerConstants.ErrorProcessTaskTransitionUpdating);
+            InternalServiceResponse<DateTimeOffset> serviceResponse = await _commandService.UpdateAsync(existedData.Data);
+
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

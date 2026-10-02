@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
@@ -11,29 +11,27 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 {
     public class UpdateWorkItemCommandHandler : IRequestHandler<UpdateWorkItemCommand, InternalHandlerResponse<DateTimeOffset>>
     {
-        private readonly IWorkItemCommandService _workItemCommandService;
+        private readonly IWorkItemCommandService _commandService;
         private readonly IMapper _mapper;
 
-        public UpdateWorkItemCommandHandler(IWorkItemCommandService workItemCommandService, IMapper mapper)
+        public UpdateWorkItemCommandHandler(IWorkItemCommandService commandService, IMapper mapper)
         {
-            _workItemCommandService = workItemCommandService;
+            _commandService = commandService;
             _mapper = mapper;
         }
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateWorkItemCommand request, CancellationToken cancellationToken)
         {
-            WorkItem existedData = await _workItemCommandService.GetDataForUpdateAsync(request.Id);
+            InternalServiceResponse<WorkItem> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
+
+            if (!existedData.IsSuccess)
+                return InternalHandlerResponse<DateTimeOffset>.Failure(existedData.ServiceMessage);
 
             _mapper.Map(request, existedData);
 
-            InternalServiceResponse<DateTimeOffset> result = await _workItemCommandService.UpdateAsync(existedData, cancellationToken);
+            InternalServiceResponse<DateTimeOffset> serviceResponse = await _commandService.UpdateAsync(existedData.Data);
 
-            if (result.IsSuccess)
-            {
-                return InternalHandlerResponse<DateTimeOffset>.Success(result.Data, InternalHandlerConstants.SuccessWorkItemUpdating);
-            }
-
-            return InternalHandlerResponse<DateTimeOffset>.Failure(InternalHandlerConstants.ErrorWorkItemUpdating);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

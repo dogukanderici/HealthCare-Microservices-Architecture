@@ -1,34 +1,32 @@
 ﻿using AutoMapper;
-using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskActionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskActionServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
     public class CreateProcessTaskActionCommandHandler : IRequestHandler<CreateProcessTaskActionCommand, InternalHandlerResponse<Guid>>
     {
-        private readonly IRepository<ProcessTaskAction> _repository;
+        private IProcessTaskActionCommandService _commandService;
         private readonly IMapper _mapper;
-        private readonly ILogger<CreateProcessTaskActionCommandHandler> _logger;
 
-        public CreateProcessTaskActionCommandHandler(IRepository<ProcessTaskAction> repository, IMapper mapper, ILogger<CreateProcessTaskActionCommandHandler> logger)
+        public CreateProcessTaskActionCommandHandler(IProcessTaskActionCommandService commandService, IMapper mapper)
         {
-            _repository = repository;
+            _commandService = commandService;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<InternalHandlerResponse<Guid>> Handle(CreateProcessTaskActionCommand request, CancellationToken cancellationToken)
         {
             ProcessTaskAction dataFromDto = _mapper.Map<ProcessTaskAction>(request);
 
-            Guid result = await _repository.CreateDataAsync(dataFromDto);
+            InternalServiceResponse<Guid> serviceResponse = await _commandService.CreateAsync(dataFromDto, cancellationToken);
 
-            return InternalHandlerResponse<Guid>.Success(result, InternalHandlerConstants.SuccessProcessTaskActionCreating);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

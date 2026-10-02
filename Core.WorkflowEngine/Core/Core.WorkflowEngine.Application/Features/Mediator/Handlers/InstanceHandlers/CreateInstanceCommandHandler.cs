@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.InstanceCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
@@ -13,16 +14,12 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
 {
     public class CreateInstanceCommandHandler : IRequestHandler<CreateInstanceCommand, InternalHandlerResponse<Guid>>
     {
-        private readonly IUnitOfWork _unitOfWork;
         private readonly IInstanceCommandService _instanceCommandService;
-        private readonly ILogger<CreateInstanceCommandHandler> _logger;
         private readonly IMapper _mapper;
 
-        public CreateInstanceCommandHandler(IUnitOfWork unitOfWork, IInstanceCommandService instanceCommandService, ILogger<CreateInstanceCommandHandler> logger, IMapper mapper)
+        public CreateInstanceCommandHandler(IInstanceCommandService instanceCommandService, IMapper mapper)
         {
-            _unitOfWork = unitOfWork;
             _instanceCommandService = instanceCommandService;
-            _logger = logger;
             _mapper = mapper;
         }
 
@@ -34,14 +31,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
 
             InternalServiceResponse<Guid> serviceResponse = await _instanceCommandService.CreateAsync(instanceEntity, cancellationToken);
 
-            if (serviceResponse.IsSuccess)
-            {
-
-                return InternalHandlerResponse<Guid>.Success(serviceResponse.Data, InternalHandlerConstants.SuccessInstanceCreating);
-            }
-
-            return InternalHandlerResponse<Guid>.Failure(InternalHandlerConstants.ErrorInstanceCreating);
-
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

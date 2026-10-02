@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExecutionCommands;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
@@ -14,15 +17,15 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
 {
     public class CommitWorkItemExecutionCommandHandler : IRequestHandler<CommitWorkItemExecutionCommand, InternalHandlerResponse<Guid>>
     {
-        private readonly ITaskTransitionQueryService _taskTransitionService;
+        private readonly ITaskTransitionQueryService _taskTransitionQueryService;
         private readonly IWorkItemQueryService _workItemQueryService;
         private readonly IWorkItemCommandService _workItemCommandService;
         private readonly IMapper _mapper;
         private readonly ICurrentUserService _currentUserService;
 
-        public CommitWorkItemExecutionCommandHandler(ITaskTransitionQueryService taskTransitionService, IWorkItemQueryService workItemQueryService, IWorkItemCommandService workItemCommandService, IMapper mapper, ICurrentUserService currentUserService)
+        public CommitWorkItemExecutionCommandHandler(ITaskTransitionQueryService taskTransitionQueryService, IWorkItemQueryService workItemQueryService, IWorkItemCommandService workItemCommandService, IMapper mapper, ICurrentUserService currentUserService)
         {
-            _taskTransitionService = taskTransitionService;
+            _taskTransitionQueryService = taskTransitionQueryService;
             _workItemQueryService = workItemQueryService;
             _workItemCommandService = workItemCommandService;
             _mapper = mapper;
@@ -37,23 +40,33 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
             // 4. Eğer yoksa, workflow instance tamamlanmış olur ve instance durumu Completed olarak güncellenir.
             // 5. Tüm db işlemleri tek bir transaction içinde yapılır. Eğer herhangi bir işlem başarısız olursa, tüm işlemler geri alınır.
 
-            InternalServiceResponse<WorkItem> workItem = await _workItemQueryService.GetDataByIdAsync(request.WorkItemId);
+            InternalServiceResponse<WorkItem> serviceResponse =
+                await _workItemCommandService.GetDataForUpdateAsync(request.WorkItemId);
 
-            if (workItem != null)
+            if (serviceResponse.IsSuccess)
             {
                 // Form verileri json formatında db'ye kaydedilir.
                 // TO-DO
 
                 // InitiatorWorkItem burada güncellenir.
-                workItem.Data.Status = 2; // Completed
-                workItem.Data.SelectedAction = request.ActionId;
-                workItem.Data.CompletedBy = _currentUserService.UserId;
-                workItem.Data.CompletedAt = _currentUserService.CurrentDate;
-                await _workItemCommandService.UpdateAsync(workItem.Data, cancellationToken);
+                serviceResponse.Data.Status = 2; // Completed
+                serviceResponse.Data.SelectedAction = request.ActionId;
+                serviceResponse.Data.CompletedBy = _currentUserService.UserId;
+                serviceResponse.Data.CompletedAt = _currentUserService.CurrentDate;
+
+                await _workItemCommandService.UpdateAsync(serviceResponse.Data);
 
                 // Sonraki task için transition var mı kontrol edilir.
                 TaskTransitionFilterDto filterFromDto = _mapper.Map<TaskTransitionFilterDto>(request);
-                InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(filterFromDto);
+
+                DBQueryOptions<ProcessTaskTransition> transitionOptions = new DBQueryOptions<ProcessTaskTransition>();
+                transitionOptions.filter = x => (
+                    (x.ProcessTaskId == request.ProcessTaskId) &&
+                    (x.ActionId == request.ActionId)
+                );
+
+                InternalServiceResponse<IReadOnlyCollection<GetProcessTaskTransitionsByFilterQueryResult>> result =
+                    await _taskTransitionQueryService.GetDatasByFilterAsync<GetProcessTaskTransitionsByFilterQueryResult>(transitionOptions);
 
                 Guid.TryParse("00000000-0000-0000-0000-000000000000", out Guid newWorkItemId);
 

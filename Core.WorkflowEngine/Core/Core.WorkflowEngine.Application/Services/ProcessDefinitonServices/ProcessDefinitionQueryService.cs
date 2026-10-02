@@ -1,4 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
@@ -12,90 +13,63 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefiniitonServices
     public class ProcessDefinitionQueryService : IProcessDefinitionQueryService
     {
         private readonly IRepository<ProcessDefinition> _repository;
-        private readonly ILogger<ProcessDefinitionQueryService> _logger;
+        private readonly IMapper _mapper;
 
-        public ProcessDefinitionQueryService(IRepository<ProcessDefinition> respository, ILogger<ProcessDefinitionQueryService> logger)
+        public ProcessDefinitionQueryService(IRepository<ProcessDefinition> repository, IMapper mapper)
         {
-            _repository = respository;
-            _logger = logger;
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public async Task<InternalServiceResponse<IReadOnlyCollection<ProcessDefinition>>> GetDatasAsync(ProcessDefinitionFilterDto? filterDto = null)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasAsync<TResult>(DBQueryOptions<ProcessDefinition>? options = null)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
+            IReadOnlyCollection<ProcessDefinition> result = await _repository.GetAllDataAsync(options);
 
-            IReadOnlyCollection<ProcessDefinition> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<IReadOnlyCollection<ProcessDefinition>>.Success(result);
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(result));
         }
 
-        public async Task<InternalServiceResponse<ProcessDefinition>> GetDataByIdAsync(Guid id)
+        public async Task<InternalServiceResponse<TResult>> GetDataByIdAsync<TResult>(Guid id)
         {
             DBQueryOptions<ProcessDefinition> dbQueryOptions = new DBQueryOptions<ProcessDefinition>();
-
-            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == id;
-            dbQueryOptions.filter = filter;
+            dbQueryOptions.filter = x => x.Id == id;
 
             ProcessDefinition result = await _repository.GetDataAsync(dbQueryOptions);
 
-            return InternalServiceResponse<ProcessDefinition>.Success(result);
+            return InternalServiceResponse<TResult>.Success(_mapper.Map<TResult>(result));
         }
 
-        public async Task<InternalServiceResponse<IReadOnlyCollection<ProcessDefinition>>> GetDatasByFilterAsync(ProcessDefinitionFilterDto filterDto)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasByFilterAsync<TResult>(DBQueryOptions<ProcessDefinition> options)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = GetDbQueryOptions(filterDto);
+            IReadOnlyCollection<ProcessDefinition> result = await _repository.GetAllDataAsync(options);
 
-            IReadOnlyCollection<ProcessDefinition> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<IReadOnlyCollection<ProcessDefinition>>.Success(result);
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(result));
         }
 
-        public async Task<InternalServiceResponse<ProcessDefinition>> GetDataForLastestVersionAsync(Guid processSpecId)
+        public async Task<InternalServiceResponse<TResult>> GetDataForLastestVersionAsync<TResult>(Guid processSpecId)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
-
-            Expression<Func<ProcessDefinition, bool>> filter = x => (
-                x.ProcessSpecId == processSpecId &&
-                x.IsActive == true
-            );
-
-            Expression<Func<ProcessDefinition, object>> orderBy = x => x.VersionNumber;
-
             int sortingType = 1; // Descending
             int dataTakeNumber = 1; // Son versiyonu alır.
 
-            dBQueryOptions.filter = filter;
+            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
+
+            dBQueryOptions.filter = x => (
+                x.ProcessSpecId == processSpecId &&
+                x.IsActive == true
+            );
+            dBQueryOptions.orderBy = x => x.VersionNumber;
             dBQueryOptions.sortingType = sortingType;
-            dBQueryOptions.orderBy = orderBy;
             dBQueryOptions.DataTakeNumber = dataTakeNumber;
 
             ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);
 
-            return InternalServiceResponse<ProcessDefinition>.Success(result);
+            return InternalServiceResponse<TResult>.Success(_mapper.Map<TResult>(result));
         }
 
-        public async Task<InternalServiceResponse<int>> GetDataCount(ProcessDefinitionFilterDto filterDto)
+        public async Task<InternalServiceResponse<int>> GetDataCount(DBQueryOptions<ProcessDefinition> options)
         {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = GetDbQueryOptions(filterDto, false);
-
-            int result = await _repository.GetAllDataCountAsync(dBQueryOptions);
+            int result = await _repository.GetAllDataCountAsync(options);
 
             return InternalServiceResponse<int>.Success(result);
-        }
-
-        private DBQueryOptions<ProcessDefinition> GetDbQueryOptions(ProcessDefinitionFilterDto filterDto, bool isRelationalQuery = true)
-        {
-            DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
-
-            Expression<Func<ProcessDefinition, bool>> filter = x => (
-            (!filterDto.ProcessSpecId.HasValue || x.ProcessSpecId == filterDto.ProcessSpecId) &&
-            (!filterDto.IsActive.HasValue || x.IsActive == filterDto.IsActive) &&
-            (string.IsNullOrEmpty(filterDto.ProcessName) || x.ProcessName == filterDto.ProcessName)
-            );
-
-            dBQueryOptions.filter = filter;
-
-            return dBQueryOptions;
         }
     }
 }

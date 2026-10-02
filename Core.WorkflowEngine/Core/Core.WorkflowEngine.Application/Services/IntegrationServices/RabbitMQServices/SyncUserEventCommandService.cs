@@ -22,14 +22,17 @@ namespace Core.WorkflowEngine.Application.Services.IntegrationServices.RabbitMQS
             _repository = repository;
         }
 
-        public async Task<SyncUserEvent> GetDataForUpdateAsync(Guid id)
+        public async Task<InternalServiceResponse<SyncUserEvent>> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<SyncUserEvent> dBQueryOptions = new DBQueryOptions<SyncUserEvent>();
             dBQueryOptions.filter = x => x.Id == id;
 
             SyncUserEvent existedData = await _repository.GetDataAsync(dBQueryOptions);
 
-            return existedData;
+            if (existedData == null)
+                return InternalServiceResponse<SyncUserEvent>.Failure("Data not found");
+
+            return InternalServiceResponse<SyncUserEvent>.Success(existedData);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(SyncUserEvent entity, CancellationToken cancellationToken)
@@ -39,21 +42,21 @@ namespace Core.WorkflowEngine.Application.Services.IntegrationServices.RabbitMQS
             return InternalServiceResponse<Guid>.Success(id);
         }
 
-        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(SyncUserEvent entity, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(SyncUserEvent entity)
         {
             DateTimeOffset updatedDate = await _repository.UpdateDataAsync(entity);
 
             return InternalServiceResponse<DateTimeOffset>.Success(updatedDate);
         }
 
-        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)
         {
-            SyncUserEvent existedData = await GetDataForUpdateAsync(id);
+            InternalServiceResponse<SyncUserEvent> existedData = await GetDataForUpdateAsync(id);
 
-            if (existedData == null)
-                return InternalServiceResponse<bool>.Failure();
+            if (existedData.IsSuccess)
+                return InternalServiceResponse<bool>.Failure(existedData.ServiceMessage);
 
-            await _repository.DeleteDataAsync(existedData);
+            await _repository.DeleteDataAsync(existedData.Data);
 
             return InternalServiceResponse<bool>.Success(true);
         }

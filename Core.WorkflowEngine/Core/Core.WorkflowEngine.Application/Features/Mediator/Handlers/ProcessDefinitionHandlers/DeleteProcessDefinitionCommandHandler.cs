@@ -19,7 +19,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
 
         public async Task<InternalHandlerResponse<bool>> Handle(DeleteProcessDefinitionCommand request, CancellationToken cancellationToken)
         {
-            InternalServiceResponse<bool> serviceResult = await _processDefinitionCommandService.DeleteAsync(request.Id, cancellationToken);
+            InternalServiceResponse<bool> serviceResult = await _processDefinitionCommandService.DeleteAsync(request.Id);
 
             return InternalHandlerResponse<bool>.Success(serviceResult.Data, InternalHandlerConstants.SuccessProcessDefinitionDeleting);
         }

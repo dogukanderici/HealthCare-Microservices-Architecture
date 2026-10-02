@@ -1,32 +1,30 @@
-﻿using AutoMapper;
-using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries;
-using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHandlers
 {
-    public class GetInstanceCountQueryHandler : IRequestHandler<GetInstanceCountQuery, InternalHandlerResponse<GetInstancesCountQueryResult>>
+    public class GetInstanceCountQueryHandler : IRequestHandler<GetInstanceCountQuery, InternalHandlerResponse<int>>
     {
-        private readonly IRepository<Instance> _repository;
-        private readonly IMapper _mapper;
+        private readonly IInstanceQueryService _queryService;
 
-        public GetInstanceCountQueryHandler(IRepository<Instance> repository, IMapper mapper)
+        public GetInstanceCountQueryHandler(IInstanceQueryService queryService)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _queryService = queryService;
         }
 
-        public async Task<InternalHandlerResponse<GetInstancesCountQueryResult>> Handle(GetInstanceCountQuery request, CancellationToken cancellationToken)
+        public async Task<InternalHandlerResponse<int>> Handle(GetInstanceCountQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<Instance> options = new DBQueryOptions<Instance>();
 
-            int dataCount = await _repository.GetAllDataCountAsync(options);
+            InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCount(options);
 
-            return InternalHandlerResponse<GetInstancesCountQueryResult>.Success(_mapper.Map<GetInstancesCountQueryResult>(dataCount));
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

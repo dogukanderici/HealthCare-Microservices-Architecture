@@ -9,10 +9,10 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkflowExec
 {
     public class GetTransitionsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetTransitionsByFilterQueryResult>>>, ICacheableQuery
     {
-        public Guid ProcessTaskId { get; set; }
-        public Guid ActionId { get; set; }
-        public bool IsActive { get; set; }
-        public Guid VersionId { get; set; }
+        public Guid? ProcessTaskId { get; set; }
+        public Guid? ActionId { get; set; }
+        public bool? IsActive { get; set; }
+        public Guid? VersionId { get; set; }
 
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey([
             typeof(GetTransitionsByFilterQuery).Name,
@@ -29,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkflowExec
 
         }
 
-        public GetTransitionsByFilterQuery Filter(Guid processTaskId, Guid actionId, bool isActive, Guid VersionId) =>
+        public GetTransitionsByFilterQuery Filter(Guid? processTaskId, Guid? actionId, bool? isActive, Guid? VersionId) =>
             new GetTransitionsByFilterQuery
             {
                 ProcessTaskId = processTaskId,

@@ -1,39 +1,32 @@
 ﻿using AutoMapper;
-using Core.WorkflowEngine.Application.Commons.Constants;
-using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskHandlers
 {
     public class CreateProcessTaskCommandHandler : IRequestHandler<CreateProcessTaskCommand, InternalHandlerResponse<Guid>>
     {
-        private readonly IRepository<ProcessTask> _repository;
+        private readonly IProcessTaskCommandService _commandService;
         private readonly IMapper _mapper;
-        private readonly ILogger<CreateProcessTaskCommandHandler> _logger;
 
-        public CreateProcessTaskCommandHandler(IRepository<ProcessTask> repository, IMapper mapper, ILogger<CreateProcessTaskCommandHandler> logger)
+        public CreateProcessTaskCommandHandler(IProcessTaskCommandService commandService, IMapper mapper)
         {
-            _repository = repository;
+            _commandService = commandService;
             _mapper = mapper;
-            _logger = logger;
         }
 
         public async Task<InternalHandlerResponse<Guid>> Handle(CreateProcessTaskCommand request, CancellationToken cancellationToken)
         {
             ProcessTask dataFropmDto = _mapper.Map<ProcessTask>(request);
 
-            Guid id = await _repository.CreateDataAsync(dataFropmDto);
+            InternalServiceResponse<Guid> serviceResponse = await _commandService.CreateAsync(dataFropmDto, cancellationToken);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                     nameof(CreateProcessTaskCommandHandler),
-                     LogConstants.SuccessMessages.DataCreatedSuccessfully);
-
-            return InternalHandlerResponse<Guid>.Success(id, InternalHandlerConstants.SuccessProcessTaskCreating);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

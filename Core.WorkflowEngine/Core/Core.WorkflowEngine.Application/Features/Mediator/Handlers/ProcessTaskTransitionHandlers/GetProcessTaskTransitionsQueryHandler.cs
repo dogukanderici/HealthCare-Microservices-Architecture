@@ -1,36 +1,33 @@
-﻿using AutoMapper;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
-using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskTransitionHandlers
 {
     public class GetProcessTaskTransitionsQueryHandler : IRequestHandler<GetProcessTaskTransitionsQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>>>
     {
-        private readonly ITaskTransitionQueryService _taskTransitionService;
-        private readonly IMapper _mapper;
-        private readonly ILogger<GetProcessTaskTransitionsQueryHandler> _logger;
+        private readonly ITaskTransitionQueryService _queryService;
 
-        public GetProcessTaskTransitionsQueryHandler(ITaskTransitionQueryService taskTransitionService, IMapper mapper, ILogger<GetProcessTaskTransitionsQueryHandler> logger)
+        public GetProcessTaskTransitionsQueryHandler(ITaskTransitionQueryService queryService)
         {
-            _taskTransitionService = taskTransitionService;
-            _mapper = mapper;
-            _logger = logger;
+            _queryService = queryService;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>>> Handle(GetProcessTaskTransitionsQuery request, CancellationToken cancellationToken)
         {
-            TaskTransitionFilterDto serviceQueryDto = _mapper.Map<TaskTransitionFilterDto>(request);
+            DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
+            dBQueryOptions.filter = x => x.ProcessTaskId == request.ProcessTaskId;
 
-            InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>> result = await _taskTransitionService.GetDatasByFilterAsync(serviceQueryDto);
+            InternalServiceResponse<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>> serviceResponse =
+                await _queryService.GetDatasAsync<GetProcessTaskTransitionsQueryResult>(dBQueryOptions);
 
-            return InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessTaskTransitionsQueryResult>>(result.Data));
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

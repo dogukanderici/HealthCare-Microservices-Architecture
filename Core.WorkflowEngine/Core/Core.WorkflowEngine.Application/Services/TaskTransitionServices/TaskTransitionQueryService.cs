@@ -1,92 +1,53 @@
-﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
-using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Domain.Entities;
-using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Services.TaskTransitionServices
 {
     public class TaskTransitionQueryService : ITaskTransitionQueryService
     {
         private readonly IRepository<ProcessTaskTransition> _repository;
-        private readonly ILogger<TaskTransitionQueryService> _logger;
+        private readonly IMapper _mapper;
 
-        public TaskTransitionQueryService(IRepository<ProcessTaskTransition> repository, ILogger<TaskTransitionQueryService> logger)
+        public TaskTransitionQueryService(IRepository<ProcessTaskTransition> repository, IMapper mapper)
         {
             _repository = repository;
-            _logger = logger;
+            _mapper = mapper;
         }
 
-        public async Task<InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>> GetDatasAsync(TaskTransitionFilterDto? filterDto = null)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasAsync<TResult>(DBQueryOptions<ProcessTaskTransition>? options = null)
         {
-            DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
+            IReadOnlyCollection<ProcessTaskTransition> repoResponse = await _repository.GetAllDataAsync(options);
 
-            if (filterDto != null)
-            {
-                dBQueryOptions = GetDbQueryOptions(filterDto);
-            }
-
-            IReadOnlyCollection<ProcessTaskTransition> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>.Success(result);
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(repoResponse));
         }
 
-        public async Task<InternalServiceResponse<int>> GetDataCount(TaskTransitionFilterDto filterDto)
+        public async Task<InternalServiceResponse<TResult>> GetDataByIdAsync<TResult>(Guid id)
         {
-            DBQueryOptions<ProcessTaskTransition> dBQueryOptions = GetDbQueryOptions(filterDto, false);
+            DBQueryOptions<ProcessTaskTransition> options = new DBQueryOptions<ProcessTaskTransition>();
+            options.filter = x => x.Id == id;
 
-            int result = await _repository.GetAllDataCountAsync(dBQueryOptions);
+            ProcessTaskTransition repoResponse = await _repository.GetDataAsync(options);
 
-            return InternalServiceResponse<int>.Success(result);
+            return InternalServiceResponse<TResult>.Success(_mapper.Map<TResult>(repoResponse));
         }
 
-        public async Task<InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>> GetDatasByFilterAsync(TaskTransitionFilterDto filterDto)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasByFilterAsync<TResult>(DBQueryOptions<ProcessTaskTransition> options)
         {
-            DBQueryOptions<ProcessTaskTransition> dBQueryOptions = GetDbQueryOptions(filterDto);
 
-            IReadOnlyCollection<ProcessTaskTransition> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            IReadOnlyCollection<ProcessTaskTransition> repoResponse = await _repository.GetAllDataAsync(options);
 
-            return InternalServiceResponse<IReadOnlyCollection<ProcessTaskTransition>>.Success(result);
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(repoResponse));
         }
 
-        public async Task<InternalServiceResponse<ProcessTaskTransition>> GetDataByIdAsync(Guid id)
+        public async Task<InternalServiceResponse<int>> GetDataCount(DBQueryOptions<ProcessTaskTransition> options)
         {
-            DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
+            int repoResponse = await _repository.GetAllDataCountAsync(options);
 
-            Expression<Func<ProcessTaskTransition, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
-
-            ProcessTaskTransition result = await _repository.GetDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<ProcessTaskTransition>.Success(result);
-        }
-
-        private DBQueryOptions<ProcessTaskTransition> GetDbQueryOptions(TaskTransitionFilterDto filterDto, bool isRelationalQuery = true)
-        {
-            DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
-
-            Expression<Func<ProcessTaskTransition, bool>> filter = x => (
-            (!filterDto.ProcessTaskId.HasValue || x.ProcessTaskId == filterDto.ProcessTaskId) &&
-            (!filterDto.ActionId.HasValue || x.ActionId == filterDto.ActionId) &&
-            (!filterDto.IsActive.HasValue || x.IsActive == filterDto.IsActive)
-            );
-
-            dBQueryOptions.filter = filter;
-
-            if (isRelationalQuery)
-            {
-                List<Expression<Func<ProcessTaskTransition, object>>> include = [
-                    x => x.ProcessTask,
-                    x => x.NextTask
-                    ];
-
-                dBQueryOptions.includes = include;
-            }
-
-            return dBQueryOptions;
+            return InternalServiceResponse<int>.Success(repoResponse);
         }
     }
 }

@@ -1,86 +1,59 @@
-﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
-using Core.WorkflowEngine.Application.ServiceDtos.WorkItemServiceDtos;
 using Core.WorkflowEngine.Domain.Entities;
-using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Services.WorkItemServices
 {
     public class WorkItemQueryService : IWorkItemQueryService
     {
         private readonly IRepository<WorkItem> _repository;
-        private readonly ILogger<WorkItemQueryService> _logger;
+        private readonly IMapper _mapper;
 
-        public WorkItemQueryService(IRepository<WorkItem> repository, ILogger<WorkItemQueryService> logger)
+        public WorkItemQueryService(IRepository<WorkItem> repository, IMapper mapper)
         {
             _repository = repository;
-            _logger = logger;
+            _mapper = mapper;
         }
 
-        public async Task<InternalServiceResponse<IReadOnlyCollection<WorkItem>>> GetDatasAsync(WorkItemFilterDto? filterDto = null)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasAsync<TResult>(DBQueryOptions<WorkItem>? options = null)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = GetDbQueryOptions(filterDto);
+            IReadOnlyCollection<WorkItem> repoResponse = await _repository.GetAllDataAsync(options);
 
-            IReadOnlyCollection<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<IReadOnlyCollection<WorkItem>>.Success(result);
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(repoResponse));
         }
 
-        public async Task<InternalServiceResponse<WorkItem>> GetDataByIdAsync(Guid id)
+        public async Task<InternalServiceResponse<TResult>> GetDataByIdAsync<TResult>(Guid id)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+            DBQueryOptions<WorkItem> options = new DBQueryOptions<WorkItem>();
+            options.filter = x => x.Id == id;
 
-            Expression<Func<WorkItem, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
+            WorkItem repoResponse = await _repository.GetDataAsync(options);
 
-            WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<WorkItem>.Success(result);
+            return InternalServiceResponse<TResult>.Success(_mapper.Map<TResult>(repoResponse));
         }
 
-        public async Task<InternalServiceResponse<IReadOnlyCollection<WorkItem>>> GetDatasByFilterAsync(WorkItemFilterDto filterDto)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasByFilterAsync<TResult>(DBQueryOptions<WorkItem> options)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = GetDbQueryOptions(filterDto);
+            IReadOnlyCollection<WorkItem> repoResponse = await _repository.GetAllDataAsync(options);
 
-            IReadOnlyCollection<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalServiceResponse<IReadOnlyCollection<WorkItem>>.Success(result);
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(repoResponse));
         }
 
-        public async Task<InternalServiceResponse<IReadOnlyCollection<WorkItem>>> GetWorkItemByFilterAsync(DBQueryOptions<WorkItem> dBQueryOptions)
+        public async Task<InternalServiceResponse<int>> GetDataCount(DBQueryOptions<WorkItem> options)
         {
-            IReadOnlyCollection<WorkItem> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            int repoResponse = await _repository.GetAllDataCountAsync(options);
 
-            return InternalServiceResponse<IReadOnlyCollection<WorkItem>>.Success(result);
+            return InternalServiceResponse<int>.Success(repoResponse);
         }
 
-        public async Task<InternalServiceResponse<int>> GetDataCount(WorkItemFilterDto filterDto)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetWorkItemByFilterAsync<TResult>(DBQueryOptions<WorkItem> options)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = GetDbQueryOptions(filterDto, false);
+            IReadOnlyCollection<WorkItem> repoResponse = await _repository.GetAllDataAsync(options);
 
-            int result = await _repository.GetAllDataCountAsync(dBQueryOptions);
-
-            return InternalServiceResponse<int>.Success(result);
-        }
-
-        private DBQueryOptions<WorkItem> GetDbQueryOptions(WorkItemFilterDto filterDto, bool isRelationalQuery = true)
-        {
-            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
-
-            Expression<Func<WorkItem, bool>> filter = x => (
-                (!filterDto.InstanceId.HasValue || x.InstanceId == filterDto.InstanceId) &&
-                (!filterDto.WorkItemId.HasValue || x.Id == filterDto.WorkItemId) &&
-                (!filterDto.AssignedUserId.HasValue || x.AssignedUserId == filterDto.AssignedUserId) &&
-                (!filterDto.Status.HasValue || x.Status == filterDto.Status) &&
-                (!filterDto.CreatedAt.HasValue || x.CreatedAt == filterDto.CreatedAt)
-            );
-
-            dBQueryOptions.filter = filter;
-
-            return dBQueryOptions;
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(repoResponse));
         }
     }
 }

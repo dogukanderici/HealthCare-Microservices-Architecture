@@ -1,5 +1,6 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
@@ -21,31 +22,43 @@ namespace Core.WorkflowEngine.Application.Services.ProcessTaskServices
             _repository = repository;
         }
 
-        public async Task<ProcessTask> GetDataForUpdateAsync(Guid id)
+        public async Task<InternalServiceResponse<ProcessTask>> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
+            dBQueryOptions.filter = x => x.Id == id;
 
-            Expression<Func<ProcessTask, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
+            ProcessTask repoResponse = await _repository.GetDataAsync(dBQueryOptions);
 
-            ProcessTask result = await _repository.GetDataAsync(dBQueryOptions);
+            if (repoResponse == null)
+                return InternalServiceResponse<ProcessTask>.Failure("Data not found.");
 
-            return result;
+            return InternalServiceResponse<ProcessTask>.Success(repoResponse);
         }
 
-        public Task<InternalServiceResponse<Guid>> CreateAsync(ProcessTask entity, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<Guid>> CreateAsync(ProcessTask entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            Guid repoResponse = await _repository.CreateDataAsync(entity);
+
+            return InternalServiceResponse<Guid>.Success(repoResponse);
         }
 
-        public Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ProcessTask entity, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ProcessTask entity)
         {
-            throw new NotImplementedException();
+            DateTimeOffset repoResponse = await _repository.UpdateDataAsync(entity);
+
+            return InternalServiceResponse<DateTimeOffset>.Success(repoResponse);
         }
 
-        public Task<InternalServiceResponse<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            InternalServiceResponse<ProcessTask> existedData = await GetDataForUpdateAsync(id);
+
+            if (!existedData.IsSuccess)
+                return InternalServiceResponse<bool>.Failure("Data not found.");
+
+            await _repository.DeleteDataAsync(existedData.Data);
+
+            return InternalServiceResponse<bool>.Success(true);
         }
     }
 }

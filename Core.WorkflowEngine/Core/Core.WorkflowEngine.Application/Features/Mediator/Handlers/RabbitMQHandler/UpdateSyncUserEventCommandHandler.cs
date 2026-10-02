@@ -26,14 +26,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.RabbitMQHan
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateSyncUserEventCommand request, CancellationToken cancellationToken)
         {
-            SyncUserEvent existedData = await _commandService.GetDataForUpdateAsync(request.Id);
+            InternalServiceResponse<SyncUserEvent> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
 
             if (existedData == null)
                 return InternalHandlerResponse<DateTimeOffset>.Failure();
 
             _mapper.Map(request, existedData);
 
-            InternalServiceResponse<DateTimeOffset> serviceResponse = await _commandService.UpdateAsync(existedData, cancellationToken);
+            InternalServiceResponse<DateTimeOffset> serviceResponse = await _commandService.UpdateAsync(existedData.Data);
 
             if (serviceResponse.IsSuccess)
                 return InternalHandlerResponse<DateTimeOffset>.Success(serviceResponse.Data);

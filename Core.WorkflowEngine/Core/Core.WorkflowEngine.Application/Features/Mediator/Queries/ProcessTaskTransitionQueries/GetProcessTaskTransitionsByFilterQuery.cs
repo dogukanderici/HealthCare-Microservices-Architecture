@@ -10,6 +10,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskT
     public class GetProcessTaskTransitionsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskTransitionsByFilterQueryResult>>>, ICacheableQuery
     {
         public Guid? ProcessTaskId { get; set; }
+        public Guid? NextTaskId { get; set; }
         public Guid? ActionId { get; set; }
         public bool? IsActive { get; set; }
 
@@ -29,10 +30,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskT
 
         }
 
-        public static GetProcessTaskTransitionsByFilterQuery Filter(Guid? processTaskId, Guid? actionId, bool? isActive) =>
+        public static GetProcessTaskTransitionsByFilterQuery Filter(Guid? processTaskId, Guid? nextTaskId, Guid? actionId, bool? isActive) =>
             new GetProcessTaskTransitionsByFilterQuery
             {
                 ProcessTaskId = processTaskId,
+                NextTaskId = nextTaskId,
                 ActionId = actionId,
                 IsActive = isActive
             };

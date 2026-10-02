@@ -4,8 +4,8 @@ using Core.WorkflowEngine.Domain.Entities;
 
 namespace Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices
 {
-    public interface IProcessDefinitionQueryService : IBaseQueryService<ProcessDefinition, ProcessDefinitionFilterDto>
+    public interface IProcessDefinitionQueryService : IBaseQueryService<ProcessDefinition>
     {
-        public Task<InternalServiceResponse<ProcessDefinition>> GetDataForLastestVersionAsync(Guid processSpecId);
+        public Task<InternalServiceResponse<TResult>> GetDataForLastestVersionAsync<TResult>(Guid processSpecId);
     }
 }

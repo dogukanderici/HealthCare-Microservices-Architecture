@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries
 {
-    public class GetInstanceCountQuery : IRequest<InternalHandlerResponse<GetInstancesCountQueryResult>>
+    public class GetInstanceCountQuery : IRequest<InternalHandlerResponse<int>>
     {
     }
 }

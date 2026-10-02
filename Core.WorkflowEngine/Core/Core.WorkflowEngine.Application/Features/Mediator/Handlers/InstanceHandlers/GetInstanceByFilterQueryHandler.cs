@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using System.Linq.Expressions;
@@ -12,30 +15,26 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
 {
     public class GetInstanceByFilterQueryHandler : IRequestHandler<GetInstanceByFilterQuery, InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>>
     {
-        private readonly IRepository<Instance> _repository;
-        private readonly IMapper _mapper;
+        private readonly IInstanceQueryService _queryService;
 
-        public GetInstanceByFilterQueryHandler(IRepository<Instance> repository, IMapper mapper)
+        public GetInstanceByFilterQueryHandler(IInstanceQueryService queryService)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _queryService = queryService;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>> Handle(GetInstanceByFilterQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<Instance> options = new DBQueryOptions<Instance>();
-
-            Expression<Func<Instance, bool>> filter = x => (
+            options.filter = x => (
                 (!request.Number.HasValue || x.Number == request.Number) &&
                 (!request.InitiatorWorkItemId.HasValue || x.InitiatorWorkItemId == request.InitiatorWorkItemId) &&
                 (!request.Status.HasValue || x.Status == request.Status)
             );
 
-            options.filter = filter;
+            InternalServiceResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>> serviceResponse =
+                await _queryService.GetDatasByFilterAsync<GetInstancesByFilterQueryResult>(options);
 
-            IReadOnlyCollection<Instance> result = await _repository.GetAllDataAsync(options);
-
-            return InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetInstancesByFilterQueryResult>>(result));
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

@@ -8,9 +8,9 @@ namespace Core.WorkflowEngine.Application.Interfaces.Services
         where T : class, IEntity
     {
 
-        Task<T> GetDataForUpdateAsync(Guid id);
+        Task<InternalServiceResponse<T>> GetDataForUpdateAsync(Guid id);
         Task<InternalServiceResponse<Guid>> CreateAsync(T entity, CancellationToken cancellationToken);
-        Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(T entity, CancellationToken cancellationToken);
-        Task<InternalServiceResponse<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken);
+        Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(T entity);
+        Task<InternalServiceResponse<bool>> DeleteAsync(Guid id);
     }
 }

@@ -48,14 +48,8 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
         [HttpPost("filtered")]
         public async Task<IActionResult> GetTaskTransitionsByFilter(GetProcessTaskTransitionsByFilterQuery query)
         {
-            GetProcessTaskTransitionsByFilterQuery filter = GetProcessTaskTransitionsByFilterQuery.Filter(
-                    query.ProcessTaskId,
-                    query.ActionId,
-                    query.IsActive
-                    );
-
             return await _controllerReponseHelper.ExecuteAsync(
-                () => _mediator.Send(filter),
+                () => _mediator.Send(query),
                 nameof(GetTaskTransitionsByFilter),
                 SuccessMessage.CallingSuccess,
                 ErrorMessage.CallingFail

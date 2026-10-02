@@ -1,110 +1,57 @@
-﻿using Core.WorkflowEngine.Application.Commons.Constants;
-using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.WorkItemBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
 using Core.WorkflowEngine.Domain.Entities;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Services.WorkItemServices
 {
     public class WorkItemCommandService : IWorkItemCommandService
     {
         private readonly IRepository<WorkItem> _repository;
-        private readonly ILogger<WorkItemQueryService> _logger;
-        private readonly IWorkItemBusinessRule _businessRule;
 
-        public WorkItemCommandService(IRepository<WorkItem> repository, ILogger<WorkItemQueryService> logger, IWorkItemBusinessRule businessRule)
+        public WorkItemCommandService(IRepository<WorkItem> repository)
         {
             _repository = repository;
-            _logger = logger;
-            _businessRule = businessRule;
         }
 
-        public async Task<WorkItem> GetDataForUpdateAsync(Guid id)
+        public async Task<InternalServiceResponse<WorkItem>> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+            dBQueryOptions.filter = x => x.Id == id;
 
-            Expression<Func<WorkItem, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
+            WorkItem repoResponse = await _repository.GetDataAsync(dBQueryOptions);
 
-            WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
+            if (repoResponse == null)
+                return InternalServiceResponse<WorkItem>.Failure("Data not found!");
 
-            return result;
+            return InternalServiceResponse<WorkItem>.Success(repoResponse);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(WorkItem entity, CancellationToken cancellationToken)
         {
-            Guid id = await _repository.CreateDataAsync(entity);
+            Guid repoResponse = await _repository.CreateDataAsync(entity);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(WorkItemQueryService),
-                    LogConstants.SuccessMessages.DataCreatedSuccessfully);
-
-            return InternalServiceResponse<Guid>.Success(id);
+            return InternalServiceResponse<Guid>.Success(repoResponse);
         }
 
-        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(WorkItem entity, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(WorkItem entity)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+            DateTimeOffset repoResponse = await _repository.UpdateDataAsync(entity);
 
-            Expression<Func<WorkItem, bool>> filter = x => x.Id == entity.Id;
-            dBQueryOptions.filter = filter;
-
-            // Veri yoksa true döner.
-            bool checkAllRules = await _businessRule.CheckAllRulesAsync(dBQueryOptions);
-
-            if (checkAllRules)
-            {
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(UpdateWorkItemCommandHandler),
-                        LogConstants.ErrorMessages.DataUpdateFailed);
-
-                return InternalServiceResponse<DateTimeOffset>.Failure();
-            }
-
-            DateTimeOffset updatedDate = await _repository.UpdateDataAsync(entity);
-
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(UpdateWorkItemCommandHandler),
-                LogConstants.SuccessMessages.DataUpdatedSuccessfully);
-
-            return InternalServiceResponse<DateTimeOffset>.Success(updatedDate);
+            return InternalServiceResponse<DateTimeOffset>.Success(repoResponse);
         }
 
-        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)
         {
-            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+            InternalServiceResponse<WorkItem> existedData = await GetDataForUpdateAsync(id);
 
-            Expression<Func<WorkItem, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
+            if (!existedData.IsSuccess)
+                return InternalServiceResponse<bool>.Failure(existedData.ServiceMessage);
 
-            WorkItem result = await _repository.GetDataAsync(dBQueryOptions);
+            await _repository.DeleteDataAsync(existedData.Data);
 
-            if (result != null)
-            {
-                await _repository.DeleteDataAsync(result);
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(DeleteWorkItemCommandHandler),
-                    LogConstants.SuccessMessages.DataDeletedSuccessfully);
-
-                return InternalServiceResponse<bool>.Success(true);
-            }
-
-            _logger.LogError(LogConstants.LogMessageTemplate,
-                    nameof(DeleteWorkItemCommandHandler),
-                    LogConstants.ErrorMessages.DataDeletionFailed);
-
-            return InternalServiceResponse<bool>.Failure();
+            return InternalServiceResponse<bool>.Success(true);
         }
     }
 }

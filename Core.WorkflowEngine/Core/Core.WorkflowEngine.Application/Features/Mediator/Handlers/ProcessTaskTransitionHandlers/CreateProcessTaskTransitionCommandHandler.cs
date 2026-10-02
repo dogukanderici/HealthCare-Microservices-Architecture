@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
@@ -11,12 +11,12 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 {
     public class CreateProcessTaskTransitionCommandHandler : IRequestHandler<CreateProcessTaskTransitionCommand, InternalHandlerResponse<Guid>>
     {
-        private readonly ITaskTransitionCommandService _service;
+        private readonly ITaskTransitionCommandService _commandService;
         private readonly IMapper _mapper;
 
-        public CreateProcessTaskTransitionCommandHandler(ITaskTransitionCommandService service, IMapper mapper)
+        public CreateProcessTaskTransitionCommandHandler(ITaskTransitionCommandService commandService, IMapper mapper)
         {
-            _service = service;
+            _commandService = commandService;
             _mapper = mapper;
         }
 
@@ -24,14 +24,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
         {
             ProcessTaskTransition dataFromDto = _mapper.Map<ProcessTaskTransition>(request);
 
-            InternalServiceResponse<Guid> result = await _service.CreateAsync(dataFromDto, cancellationToken);
+            InternalServiceResponse<Guid> serviceResponse = await _commandService.CreateAsync(dataFromDto, cancellationToken);
 
-            if (result.IsSuccess)
-            {
-                return InternalHandlerResponse<Guid>.Success(result.Data, InternalHandlerConstants.SuccessProcessTaskTransitionCreating);
-            }
-
-            return InternalHandlerResponse<Guid>.Failure(InternalHandlerConstants.ErrorProcessTaskTransitionCreating);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

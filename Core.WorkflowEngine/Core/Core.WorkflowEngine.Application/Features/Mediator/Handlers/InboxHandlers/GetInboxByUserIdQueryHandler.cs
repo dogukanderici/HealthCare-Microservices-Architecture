@@ -3,6 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.InboxQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InboxResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
 using Core.WorkflowEngine.Domain.Entities;
@@ -13,26 +14,23 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InboxHandle
 {
     public class GetInboxByUserIdQueryHandler : IRequestHandler<GetInboxByUserIdQuery, InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>>
     {
-        private readonly IWorkItemQueryService _workItemService;
+        private readonly IWorkItemQueryService _workItemQueryService;
         private readonly IMapper _mapper;
 
-        public GetInboxByUserIdQueryHandler(IWorkItemQueryService workItemService, IMapper mapper)
+        public GetInboxByUserIdQueryHandler(IWorkItemQueryService workItemQueryService, IMapper mapper)
         {
-            _workItemService = workItemService;
+            _workItemQueryService = workItemQueryService;
             _mapper = mapper;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>> Handle(GetInboxByUserIdQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
-
-            Expression<Func<WorkItem, bool>> filter = x => (
+            dBQueryOptions.filter = x => (
                 (x.AssignedUserId == request.AssignedUserId) &&
                 (x.Status == 1)
             );
-
-            Dictionary<Expression<Func<WorkItem, object>>, List<Expression<Func<object, object>>>> thenIncludes =
-                new Dictionary<Expression<Func<WorkItem, object>>, List<Expression<Func<object, object>>>>()
+            dBQueryOptions.thenIncludes = new Dictionary<Expression<Func<WorkItem, object>>, List<Expression<Func<object, object>>>>()
             {
                 {
                         x => x.Instance,
@@ -47,12 +45,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InboxHandle
                 }
             };
 
-            dBQueryOptions.filter = filter;
-            dBQueryOptions.thenIncludes = thenIncludes;
+            InternalServiceResponse<IReadOnlyCollection<GetWorkItemsByFilterQueryResult>> serviceResponse =
+                await _workItemQueryService.GetWorkItemByFilterAsync<GetWorkItemsByFilterQueryResult>(dBQueryOptions);
 
-            InternalServiceResponse<IReadOnlyCollection<WorkItem>> result = await _workItemService.GetWorkItemByFilterAsync(dBQueryOptions);
+            if (!serviceResponse.IsSuccess)
+                return InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>.Failure(serviceResponse.ServiceMessage);
 
-            IReadOnlyCollection<GetInboxByUserIdQueryResult> mappedData = _mapper.Map<IReadOnlyCollection<GetInboxByUserIdQueryResult>>(result.Data);
+            IReadOnlyCollection<GetInboxByUserIdQueryResult> mappedData = _mapper.Map<IReadOnlyCollection<GetInboxByUserIdQueryResult>>(serviceResponse.Data);
 
             return InternalHandlerResponse<IReadOnlyCollection<GetInboxByUserIdQueryResult>>.Success(mappedData);
         }

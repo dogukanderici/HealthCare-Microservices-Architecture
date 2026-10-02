@@ -1,6 +1,7 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Constants;
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
@@ -29,16 +30,18 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
             _businessRule = businessRule;
             _processTaskService = processTaskService;
         }
-        public async Task<Instance> GetDataForUpdateAsync(Guid id)
+
+        public async Task<InternalServiceResponse<Instance>> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<Instance> dBQueryOptions = new DBQueryOptions<Instance>();
-
-            Expression<Func<Instance, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
+            dBQueryOptions.filter = x => x.Id == id;
 
             Instance result = await _repository.GetDataAsync(dBQueryOptions);
 
-            return result;
+            if (result == null)
+                return InternalServiceResponse<Instance>.Failure("Data not found!");
+
+            return InternalServiceResponse<Instance>.Success(result);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(Instance entity, CancellationToken cancellationToken)
@@ -53,8 +56,9 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
                 await _unitOfWork.CommitAsync(cancellationToken);
 
                 // ProcessId ile başlangıç adımı bulunur.
-                ProcessTask taskData = await _processTaskService.GetDataByProcessIdAsync(entity.ProcessId);
-                Guid processTaskId = taskData.Id;
+                InternalServiceResponse<GetProcessTaskByIdQueryResult> serviceResponse = 
+                    await _processTaskService.GetDataByProcessIdAsync<GetProcessTaskByIdQueryResult>(entity.ProcessId);
+                Guid processTaskId = serviceResponse.Data.Id;
 
                 WorkItem workitemEntity = new WorkItem();
                 workitemEntity.InstanceId = entity.Id;
@@ -89,7 +93,7 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
             }
         }
 
-        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(Instance entity, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(Instance entity)
         {
             #region BusinessRule
 
@@ -119,7 +123,7 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
             return InternalServiceResponse<DateTimeOffset>.Failure();
         }
 
-        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)
         {
             DBQueryOptions<Instance> dbQueryOptions = new DBQueryOptions<Instance>();
 

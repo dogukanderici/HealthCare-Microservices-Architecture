@@ -1,102 +1,73 @@
-﻿using Core.WorkflowEngine.Application.Commons.Constants;
-using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessDefinitionBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
-using Core.WorkflowEngine.Application.Services.ProcessDefiniitonServices;
 using Core.WorkflowEngine.Domain.Entities;
-using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Services.ProcessDefinitonServices
 {
     public class ProcessDefinitionCommandService : IProcessDefinitionCommandService
     {
         private readonly IRepository<ProcessDefinition> _repository;
-        private readonly ILogger<ProcessDefinitionCommandService> _logger;
         private readonly IProcessDefinitionBusinessRule _businessRule;
 
-        public ProcessDefinitionCommandService(IRepository<ProcessDefinition> repository, ILogger<ProcessDefinitionCommandService> logger, IProcessDefinitionBusinessRule businessRule)
+        public ProcessDefinitionCommandService(IRepository<ProcessDefinition> repository, IProcessDefinitionBusinessRule businessRule)
         {
             _repository = repository;
-            _logger = logger;
             _businessRule = businessRule;
         }
 
-        public async Task<ProcessDefinition> GetDataForUpdateAsync(Guid id)
+        public async Task<InternalServiceResponse<ProcessDefinition>> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
-
-            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
+            dBQueryOptions.filter = x => (
+                (x.Id == id) && (x.IsActive == true)
+            );
 
             ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);
 
-            return result;
+            if (result == null)
+                return InternalServiceResponse<ProcessDefinition>.Failure("Data not found!");
+
+            return InternalServiceResponse<ProcessDefinition>.Success(result);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(ProcessDefinition entity, CancellationToken cancellationToken)
         {
             Guid result = await _repository.CreateDataAsync(entity);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(ProcessDefinitionQueryService),
-                    LogConstants.SuccessMessages.DataCreatedSuccessfully);
-
             return InternalServiceResponse<Guid>.Success(result);
         }
 
-        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ProcessDefinition entity, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ProcessDefinition entity)
         {
             // Veri yoksa true döner.
             bool ruleResult = await _businessRule.ExistingProcessDefinitionDataAsync(entity.Id);
 
             if (ruleResult)
             {
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(ProcessDefinitionQueryService),
-                    LogConstants.ErrorMessages.DataUpdateFailed);
-
-                return InternalServiceResponse<DateTimeOffset>.Failure(LogConstants.ErrorMessages.DataNotFound);
+                return InternalServiceResponse<DateTimeOffset>.Failure("Business rule is not valid!");
             }
 
             DateTimeOffset updatedDate = await _repository.UpdateDataAsync(entity);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(ProcessDefinitionQueryService),
-                LogConstants.SuccessMessages.DataUpdatedSuccessfully);
-
             return InternalServiceResponse<DateTimeOffset>.Success(updatedDate);
         }
 
-        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
-
-            Expression<Func<ProcessDefinition, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
+            dBQueryOptions.filter = x => x.Id == id;
 
             ProcessDefinition existingData = await _repository.GetDataAsync(dBQueryOptions);
 
-            if (existingData != null)
-            {
-                await _repository.DeleteDataAsync(existingData);
+            if (existingData == null)
+                return InternalServiceResponse<bool>.Failure("Data not found!");
 
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(ProcessDefinitionQueryService),
-                    LogConstants.SuccessMessages.DataDeletedSuccessfully
-                    );
+            await _repository.DeleteDataAsync(existingData);
 
-                return InternalServiceResponse<bool>.Success(true);
-            }
-
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(ProcessDefinitionQueryService),
-                    LogConstants.ErrorMessages.DataDeletionFailed
-                    );
-
-            return InternalServiceResponse<bool>.Failure();
+            return InternalServiceResponse<bool>.Success(true);
         }
     }
 }

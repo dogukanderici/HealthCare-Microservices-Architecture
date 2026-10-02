@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Constants;
 using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskBusinessRules;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -15,48 +18,27 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 {
     public class UpdateProcessTaskCommandHandler : IRequestHandler<UpdateProcessTaskCommand, InternalHandlerResponse<DateTimeOffset>>
     {
-        private readonly IRepository<ProcessTask> _repository;
+        private readonly IProcessTaskCommandService _commandService;
         private readonly IMapper _mapper;
-        private readonly ILogger<UpdateProcessTaskCommandHandler> _logger;
-        private readonly IProcessTaskBusinessRule _businessRule;
 
-        public UpdateProcessTaskCommandHandler(IRepository<ProcessTask> repository, IMapper mapper, ILogger<UpdateProcessTaskCommandHandler> logger, IProcessTaskBusinessRule businessRule)
+        public UpdateProcessTaskCommandHandler(IProcessTaskCommandService commandService, IMapper mapper)
         {
-            _repository = repository;
+            _commandService = commandService;
             _mapper = mapper;
-            _logger = logger;
-            _businessRule = businessRule;
         }
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateProcessTaskCommand request, CancellationToken cancellationToken)
         {
-            DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
+            InternalServiceResponse<ProcessTask> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
 
-            Expression<Func<ProcessTask, bool>> filter = x => x.Id == request.Id;
-            dBQueryOptions.filter = filter;
+            if (!existedData.IsSuccess)
+                return InternalHandlerResponse<DateTimeOffset>.Failure(existedData.ServiceMessage);
 
-            // Veri yoksa true döner.
-            bool checkExistingData = await _businessRule.CheckExistingDataAsync(dBQueryOptions);
+            _mapper.Map(request, existedData.Data);
 
-            if (checkExistingData)
-            {
+            InternalServiceResponse<DateTimeOffset> serviceResponse = await _commandService.UpdateAsync(existedData.Data);
 
-                _logger.LogError(LogConstants.LogMessageTemplate,
-                         nameof(CreateProcessTaskCommandHandler),
-                         LogConstants.ErrorMessages.DataUpdateFailed);
-
-                return InternalHandlerResponse<DateTimeOffset>.Failure(InternalHandlerConstants.NotFoundData);
-            }
-
-            ProcessTask dataFromDto = _mapper.Map<ProcessTask>(request);
-
-            await _repository.UpdateDataAsync(dataFromDto);
-
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                 nameof(CreateProcessTaskCommandHandler),
-                 LogConstants.SuccessMessages.DataUpdatedSuccessfully);
-
-            return InternalHandlerResponse<DateTimeOffset>.Success(DateTimeOffset.Now, InternalHandlerConstants.SuccessProcessTaskUpdating);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

@@ -1,93 +1,54 @@
-﻿using Core.WorkflowEngine.Application.Commons.Constants;
-using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskTransitionRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Domain.Entities;
-using Microsoft.Extensions.Logging;
-using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Services.TaskTransitionServices
 {
     public class TaskTransitionCommandService : ITaskTransitionCommandService
     {
         private readonly IRepository<ProcessTaskTransition> _repository;
-        private readonly ILogger<TaskTransitionQueryService> _logger;
-        private readonly ITaskTransitionBusinessRule _businessRule;
 
-        public TaskTransitionCommandService(IRepository<ProcessTaskTransition> repository, ILogger<TaskTransitionQueryService> logger, ITaskTransitionBusinessRule businessRule)
+        public TaskTransitionCommandService(IRepository<ProcessTaskTransition> repository)
         {
             _repository = repository;
-            _logger = logger;
-            _businessRule = businessRule;
         }
 
-        public async Task<ProcessTaskTransition> GetDataForUpdateAsync(Guid id)
+        public async Task<InternalServiceResponse<ProcessTaskTransition>> GetDataForUpdateAsync(Guid id)
         {
             DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
-
-            Expression<Func<ProcessTaskTransition, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
+            dBQueryOptions.filter = x => x.Id == id;
 
             ProcessTaskTransition result = await _repository.GetDataAsync(dBQueryOptions);
 
-            return result;
+            return InternalServiceResponse<ProcessTaskTransition>.Success(result);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(ProcessTaskTransition entity, CancellationToken cancellationToken)
         {
-            Guid id = await _repository.CreateDataAsync(entity);
+            Guid repoResponse = await _repository.CreateDataAsync(entity);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(TaskTransitionQueryService),
-                LogConstants.SuccessMessages.DataCreatedSuccessfully);
-
-            return InternalServiceResponse<Guid>.Success(id);
+            return InternalServiceResponse<Guid>.Success(repoResponse);
         }
 
-        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ProcessTaskTransition entity, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ProcessTaskTransition entity)
         {
-            InternalBusinessRuleResponse<bool> checkExisting = await _businessRule.CheckAllRulesForUpdateAsync(entity);
+            DateTimeOffset repoResponse = await _repository.UpdateDataAsync(entity);
 
-            if (checkExisting.Data)
-            {
-                DateTimeOffset result = await _repository.UpdateDataAsync(entity);
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(TaskTransitionQueryService),
-                    LogConstants.SuccessMessages.DataUpdatedSuccessfully);
-
-                return InternalServiceResponse<DateTimeOffset>.Success(result);
-            }
-
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(TaskTransitionQueryService),
-                    LogConstants.ErrorMessages.DataUpdateFailed);
-
-            return InternalServiceResponse<DateTimeOffset>.Failure();
+            return InternalServiceResponse<DateTimeOffset>.Success(repoResponse);
         }
 
-        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)
         {
-            InternalBusinessRuleResponse<ProcessTaskTransition> checkExisting = await _businessRule.CheckAllRulesForDeleteAsync(id);
+            InternalServiceResponse<ProcessTaskTransition> existedData = await GetDataForUpdateAsync(id);
 
-            if (checkExisting.Data != null)
-            {
-                await _repository.DeleteDataAsync(checkExisting.Data);
+            if (!existedData.IsSuccess)
+                return InternalServiceResponse<bool>.Failure(existedData.ServiceMessage);
 
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(TaskTransitionQueryService),
-                    LogConstants.SuccessMessages.DataDeletedSuccessfully);
+            await _repository.DeleteDataAsync(existedData.Data);
 
-                return InternalServiceResponse<bool>.Success(true);
-            }
-
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                    nameof(TaskTransitionQueryService),
-                    LogConstants.ErrorMessages.DataUpdateFailed);
-
-            return InternalServiceResponse<bool>.Failure();
+            return InternalServiceResponse<bool>.Success(true);
         }
     }
 }

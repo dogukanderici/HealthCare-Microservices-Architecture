@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -13,33 +16,27 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 {
     public class GetProcessTasksByFilterQueryHandler : IRequestHandler<GetProcessTasksByFilterQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>>>
     {
-        private readonly IRepository<ProcessTask> _repository;
-        private readonly IMapper _mapper;
-        private readonly ILogger<GetProcessTasksByFilterQueryHandler> _logger;
+        private readonly IProcessTaskQueryService _queryService;
 
-        public GetProcessTasksByFilterQueryHandler(IRepository<ProcessTask> repository, IMapper mapper, ILogger<GetProcessTasksByFilterQueryHandler> logger)
+        public GetProcessTasksByFilterQueryHandler(IProcessTaskQueryService queryService)
         {
-            _repository = repository;
-            _mapper = mapper;
-            _logger = logger;
+            _queryService = queryService;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>>> Handle(GetProcessTasksByFilterQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
-
-            Expression<Func<ProcessTask, bool>> filter = x => (
-            (!request.ProcessId.HasValue || x.ProcessId == request.ProcessId) &&
-            (string.IsNullOrEmpty(request.StepName) || x.StepName == request.StepName) &&
-            (!request.IsActive.HasValue || x.IsActive == request.IsActive) &&
-            (!request.IsStartStep.HasValue || x.IsStartStep == request.IsStartStep)
+            dBQueryOptions.filter = x => (
+                (!request.ProcessId.HasValue || x.ProcessId == request.ProcessId) &&
+                (string.IsNullOrEmpty(request.StepName) || x.StepName == request.StepName) &&
+                (!request.IsActive.HasValue || x.IsActive == request.IsActive) &&
+                (!request.IsStartStep.HasValue || x.IsStartStep == request.IsStartStep)
             );
 
-            dBQueryOptions.filter = filter;
+            InternalServiceResponse<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>> serviceResponse =
+                await _queryService.GetDatasByFilterAsync<GetProcessTasksByFilterQueryResult>(dBQueryOptions);
 
-            IReadOnlyCollection<ProcessTask> result = await _repository.GetAllDataAsync(dBQueryOptions);
-
-            return InternalHandlerResponse<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessTasksByFilterQueryResult>>(result));
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

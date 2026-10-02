@@ -1,5 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkItemCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
@@ -9,23 +9,18 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHan
 {
     public class DeleteWorkItemCommandHandler : IRequestHandler<DeleteWorkItemCommand, InternalHandlerResponse<bool>>
     {
-        private readonly IWorkItemCommandService _workItemCommandService;
+        private readonly IWorkItemCommandService _commandService;
 
-        public DeleteWorkItemCommandHandler(IWorkItemCommandService workItemCommandService)
+        public DeleteWorkItemCommandHandler(IWorkItemCommandService commandService)
         {
-            _workItemCommandService = workItemCommandService;
+            _commandService = commandService;
         }
 
         public async Task<InternalHandlerResponse<bool>> Handle(DeleteWorkItemCommand request, CancellationToken cancellationToken)
         {
-            InternalServiceResponse<bool> result = await _workItemCommandService.DeleteAsync(request.Id, cancellationToken);
+            InternalServiceResponse<bool> serviceResponse = await _commandService.DeleteAsync(request.Id);
 
-            if (result.IsSuccess)
-            {
-                return InternalHandlerResponse<bool>.Success(true, InternalHandlerConstants.WorkItemNotFound);
-            }
-
-            return InternalHandlerResponse<bool>.Failure(InternalHandlerConstants.ErrorWorkItemDeleting);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

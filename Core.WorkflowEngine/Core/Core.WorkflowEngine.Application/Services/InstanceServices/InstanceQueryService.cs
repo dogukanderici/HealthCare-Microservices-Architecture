@@ -1,4 +1,7 @@
-﻿using Core.WorkflowEngine.Application.Commons.Wrappers;
+﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using Core.WorkflowEngine.Application.ServiceDtos.InstanceDtos;
 using Core.WorkflowEngine.Domain.Entities;
@@ -7,24 +10,44 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
 {
     public class InstanceQueryService : IInstanceQueryService
     {
-        public Task<InternalServiceResponse<Instance>> GetDataByIdAsync(Guid id)
+        private readonly IRepository<Instance> _repository;
+        private readonly IMapper _mapper;
+
+        public InstanceQueryService(IRepository<Instance> repository, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _repository = repository;
+            _mapper = mapper;
         }
 
-        public Task<InternalServiceResponse<int>> GetDataCount(InstanceFilterDto filterDto)
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasAsync<TResult>(DBQueryOptions<Instance>? options = null)
         {
-            throw new NotImplementedException();
+            IReadOnlyCollection<Instance> existedDataList = await _repository.GetAllDataAsync(options);
+
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(existedDataList));
         }
 
-        public Task<InternalServiceResponse<IReadOnlyCollection<Instance>>> GetDatasAsync(InstanceFilterDto? filterDto = null)
+        public async Task<InternalServiceResponse<TResult>> GetDataByIdAsync<TResult>(Guid id)
         {
-            throw new NotImplementedException();
+            DBQueryOptions<Instance> dBQueryOptions = new DBQueryOptions<Instance>();
+            dBQueryOptions.filter = x => x.Id == id;
+
+            Instance existedData = await _repository.GetDataAsync(dBQueryOptions);
+
+            return InternalServiceResponse<TResult>.Success(_mapper.Map<TResult>(existedData));
         }
 
-        public Task<InternalServiceResponse<IReadOnlyCollection<Instance>>> GetDatasByFilterAsync(InstanceFilterDto filterDto)
+        public async Task<InternalServiceResponse<int>> GetDataCount(DBQueryOptions<Instance> options)
         {
-            throw new NotImplementedException();
+            int existedCount = await _repository.GetAllDataCountAsync(options);
+
+            return InternalServiceResponse<int>.Success(existedCount);
+        }
+
+        public async Task<InternalServiceResponse<IReadOnlyCollection<TResult>>> GetDatasByFilterAsync<TResult>(DBQueryOptions<Instance> options)
+        {
+            IReadOnlyCollection<Instance> existedDataList = await _repository.GetAllDataAsync(options);
+
+            return InternalServiceResponse<IReadOnlyCollection<TResult>>.Success(_mapper.Map<IReadOnlyCollection<TResult>>(existedDataList));
         }
     }
 }

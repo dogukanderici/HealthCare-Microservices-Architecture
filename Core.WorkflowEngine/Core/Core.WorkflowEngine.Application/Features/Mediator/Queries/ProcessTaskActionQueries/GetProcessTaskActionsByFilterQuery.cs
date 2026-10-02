@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskActionQueries
 {
-    public class GetProcessTaskActionsByFilterQuery : IRequest<InternalHandlerResponse<List<GetProcessTaskActionsByFilterQueryResult>>>, ICacheableQuery
+    public class GetProcessTaskActionsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsByFilterQueryResult>>>, ICacheableQuery
     {
         public Guid? ProcessTaskId { get; set; }
         public Guid? ActionId { get; set; }

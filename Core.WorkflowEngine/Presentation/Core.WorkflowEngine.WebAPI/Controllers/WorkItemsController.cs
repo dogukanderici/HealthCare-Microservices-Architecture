@@ -44,16 +44,8 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
         [HttpPost("filtered")]
         public async Task<IActionResult> GetWorkItemsByFilter(GetWorkItemsByFilterQuery query)
         {
-            GetWorkItemsByFilterQuery filter = GetWorkItemsByFilterQuery.Filter(
-                    query.InstanceId,
-                    query.AssignedUserId,
-                    query.Status,
-                    query.CreatedAt,
-                    query.CreatedBy
-                    );
-
             return await _controllerReponseHelper.ExecuteAsync(
-                () => _mediator.Send(filter),
+                () => _mediator.Send(query),
                 nameof(GetWorkItemsByFilter),
                 SuccessMessage.CallingSuccess,
                 ErrorMessage.CallingFail

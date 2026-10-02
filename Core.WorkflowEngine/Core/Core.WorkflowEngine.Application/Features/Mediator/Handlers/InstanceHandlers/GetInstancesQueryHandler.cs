@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 
@@ -11,24 +14,21 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
 {
     public class GetInstancesQueryHandler : IRequestHandler<GetInstancesQuery, InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>>
     {
-        private readonly IRepository<Instance> _repository;
-        private readonly IMapper _mapper;
+        private readonly IInstanceQueryService _queryService;
 
-        public GetInstancesQueryHandler(IRepository<Instance> repository, IMapper mapper)
+        public GetInstancesQueryHandler(IInstanceQueryService queryService)
         {
-            _repository = repository;
-            _mapper = mapper;
+            _queryService = queryService;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>> Handle(GetInstancesQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<Instance> dBQueryOptions = new DBQueryOptions<Instance>();
 
-            IReadOnlyCollection<Instance> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            InternalServiceResponse<IReadOnlyCollection<GetInstancesQueryResult>> serviceResponse =
+                await _queryService.GetDatasAsync<GetInstancesQueryResult>(dBQueryOptions);
 
-            IReadOnlyCollection<GetInstancesQueryResult> mappedData = _mapper.Map<IReadOnlyCollection<GetInstancesQueryResult>>(result);
-
-            return InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>.Success(mappedData);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

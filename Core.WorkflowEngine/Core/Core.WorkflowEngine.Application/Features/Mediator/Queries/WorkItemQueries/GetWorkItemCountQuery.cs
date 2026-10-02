@@ -5,5 +5,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQuer
 {
     public class GetWorkItemCountQuery : IRequest<InternalHandlerResponse<int>>
     {
+        public Guid InstanceId { get; set; }
+
+        public GetWorkItemCountQuery(Guid instanceId)
+        {
+            InstanceId = instanceId;
+        }
     }
 }

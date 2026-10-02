@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
@@ -29,14 +30,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             dataFromDto.Id = Guid.NewGuid();
             dataFromDto.ProcessSpecId = Guid.NewGuid();
 
-            InternalServiceResponse<Guid> result = await _processDefinitionCommandService.CreateAsync(dataFromDto, cancellationToken);
+            InternalServiceResponse<Guid> serviceResponse = await _processDefinitionCommandService.CreateAsync(dataFromDto, cancellationToken);
 
-            if (result.IsSuccess)
-            {
-                return InternalHandlerResponse<Guid>.Success(result.Data, InternalHandlerConstants.SuccessProcessDefinitionCreating);
-            }
-
-            return InternalHandlerResponse<Guid>.Failure(InternalHandlerConstants.ErrorProcessDefinitionCreating);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

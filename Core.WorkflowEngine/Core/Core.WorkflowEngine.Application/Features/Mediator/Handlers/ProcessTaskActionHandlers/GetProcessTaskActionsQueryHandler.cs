@@ -1,40 +1,32 @@
-﻿using AutoMapper;
-using Core.WorkflowEngine.Application.Commons.Constants;
-using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskActionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskActionResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskActionServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTaskActionHandlers
 {
     public class GetProcessTaskActionsQueryHandler : IRequestHandler<GetProcessTaskActionsQuery, InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>>
     {
-        private readonly IRepository<ProcessTaskAction> _repository;
-        private readonly ILogger<GetProcessTaskActionsQueryHandler> _logger;
-        private readonly IMapper _mapper;
+        private readonly IProcessTaskActionQueryService _queryService;
 
-        public GetProcessTaskActionsQueryHandler(IRepository<ProcessTaskAction> repository, ILogger<GetProcessTaskActionsQueryHandler> logger, IMapper mapper)
+        public GetProcessTaskActionsQueryHandler(IProcessTaskActionQueryService queryService)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper = mapper;
+            _queryService = queryService;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>> Handle(GetProcessTaskActionsQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTaskAction> dBQueryOptions = new DBQueryOptions<ProcessTaskAction>();
 
-            IReadOnlyCollection<ProcessTaskAction> result = await _repository.GetAllDataAsync(dBQueryOptions);
+            InternalServiceResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>> serviceResponse =
+                await _queryService.GetDatasAsync<GetProcessTaskActionsQueryResult>(dBQueryOptions);
 
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                nameof(GetProcessTaskActionsQueryHandler),
-                LogConstants.SuccessMessages.ProcessSuccessed);
-
-            return InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>.Success(_mapper.Map<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>(result));
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

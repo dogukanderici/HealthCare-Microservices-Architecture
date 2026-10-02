@@ -1,31 +1,31 @@
-﻿using AutoMapper;
+﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.WorkItemQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkItemHandlers
 {
     public class GetWorkItemCountQueryHandler : IRequestHandler<GetWorkItemCountQuery, InternalHandlerResponse<int>>
     {
-        private readonly IRepository<WorkItem> _repository;
-        private readonly ILogger<GetWorkItemsQueryHandler> _logger;
-        private readonly IMapper _mapper;
+        private readonly IWorkItemQueryService _queryService;
 
-        public GetWorkItemCountQueryHandler(IRepository<WorkItem> repository, ILogger<GetWorkItemsQueryHandler> logger, IMapper mapper)
+        public GetWorkItemCountQueryHandler(IWorkItemQueryService queryService)
         {
-            _repository = repository;
-            _logger = logger;
-            _mapper = mapper;
+            _queryService = queryService;
         }
 
         public async Task<InternalHandlerResponse<int>> Handle(GetWorkItemCountQuery request, CancellationToken cancellationToken)
         {
-            int data = await _repository.GetAllDataCountAsync();
+            DBQueryOptions<WorkItem> dBQueryOptions = new DBQueryOptions<WorkItem>();
+            dBQueryOptions.filter = x => x.InstanceId == request.InstanceId;
 
-            return InternalHandlerResponse<int>.Success(data);
+            InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCount(dBQueryOptions);
+
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

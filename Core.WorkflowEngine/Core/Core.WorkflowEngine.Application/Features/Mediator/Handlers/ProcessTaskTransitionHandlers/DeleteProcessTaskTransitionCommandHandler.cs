@@ -1,5 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Constants;
+using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
@@ -9,23 +9,18 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
 {
     public class DeleteProcessTaskTransitionCommandHandler : IRequestHandler<DeleteProcessTaskTransitionCommand, InternalHandlerResponse<bool>>
     {
-        private readonly ITaskTransitionCommandService _service;
+        private readonly ITaskTransitionCommandService _commandService;
 
-        public DeleteProcessTaskTransitionCommandHandler(ITaskTransitionCommandService service)
+        public DeleteProcessTaskTransitionCommandHandler(ITaskTransitionCommandService commandService)
         {
-            _service = service;
+            _commandService = commandService;
         }
 
         public async Task<InternalHandlerResponse<bool>> Handle(DeleteProcessTaskTransitionCommand request, CancellationToken cancellationToken)
         {
-            InternalServiceResponse<bool> result = await _service.DeleteAsync(request.Id, cancellationToken);
+            InternalServiceResponse<bool> serviceResponse = await _commandService.DeleteAsync(request.Id);
 
-            if (result.IsSuccess)
-            {
-                return InternalHandlerResponse<bool>.Success(result.Data, InternalHandlerConstants.SuccessProcessTaskTransitionDeleting);
-            }
-
-            return InternalHandlerResponse<bool>.Failure(InternalHandlerConstants.ErrorProcessTaskTransitionDeleting);
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }
