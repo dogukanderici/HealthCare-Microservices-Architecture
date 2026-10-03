@@ -1,4 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
@@ -20,9 +21,14 @@ namespace Core.WorkflowEngine.Application.Services.TaskTransitionServices
             DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
             dBQueryOptions.filter = x => x.Id == id;
 
-            ProcessTaskTransition result = await _repository.GetDataAsync(dBQueryOptions);
+            ProcessTaskTransition repoResponse = await _repository.GetDataAsync(dBQueryOptions);
 
-            return InternalServiceResponse<ProcessTaskTransition>.Success(result);
+            if (repoResponse == null)
+            {
+                return InternalServiceResponse<ProcessTaskTransition>.Failure(InternalServiceResponseConstants.DataNotFound);
+            }
+
+            return InternalServiceResponse<ProcessTaskTransition>.Success(repoResponse);
         }
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(ProcessTaskTransition entity, CancellationToken cancellationToken)

@@ -1,5 +1,4 @@
-﻿using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
-using Core.WorkflowEngine.Domain.Entities;
+﻿using Core.WorkflowEngine.Domain.Entities;
 
 namespace Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices
 {

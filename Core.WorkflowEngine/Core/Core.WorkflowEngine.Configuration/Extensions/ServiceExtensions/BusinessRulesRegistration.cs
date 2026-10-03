@@ -1,10 +1,10 @@
 ﻿using Core.WorkflowEngine.Application.Features.Commons;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessDefinitionBusinessRules;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskActionBusinessRules;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskBusinessRules;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskTransitionRules;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.WorkItemBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.InstanceBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessDefinitionBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskTransitionRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 

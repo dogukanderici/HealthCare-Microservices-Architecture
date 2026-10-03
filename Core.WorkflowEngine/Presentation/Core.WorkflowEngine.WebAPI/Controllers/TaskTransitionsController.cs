@@ -1,6 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessTaskTransitionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskTransitionQueries;
-using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

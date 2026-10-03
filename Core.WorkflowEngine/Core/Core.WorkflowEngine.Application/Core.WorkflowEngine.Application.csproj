@@ -24,8 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Mediator\Validations\InstanceValidations\" />
-    <Folder Include="Services\WorkflowExecutionServices\" />
+    <Folder Include="Features\BusinessRules\Commons\" />
+    <Folder Include="Features\Validations\InstanceValidations\" />
   </ItemGroup>
 
 </Project>

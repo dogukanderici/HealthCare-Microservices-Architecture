@@ -1,6 +1,7 @@
-﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessDefinitionBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessDefinitionBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
 using Core.WorkflowEngine.Domain.Entities;
@@ -28,7 +29,7 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefinitonServices
             ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);
 
             if (result == null)
-                return InternalServiceResponse<ProcessDefinition>.Failure("Data not found!");
+                return InternalServiceResponse<ProcessDefinition>.Failure(InternalServiceResponseConstants.DataNotFound);
 
             return InternalServiceResponse<ProcessDefinition>.Success(result);
         }
@@ -47,7 +48,7 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefinitonServices
 
             if (ruleResult)
             {
-                return InternalServiceResponse<DateTimeOffset>.Failure("Business rule is not valid!");
+                return InternalServiceResponse<DateTimeOffset>.Failure(InternalServiceResponseConstants.NotValidBusinessRule);
             }
 
             DateTimeOffset updatedDate = await _repository.UpdateDataAsync(entity);

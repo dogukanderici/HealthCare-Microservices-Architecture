@@ -1,4 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
@@ -23,7 +24,7 @@ namespace Core.WorkflowEngine.Application.Services.WorkItemServices
             WorkItem repoResponse = await _repository.GetDataAsync(dBQueryOptions);
 
             if (repoResponse == null)
-                return InternalServiceResponse<WorkItem>.Failure("Data not found!");
+                return InternalServiceResponse<WorkItem>.Failure(InternalServiceResponseConstants.DataNotFound);
 
             return InternalServiceResponse<WorkItem>.Success(repoResponse);
         }

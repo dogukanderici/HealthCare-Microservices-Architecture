@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.WorkflowEngine.Application.Commons.Constants;
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ;
@@ -30,7 +31,7 @@ namespace Core.WorkflowEngine.Application.Services.IntegrationServices.RabbitMQS
             SyncUserEvent existedData = await _repository.GetDataAsync(dBQueryOptions);
 
             if (existedData == null)
-                return InternalServiceResponse<SyncUserEvent>.Failure("Data not found");
+                return InternalServiceResponse<SyncUserEvent>.Failure(InternalServiceResponseConstants.DataNotFound);
 
             return InternalServiceResponse<SyncUserEvent>.Success(existedData);
         }

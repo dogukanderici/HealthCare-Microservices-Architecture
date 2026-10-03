@@ -3,7 +3,6 @@ using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
-using Core.WorkflowEngine.Application.ServiceDtos.InstanceDtos;
 using Core.WorkflowEngine.Domain.Entities;
 
 namespace Core.WorkflowEngine.Application.Services.InstanceServices

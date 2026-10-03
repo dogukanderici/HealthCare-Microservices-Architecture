@@ -1,6 +1,6 @@
-﻿using Core.WorkflowEngine.Application.Commons.Parameters;
+﻿using Core.WorkflowEngine.Application.Commons.Constants;
+using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.ProcessTaskBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
@@ -30,7 +30,7 @@ namespace Core.WorkflowEngine.Application.Services.ProcessTaskServices
             ProcessTask repoResponse = await _repository.GetDataAsync(dBQueryOptions);
 
             if (repoResponse == null)
-                return InternalServiceResponse<ProcessTask>.Failure("Data not found.");
+                return InternalServiceResponse<ProcessTask>.Failure(InternalServiceResponseConstants.DataNotFound);
 
             return InternalServiceResponse<ProcessTask>.Success(repoResponse);
         }

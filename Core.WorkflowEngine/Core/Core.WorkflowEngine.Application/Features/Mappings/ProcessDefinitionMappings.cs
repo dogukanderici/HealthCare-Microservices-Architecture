@@ -1,16 +1,9 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
-using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InstanceResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskResults;
-using Core.WorkflowEngine.Application.ServiceDtos.ProcessDefinitionDtos;
 using Core.WorkflowEngine.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mappings
 {
@@ -29,9 +22,6 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
             CreateMap<ProcessDefinition, GetProcessTaskWithProcessResult>().ReverseMap();
 
             CreateMap<ProcessDefinition, GetInstanceWithProcessResult>().ReverseMap();
-
-            CreateMap<GetProcessDefinitionCountQuery, ProcessDefinitionFilterDto>().ReverseMap();
-            CreateMap<GetProcessDefinitionCountQuery, ProcessDefinitionFilterDto>().ReverseMap();
         }
     }
 }

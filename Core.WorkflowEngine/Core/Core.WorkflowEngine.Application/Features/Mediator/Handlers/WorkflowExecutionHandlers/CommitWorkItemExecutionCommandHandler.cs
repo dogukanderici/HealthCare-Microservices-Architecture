@@ -4,12 +4,10 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExecutionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
-using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
-using Core.WorkflowEngine.Application.ServiceDtos.ProcessTaskTransitionDtos;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 
@@ -18,15 +16,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
     public class CommitWorkItemExecutionCommandHandler : IRequestHandler<CommitWorkItemExecutionCommand, InternalHandlerResponse<Guid>>
     {
         private readonly ITaskTransitionQueryService _taskTransitionQueryService;
-        private readonly IWorkItemQueryService _workItemQueryService;
         private readonly IWorkItemCommandService _workItemCommandService;
         private readonly IMapper _mapper;
         private readonly ICurrentUserService _currentUserService;
 
-        public CommitWorkItemExecutionCommandHandler(ITaskTransitionQueryService taskTransitionQueryService, IWorkItemQueryService workItemQueryService, IWorkItemCommandService workItemCommandService, IMapper mapper, ICurrentUserService currentUserService)
+        public CommitWorkItemExecutionCommandHandler(ITaskTransitionQueryService taskTransitionQueryService, IWorkItemCommandService workItemCommandService, IMapper mapper, ICurrentUserService currentUserService)
         {
             _taskTransitionQueryService = taskTransitionQueryService;
-            _workItemQueryService = workItemQueryService;
             _workItemCommandService = workItemCommandService;
             _mapper = mapper;
             _currentUserService = currentUserService;
@@ -57,7 +53,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
                 await _workItemCommandService.UpdateAsync(serviceResponse.Data);
 
                 // Sonraki task için transition var mı kontrol edilir.
-                TaskTransitionFilterDto filterFromDto = _mapper.Map<TaskTransitionFilterDto>(request);
 
                 DBQueryOptions<ProcessTaskTransition> transitionOptions = new DBQueryOptions<ProcessTaskTransition>();
                 transitionOptions.filter = x => (

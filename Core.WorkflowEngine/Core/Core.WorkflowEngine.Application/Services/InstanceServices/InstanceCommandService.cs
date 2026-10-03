@@ -2,7 +2,7 @@
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskResults;
-using Core.WorkflowEngine.Application.Features.Mediator.Rules.InstanceBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.InstanceBusinessRules;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
@@ -39,7 +39,7 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
             Instance result = await _repository.GetDataAsync(dBQueryOptions);
 
             if (result == null)
-                return InternalServiceResponse<Instance>.Failure("Data not found!");
+                return InternalServiceResponse<Instance>.Failure(InternalServiceResponseConstants.DataNotFound);
 
             return InternalServiceResponse<Instance>.Success(result);
         }
@@ -56,7 +56,7 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
                 await _unitOfWork.CommitAsync(cancellationToken);
 
                 // ProcessId ile başlangıç adımı bulunur.
-                InternalServiceResponse<GetProcessTaskByIdQueryResult> serviceResponse = 
+                InternalServiceResponse<GetProcessTaskByIdQueryResult> serviceResponse =
                     await _processTaskService.GetDataByProcessIdAsync<GetProcessTaskByIdQueryResult>(entity.ProcessId);
                 Guid processTaskId = serviceResponse.Data.Id;
 
