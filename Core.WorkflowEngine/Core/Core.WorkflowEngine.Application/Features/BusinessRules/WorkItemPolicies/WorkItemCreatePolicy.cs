@@ -2,13 +2,13 @@
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Domain.Entities;
 
-namespace Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemBusinessRules
+namespace Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemPolicies
 {
-    public class WorkItemBusinessRule : IWorkItemBusinessRule
+    public class WorkItemCreatePolicy : IWorkItemCreatePolicy
     {
         private readonly IBaseBusinessRule<WorkItem, DBQueryOptions<WorkItem>> _businessRule;
 
-        public WorkItemBusinessRule(IBaseBusinessRule<WorkItem, DBQueryOptions<WorkItem>> businessRule)
+        public WorkItemCreatePolicy(IBaseBusinessRule<WorkItem, DBQueryOptions<WorkItem>> businessRule)
         {
             _businessRule = businessRule;
         }

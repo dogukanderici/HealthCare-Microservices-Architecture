@@ -3,15 +3,15 @@ using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Domain.Entities;
 using Microsoft.Extensions.Logging;
 
-namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionBusinessRules
+namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionPolicies
 {
-    public class ProcessTaskActionBusinessRule : IProcessTaskActionBusinessRule
+    public class ProcessTaskActionCreatePolicy : IProcessTaskActionCreatePolicy
     {
         private readonly IRepository<ProcessTaskAction> _repository;
         private readonly IBaseBusinessRule<ProcessTaskAction, DBQueryOptions<ProcessTaskAction>> _businessRule;
-        private readonly ILogger<ProcessTaskActionBusinessRule> _logger;
+        private readonly ILogger<ProcessTaskActionCreatePolicy> _logger;
 
-        public ProcessTaskActionBusinessRule(IRepository<ProcessTaskAction> repository, IBaseBusinessRule<ProcessTaskAction, DBQueryOptions<ProcessTaskAction>> businessRule, ILogger<ProcessTaskActionBusinessRule> logger)
+        public ProcessTaskActionCreatePolicy(IRepository<ProcessTaskAction> repository, IBaseBusinessRule<ProcessTaskAction, DBQueryOptions<ProcessTaskAction>> businessRule, ILogger<ProcessTaskActionCreatePolicy> logger)
         {
             _repository = repository;
             _businessRule = businessRule;

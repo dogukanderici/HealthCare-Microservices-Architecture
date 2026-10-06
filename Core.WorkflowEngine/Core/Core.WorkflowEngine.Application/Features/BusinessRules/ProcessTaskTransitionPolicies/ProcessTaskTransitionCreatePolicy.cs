@@ -4,13 +4,13 @@ using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Domain.Entities;
 using System.Linq.Expressions;
 
-namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskTransitionRules
+namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskTransitionPolicies
 {
-    public class TaskTransitionBusinessRule : ITaskTransitionBusinessRule
+    public class ProcessTaskTransitionCreatePolicy : IProcessTaskTransitionCreatePolicy
     {
         private readonly IBaseBusinessRule<ProcessTaskTransition, DBQueryOptions<ProcessTaskTransition>> _baseBusinessRule;
 
-        public TaskTransitionBusinessRule(IBaseBusinessRule<ProcessTaskTransition, DBQueryOptions<ProcessTaskTransition>> baseBusinessRule)
+        public ProcessTaskTransitionCreatePolicy(IBaseBusinessRule<ProcessTaskTransition, DBQueryOptions<ProcessTaskTransition>> baseBusinessRule)
         {
             _baseBusinessRule = baseBusinessRule;
         }

@@ -1,11 +1,9 @@
-﻿using Core.WorkflowEngine.Application.Features.Commons;
-using Core.WorkflowEngine.Application.Features.BusinessRules.InstanceBusinessRules;
-using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessDefinitionBusinessRules;
-using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionBusinessRules;
-using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskBusinessRules;
-using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskTransitionRules;
-using Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemBusinessRules;
-using Core.WorkflowEngine.Application.Interfaces;
+﻿using Core.WorkflowEngine.Application.Features.BusinessRules.InstancePolicies;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessDefinitionPolicies;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionPolicies;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskPolicies;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskTransitionPolicies;
+using Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemPolicies;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions
@@ -14,13 +12,23 @@ namespace Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions
     {
         public static IServiceCollection AddBusinessRulesRegistration(this IServiceCollection services)
         {
-            services.AddScoped(typeof(IBaseBusinessRule<,>), typeof(BaseBusinessRule<,>));
-            services.AddScoped(typeof(IInstanceBusinessRule), typeof(InstanceBusinessRule));
-            services.AddScoped(typeof(IProcessDefinitionBusinessRule), typeof(ProcessDefinitionBusinessRule));
-            services.AddScoped(typeof(IProcessTaskBusinessRule), typeof(ProcessTaskBusinessRule));
-            services.AddScoped(typeof(IProcessTaskActionBusinessRule), typeof(ProcessTaskActionBusinessRule));
-            services.AddScoped(typeof(ITaskTransitionBusinessRule), typeof(TaskTransitionBusinessRule));
-            services.AddScoped(typeof(IWorkItemBusinessRule), typeof(WorkItemBusinessRule));
+            services.AddScoped(typeof(IInstanceCreatePolicy), typeof(InstanceCreatePolicy));
+            services.AddScoped(typeof(IInstanceUpdatePolicy), typeof(InstanceUpdatePolicy));
+
+            services.AddScoped(typeof(IProcessDefinitionCreatePolicy), typeof(ProcessDefinitionCreatePolicy));
+            services.AddScoped(typeof(IProcessDefinitionUpdatePolicy), typeof(ProcessDefinitionUpdatePolicy));
+
+            services.AddScoped(typeof(IProcessTaskCreatePolicy), typeof(ProcessTaskCreatePolicy));
+            services.AddScoped(typeof(IProcessTaskUpdatePolicy), typeof(ProcessTaskUpdatePolicy));
+
+            services.AddScoped(typeof(IProcessTaskActionCreatePolicy), typeof(ProcessTaskActionCreatePolicy));
+            services.AddScoped(typeof(IProcessTaskActionUpdatePolicy), typeof(ProcessTaskActionUpdatePolicy));
+
+            services.AddScoped(typeof(IProcessTaskTransitionCreatePolicy), typeof(ProcessTaskTransitionCreatePolicy));
+            services.AddScoped(typeof(IProcessTaskTransitionUpdatePolicy), typeof(ProcessTaskTransitionUpdatePolicy));
+
+            services.AddScoped(typeof(IWorkItemCreatePolicy), typeof(WorkItemCreatePolicy));
+            services.AddScoped(typeof(IWorkItemUpdatePolicy), typeof(WorkItemUpdatePolicy));
 
             return services;
         }

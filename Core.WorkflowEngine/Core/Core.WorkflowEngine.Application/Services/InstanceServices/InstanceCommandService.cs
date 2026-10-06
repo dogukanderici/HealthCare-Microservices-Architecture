@@ -2,13 +2,14 @@
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskResults;
-using Core.WorkflowEngine.Application.Features.BusinessRules.InstanceBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.InstancePolicies;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using System.Linq.Expressions;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Wrapper;
 
 namespace Core.WorkflowEngine.Application.Services.InstanceServices
 {
@@ -18,16 +19,16 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
         private readonly IRepository<WorkItem> _wiRepository;
         private readonly ILogger<InstanceQueryService> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IInstanceBusinessRule _businessRule;
+        private readonly IInstanceCreatePolicy _instanceCreatePolicy;
         private readonly IProcessTaskQueryService _processTaskService;
 
-        public InstanceCommandService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceQueryService> logger, IUnitOfWork unitOfWork, IInstanceBusinessRule businessRule, IProcessTaskQueryService processTaskService)
+        public InstanceCommandService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceQueryService> logger, IUnitOfWork unitOfWork, IInstanceCreatePolicy instanceCreatePolicy, IProcessTaskQueryService processTaskService)
         {
             _repository = repository;
             _wiRepository = wiRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _businessRule = businessRule;
+            _instanceCreatePolicy = instanceCreatePolicy;
             _processTaskService = processTaskService;
         }
 
@@ -102,10 +103,10 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
             Expression<Func<Instance, bool>> filter = x => x.Id == entity.Id;
             dbQueryOptions.filter = filter;
 
-            bool checkAllRules = await _businessRule.CheckAllRulesAsync(dbQueryOptions);
+            InternalPolicyResponse policyResponse = await _instanceCreatePolicy.ExecuteAllRuleAsync(entity);
             #endregion
 
-            if (checkAllRules)
+            if (policyResponse.IsSuccess)
             {
                 await _repository.UpdateDataAsync(entity);
 
@@ -115,12 +116,15 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
 
                 return InternalServiceResponse<DateTimeOffset>.Success(DateTimeOffset.UtcNow);
             }
+            else
+            {
 
-            _logger.LogError(LogConstants.LogMessageTemplate,
-                        nameof(InstanceQueryService),
-                        LogConstants.ErrorMessages.DataUpdateFailed);
+                _logger.LogError(LogConstants.LogMessageTemplate,
+                            nameof(InstanceQueryService),
+                            LogConstants.ErrorMessages.DataUpdateFailed);
 
-            return InternalServiceResponse<DateTimeOffset>.Failure();
+                return InternalServiceResponse<DateTimeOffset>.Failure(policyResponse.PolicyMessage);
+            }
         }
 
         public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)

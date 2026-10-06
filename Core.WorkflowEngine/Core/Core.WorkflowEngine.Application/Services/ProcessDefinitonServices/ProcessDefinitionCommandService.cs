@@ -1,7 +1,8 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Constants;
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessDefinitionBusinessRules;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Wrapper;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessDefinitionPolicies;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
 using Core.WorkflowEngine.Domain.Entities;
@@ -11,12 +12,14 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefinitonServices
     public class ProcessDefinitionCommandService : IProcessDefinitionCommandService
     {
         private readonly IRepository<ProcessDefinition> _repository;
-        private readonly IProcessDefinitionBusinessRule _businessRule;
+        private readonly IProcessDefinitionCreatePolicy _createPolicy;
+        private readonly IProcessDefinitionUpdatePolicy _updatePolicy;
 
-        public ProcessDefinitionCommandService(IRepository<ProcessDefinition> repository, IProcessDefinitionBusinessRule businessRule)
+        public ProcessDefinitionCommandService(IRepository<ProcessDefinition> repository, IProcessDefinitionCreatePolicy createPolicy, IProcessDefinitionUpdatePolicy updatePolicy)
         {
             _repository = repository;
-            _businessRule = businessRule;
+            _createPolicy = createPolicy;
+            _updatePolicy = updatePolicy;
         }
 
         public async Task<InternalServiceResponse<ProcessDefinition>> GetDataForUpdateAsync(Guid id)
@@ -36,6 +39,13 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefinitonServices
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(ProcessDefinition entity, CancellationToken cancellationToken)
         {
+            InternalPolicyResponse policyResponse = await _createPolicy.ExecuteAllRuleAsync(entity);
+
+            if (!policyResponse.IsSuccess)
+            {
+                return InternalServiceResponse<Guid>.Failure(policyResponse.PolicyMessage);
+            }
+
             Guid result = await _repository.CreateDataAsync(entity);
 
             return InternalServiceResponse<Guid>.Success(result);
@@ -44,11 +54,11 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefinitonServices
         public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ProcessDefinition entity)
         {
             // Veri yoksa true döner.
-            bool ruleResult = await _businessRule.ExistingProcessDefinitionDataAsync(entity.Id);
+            InternalPolicyResponse policyResponse = await _updatePolicy.ExecuteAllRuleAsync(entity);
 
-            if (ruleResult)
+            if (!policyResponse.IsSuccess)
             {
-                return InternalServiceResponse<DateTimeOffset>.Failure(InternalServiceResponseConstants.NotValidBusinessRule);
+                return InternalServiceResponse<DateTimeOffset>.Failure(policyResponse.PolicyMessage);
             }
 
             DateTimeOffset updatedDate = await _repository.UpdateDataAsync(entity);

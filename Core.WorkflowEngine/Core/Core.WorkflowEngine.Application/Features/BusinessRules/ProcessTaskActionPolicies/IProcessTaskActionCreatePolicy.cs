@@ -1,9 +1,9 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Domain.Entities;
 
-namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionBusinessRules
+namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionPolicies
 {
-    public interface IProcessTaskActionBusinessRule
+    public interface IProcessTaskActionCreatePolicy
     {
         Task<bool> CheckExistingDataAsync(DBQueryOptions<ProcessTaskAction> dBQueryOptions);
         Task<bool> CheckAllRulesAsync(DBQueryOptions<ProcessTaskAction> dBQueryOptions);
