@@ -37,6 +37,7 @@ namespace Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions
             services.AddScoped(typeof(IProcessTaskQueryService), typeof(ProcessTaskQueryService));
             services.AddScoped(typeof(IProcessTaskCommandService), typeof(ProcessTaskCommandService));
 
+            services.AddScoped(typeof(ISyncUserEventQueryService), typeof(SyncUserEventQueryService));
             services.AddScoped(typeof(ISyncUserEventCommandService), typeof(SyncUserEventCommandService));
 
             services.AddScoped(typeof(ICurrentUserService), typeof(CurrentUserService));

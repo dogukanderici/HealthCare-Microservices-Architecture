@@ -1,49 +1,40 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Extensions;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Helpers;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Wrapper;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Domain.Entities;
-using System.Linq.Expressions;
 
 namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskTransitionPolicies
 {
-    public class ProcessTaskTransitionCreatePolicy : IProcessTaskTransitionCreatePolicy
+    public class ProcessTaskTransitionCreatePolicy : PolicyRule<ProcessTaskTransition>, IProcessTaskTransitionCreatePolicy
     {
-        private readonly IBaseBusinessRule<ProcessTaskTransition, DBQueryOptions<ProcessTaskTransition>> _baseBusinessRule;
+        private readonly ITaskTransitionQueryService _queryService;
 
-        public ProcessTaskTransitionCreatePolicy(IBaseBusinessRule<ProcessTaskTransition, DBQueryOptions<ProcessTaskTransition>> baseBusinessRule)
+        public ProcessTaskTransitionCreatePolicy(ITaskTransitionQueryService queryService)
         {
-            _baseBusinessRule = baseBusinessRule;
+            _queryService = queryService;
         }
 
-        public async Task<InternalBusinessRuleResponse<bool>> ExistingTaskTransitionControlAsync(DBQueryOptions<ProcessTaskTransition> queryData)
-        {
-            int data = await _baseBusinessRule.ExistingDataControlAsync(queryData);
-
-            return InternalBusinessRuleResponse<bool>.Success((data == 0));
-        }
-
-        public async Task<InternalBusinessRuleResponse<bool>> CheckAllRulesForUpdateAsync(ProcessTaskTransition entity)
+        protected override async Task<InternalPolicyResponse> CountExistingDataAsync(ProcessTaskTransition entity)
         {
             DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
+            dBQueryOptions.filter = x => x.Id != entity.Id;
 
-            Expression<Func<ProcessTaskTransition, bool>> filter = x => x.Id == entity.Id;
-            dBQueryOptions.filter = filter;
+            InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCount(dBQueryOptions);
 
-            InternalBusinessRuleResponse<bool> checkExist = await ExistingTaskTransitionControlAsync(dBQueryOptions);
-
-            return InternalBusinessRuleResponse<bool>.Success((checkExist.Data));
+            return serviceResponse.ExecuteServiceWithPolicy(x => x > 0, "Task Transiton must be unique!");
         }
 
-        public async Task<InternalBusinessRuleResponse<ProcessTaskTransition>> CheckAllRulesForDeleteAsync(Guid id)
+        public override async Task<InternalPolicyResponse> ExecuteAllRuleAsync(ProcessTaskTransition entity)
         {
-            DBQueryOptions<ProcessTaskTransition> dBQueryOptions = new DBQueryOptions<ProcessTaskTransition>();
+            PolicyResponseHelper policyHelper = new PolicyResponseHelper
+            {
+                ()=>CountExistingDataAsync(entity)
+            };
 
-            Expression<Func<ProcessTaskTransition, bool>> filter = x => x.Id == id;
-            dBQueryOptions.filter = filter;
-
-            ProcessTaskTransition existData = await _baseBusinessRule.ExistingDataAsync(dBQueryOptions);
-
-            return InternalBusinessRuleResponse<ProcessTaskTransition>.Success(existData);
+            return await policyHelper.ExecutePolicyRulesAync();
         }
     }
 }

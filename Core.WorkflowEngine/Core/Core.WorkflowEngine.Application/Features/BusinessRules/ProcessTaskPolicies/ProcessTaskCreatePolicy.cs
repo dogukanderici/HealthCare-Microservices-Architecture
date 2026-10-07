@@ -1,23 +1,40 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Parameters;
-using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Extensions;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Helpers;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Wrapper;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
 
 namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskPolicies
 {
-    public class ProcessTaskCreatePolicy : IProcessTaskCreatePolicy
+    public class ProcessTaskCreatePolicy : PolicyRule<ProcessTask>, IProcessTaskCreatePolicy
     {
-        private readonly IRepository<ProcessTask> _repository;
+        private readonly IProcessTaskQueryService _queryService;
 
-        public ProcessTaskCreatePolicy(IRepository<ProcessTask> repository)
+        public ProcessTaskCreatePolicy(IProcessTaskQueryService queryService)
         {
-            _repository = repository;
+            _queryService = queryService;
         }
 
-        public async Task<bool> CheckExistingDataAsync(DBQueryOptions<ProcessTask> dBQueryOptions)
+        protected override async Task<InternalPolicyResponse> CountExistingDataAsync(ProcessTask entity)
         {
-            int data = await _repository.GetAllDataCountAsync(dBQueryOptions);
+            DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
+            dBQueryOptions.filter = x => (x.Id != entity.Id);
 
-            return data == 0;
+            InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCount(dBQueryOptions);
+
+            return serviceResponse.ExecuteServiceWithPolicy(x => x > 1, "Adım tanımları tekil olmalıdır!");
+        }
+
+        public override async Task<InternalPolicyResponse> ExecuteAllRuleAsync(ProcessTask entity)
+        {
+            PolicyResponseHelper policyHelper = new PolicyResponseHelper
+            {
+                ()=>CountExistingDataAsync(entity)
+            };
+
+            return await policyHelper.ExecutePolicyRulesAync();
         }
     }
 }

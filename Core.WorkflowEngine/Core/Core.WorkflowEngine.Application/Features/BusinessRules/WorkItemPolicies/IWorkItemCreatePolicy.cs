@@ -3,9 +3,7 @@ using Core.WorkflowEngine.Domain.Entities;
 
 namespace Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemPolicies
 {
-    public interface IWorkItemCreatePolicy
+    public interface IWorkItemCreatePolicy : IPolicyRule<WorkItem>
     {
-        Task<bool> CheckExistingDataAsync(DBQueryOptions<WorkItem> dBQueryOptions);
-        Task<bool> CheckAllRulesAsync(DBQueryOptions<WorkItem> dBQueryOptions);
     }
 }

@@ -4,11 +4,7 @@ using Core.WorkflowEngine.Domain.Entities;
 
 namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskTransitionPolicies
 {
-    public interface IProcessTaskTransitionCreatePolicy
+    public interface IProcessTaskTransitionCreatePolicy : IPolicyRule<ProcessTaskTransition>
     {
-        Task<InternalBusinessRuleResponse<bool>> ExistingTaskTransitionControlAsync(DBQueryOptions<ProcessTaskTransition> queryData);
-
-        Task<InternalBusinessRuleResponse<bool>> CheckAllRulesForUpdateAsync(ProcessTaskTransition entity);
-        Task<InternalBusinessRuleResponse<ProcessTaskTransition>> CheckAllRulesForDeleteAsync(Guid id);
     }
 }

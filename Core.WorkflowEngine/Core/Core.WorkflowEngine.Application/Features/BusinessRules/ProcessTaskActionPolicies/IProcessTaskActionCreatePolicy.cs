@@ -3,9 +3,7 @@ using Core.WorkflowEngine.Domain.Entities;
 
 namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionPolicies
 {
-    public interface IProcessTaskActionCreatePolicy
+    public interface IProcessTaskActionCreatePolicy : IPolicyRule<ProcessTaskAction>
     {
-        Task<bool> CheckExistingDataAsync(DBQueryOptions<ProcessTaskAction> dBQueryOptions);
-        Task<bool> CheckAllRulesAsync(DBQueryOptions<ProcessTaskAction> dBQueryOptions);
     }
 }
