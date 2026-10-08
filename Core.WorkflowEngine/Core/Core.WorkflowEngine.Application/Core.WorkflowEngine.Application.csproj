@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\BusinessRules\WorkItemExecutionPolicies\" />
     <Folder Include="Features\Validations\InstanceValidations\" />
   </ItemGroup>
 

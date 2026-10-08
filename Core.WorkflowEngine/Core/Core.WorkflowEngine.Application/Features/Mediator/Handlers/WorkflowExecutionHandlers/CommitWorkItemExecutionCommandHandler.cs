@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Wrapper;
+using Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemExecutionPolicies;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExecutionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
@@ -19,17 +21,25 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.WorkflowExe
         private readonly IWorkItemCommandService _workItemCommandService;
         private readonly IMapper _mapper;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IWorkItemExecutionUpdatePolicy _updatePolicy;
 
-        public CommitWorkItemExecutionCommandHandler(ITaskTransitionQueryService taskTransitionQueryService, IWorkItemCommandService workItemCommandService, IMapper mapper, ICurrentUserService currentUserService)
+        public CommitWorkItemExecutionCommandHandler(ITaskTransitionQueryService taskTransitionQueryService, IWorkItemCommandService workItemCommandService, IMapper mapper, ICurrentUserService currentUserService, IWorkItemExecutionUpdatePolicy updatePolicy)
         {
             _taskTransitionQueryService = taskTransitionQueryService;
             _workItemCommandService = workItemCommandService;
             _mapper = mapper;
             _currentUserService = currentUserService;
+            _updatePolicy = updatePolicy;
         }
 
         public async Task<InternalHandlerResponse<Guid>> Handle(CommitWorkItemExecutionCommand request, CancellationToken cancellationToken)
         {
+
+            InternalPolicyResponse policyResponse = await _updatePolicy.ExecuteAllRuleAsync(request);
+
+            if (!policyResponse.IsSuccess)
+                return InternalHandlerResponse<Guid>.Failure(policyResponse.PolicyMessage);
+
             // 1. Form verileri json formatında db'ye kaydedilir.
             // 2. Aksiyon alınan workitem durumu Commit olacak şekilde güncellenir.
             // 3. Sonraki task için transition var mı kontrol edilir. Eğer varsa, yeni WorkItem oluşturulur ve task kullanıcısına atanır.

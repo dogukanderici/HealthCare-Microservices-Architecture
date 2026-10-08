@@ -19,16 +19,18 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
         private readonly IRepository<WorkItem> _wiRepository;
         private readonly ILogger<InstanceQueryService> _logger;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IInstanceCreatePolicy _instanceCreatePolicy;
+        private readonly IInstanceCreatePolicy _createPolicy;
+        private readonly IInstanceUpdatePolicy _updatePolicy;
         private readonly IProcessTaskQueryService _processTaskService;
 
-        public InstanceCommandService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceQueryService> logger, IUnitOfWork unitOfWork, IInstanceCreatePolicy instanceCreatePolicy, IProcessTaskQueryService processTaskService)
+        public InstanceCommandService(IRepository<Instance> repository, IRepository<WorkItem> wiRepository, ILogger<InstanceQueryService> logger, IUnitOfWork unitOfWork, IInstanceCreatePolicy createPolicy, IInstanceUpdatePolicy updatePolicy, IProcessTaskQueryService processTaskService)
         {
             _repository = repository;
             _wiRepository = wiRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
-            _instanceCreatePolicy = instanceCreatePolicy;
+            _createPolicy = createPolicy;
+            _updatePolicy = updatePolicy;
             _processTaskService = processTaskService;
         }
 
@@ -47,6 +49,13 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(Instance entity, CancellationToken cancellationToken)
         {
+            InternalPolicyResponse policyResponse = await _createPolicy.ExecuteAllRuleAsync(entity);
+
+            if (!policyResponse.IsSuccess)
+            {
+                return InternalServiceResponse<Guid>.Failure(policyResponse.PolicyMessage);
+            }
+
             await _unitOfWork.BeginTransactionAsync();
 
             try
@@ -75,10 +84,6 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
                 // Transaction tamamlanır.
                 await _unitOfWork.CommitTransactionAsync();
 
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(InstanceQueryService),
-                        LogConstants.SuccessMessages.DataCreatedSuccessfully);
-
                 return InternalServiceResponse<Guid>.Success(instanceId);
             }
             catch (Exception ex)
@@ -96,35 +101,16 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
 
         public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(Instance entity)
         {
-            #region BusinessRule
+            InternalPolicyResponse policyResponse = await _updatePolicy.ExecuteAllRuleAsync(entity);
 
-            DBQueryOptions<Instance> dbQueryOptions = new DBQueryOptions<Instance>();
-
-            Expression<Func<Instance, bool>> filter = x => x.Id == entity.Id;
-            dbQueryOptions.filter = filter;
-
-            InternalPolicyResponse policyResponse = await _instanceCreatePolicy.ExecuteAllRuleAsync(entity);
-            #endregion
-
-            if (policyResponse.IsSuccess)
+            if (!policyResponse.IsSuccess)
             {
-                await _repository.UpdateDataAsync(entity);
-
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                            nameof(InstanceQueryService),
-                            LogConstants.SuccessMessages.DataUpdatedSuccessfully);
-
-                return InternalServiceResponse<DateTimeOffset>.Success(DateTimeOffset.UtcNow);
-            }
-            else
-            {
-
-                _logger.LogError(LogConstants.LogMessageTemplate,
-                            nameof(InstanceQueryService),
-                            LogConstants.ErrorMessages.DataUpdateFailed);
-
                 return InternalServiceResponse<DateTimeOffset>.Failure(policyResponse.PolicyMessage);
             }
+
+            await _repository.UpdateDataAsync(entity);
+
+            return InternalServiceResponse<DateTimeOffset>.Success(DateTimeOffset.UtcNow);
         }
 
         public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)
@@ -141,16 +127,8 @@ namespace Core.WorkflowEngine.Application.Services.InstanceServices
 
                 await _repository.DeleteDataAsync(existingData);
 
-                _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(InstanceQueryService),
-                        LogConstants.SuccessMessages.DataDeletedSuccessfully);
-
                 return InternalServiceResponse<bool>.Success(true);
             }
-
-            _logger.LogInformation(LogConstants.LogMessageTemplate,
-                        nameof(InstanceQueryService),
-                        LogConstants.ErrorMessages.DataNotFound);
 
             return InternalServiceResponse<bool>.Failure();
         }

@@ -1,25 +1,25 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Constants;
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Wrapper;
+using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskPolicies;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Services.ProcessTaskServices
 {
     public class ProcessTaskCommandService : IProcessTaskCommandService
     {
         private readonly IRepository<ProcessTask> _repository;
+        private readonly IProcessTaskCreatePolicy _createPolicy;
+        private readonly IProcessTaskUpdatePolicy _updatePolicy;
 
-        public ProcessTaskCommandService(IRepository<ProcessTask> repository)
+        public ProcessTaskCommandService(IRepository<ProcessTask> repository, IProcessTaskCreatePolicy createPolicy, IProcessTaskUpdatePolicy updatePolicy)
         {
             _repository = repository;
+            _createPolicy = createPolicy;
+            _updatePolicy = updatePolicy;
         }
 
         public async Task<InternalServiceResponse<ProcessTask>> GetDataForUpdateAsync(Guid id)
@@ -37,6 +37,11 @@ namespace Core.WorkflowEngine.Application.Services.ProcessTaskServices
 
         public async Task<InternalServiceResponse<Guid>> CreateAsync(ProcessTask entity, CancellationToken cancellationToken)
         {
+            InternalPolicyResponse policyResponse = await _createPolicy.ExecuteAllRuleAsync(entity);
+
+            if (!policyResponse.IsSuccess)
+                return InternalServiceResponse<Guid>.Failure(policyResponse.PolicyMessage);
+
             Guid repoResponse = await _repository.CreateDataAsync(entity);
 
             return InternalServiceResponse<Guid>.Success(repoResponse);
@@ -44,6 +49,11 @@ namespace Core.WorkflowEngine.Application.Services.ProcessTaskServices
 
         public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(ProcessTask entity)
         {
+            InternalPolicyResponse policyResponse = await _updatePolicy.ExecuteAllRuleAsync(entity);
+
+            if (!policyResponse.IsSuccess)
+                return InternalServiceResponse<DateTimeOffset>.Failure(policyResponse.PolicyMessage);
+
             DateTimeOffset repoResponse = await _repository.UpdateDataAsync(entity);
 
             return InternalServiceResponse<DateTimeOffset>.Success(repoResponse);
