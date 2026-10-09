@@ -1,6 +1,6 @@
 ﻿using Core.IdentityServer.Commons.Constants;
 using Core.IdentityServer.Commons.Helpers.RabbitMQ;
-using Core.IdentityServer.Services.RabbitMQ.Events;
+using Core.IdentityServer.Services.RabbitMQ.Events.Users;
 
 namespace Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users
 {
@@ -15,7 +15,7 @@ namespace Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users
 
         public async Task<bool> PublishEventAsync(UserCreatedEvent userCreatedEvent)
         {
-            bool result = await _publisherHelper.PublisherAsync(userCreatedEvent, RabbitMQRoutingType.Create);
+            bool result = await _publisherHelper.PublisherAsync(userCreatedEvent, RabbitMQRoutingType.Create.User);
 
             return result;
         }

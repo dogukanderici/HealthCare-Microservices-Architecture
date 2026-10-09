@@ -4,6 +4,7 @@ using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommand
 using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.IntegrationServices.RabbitMQServices;
+using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.RabbitMQHan
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateSyncUserEventCommand request, CancellationToken cancellationToken)
         {
-            InternalServiceResponse<SyncUserEvent> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
+            InternalServiceResponse<SyncedUser> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
 
             if (existedData == null)
                 return InternalHandlerResponse<DateTimeOffset>.Failure();

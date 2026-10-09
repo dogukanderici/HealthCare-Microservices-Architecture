@@ -5,6 +5,7 @@ using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.IntegrationServices.RabbitMQServices;
+using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.RabbitMQHan
 
         public async Task<InternalHandlerResponse<Guid>> Handle(CreateSyncUserEventCommand request, CancellationToken cancellationToken)
         {
-            SyncUserEvent dataFromDto = _mapper.Map<SyncUserEvent>(request);
+            SyncedUser dataFromDto = _mapper.Map<SyncedUser>(request);
 
             InternalServiceResponse<Guid> serviceResponse = await _commandService.CreateAsync(dataFromDto, cancellationToken);
 

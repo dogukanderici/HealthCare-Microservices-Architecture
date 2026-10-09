@@ -1,5 +1,5 @@
 ﻿using Core.IdentityServer.Commons.Parameters;
-using Core.IdentityServer.Services.RabbitMQ.Events;
+using Core.IdentityServer.Services.RabbitMQ.Events.Users;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using RabbitMQ.Client;

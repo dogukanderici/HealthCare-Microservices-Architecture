@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Core.IdentityServer.Dtos.UserDtos;
 using Core.IdentityServer.Models;
-using Core.IdentityServer.Services.RabbitMQ.Events;
+using Core.IdentityServer.Services.RabbitMQ.Events.Users;
 
 namespace Core.IdentityServer.Mappings
 {

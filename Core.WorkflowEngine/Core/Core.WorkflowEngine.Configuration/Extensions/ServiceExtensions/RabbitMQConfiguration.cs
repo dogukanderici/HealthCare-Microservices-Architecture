@@ -2,6 +2,7 @@
 using Core.WorkflowEngine.Persistence.Commons.Helpers;
 using Core.WorkflowEngine.Persistence.Commons.Helpers.Abstracts;
 using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ;
+using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ.Roles;
 using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ.Users;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,9 @@ namespace Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions
 
             services.AddHostedService<CreateUserEventConsumer>();
             services.AddHostedService<UpdateUserEventConsumer>();
+
+            services.AddHostedService<CreateRoleEventConsumer>();
+            services.AddHostedService<UpdateRoleEventConsumer>();
 
             return services;
         }

@@ -1,19 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Core.WorkflowEngine.Application.Commons.Constants
+﻿namespace Core.WorkflowEngine.Application.Commons.Constants
 {
     public static class RabbitMQConstants
     {
-        public static readonly string CreateQueueName = "user_created_workflow_engine";
-        public static readonly string UpdateQueueName = "user_updated_workflow_engine";
-        public static readonly string DeleteQueueName = "user_deleted_workflow_engine";
+        public static class Create
+        {
+            public static readonly string UserQueueName = "user_created_workflow_engine";
+            public static readonly string UserRoutingKey = "user.created";
 
-        public static readonly string CreateRoutingKey = "user.created";
-        public static readonly string UpdateRoutingKey = "user.updated";
-        public static readonly string DeleteRoutingKey = "user.deleted";
+            public static readonly string RoleQueueName = "role_created_workflow_engine";
+            public static readonly string RoleRoutingKey = "role.created";
+        }
+
+        public static class Update
+        {
+            public static readonly string UserQueueName = "user_updated_workflow_engine";
+            public static readonly string UserRoutingKey = "user.updated";
+
+            public static readonly string RoleQueueName = "role_updated_workflow_engine";
+            public static readonly string RoleRoutingKey = "role.updated";
+
+        }
+
+        public static class Delete
+        {
+            public static readonly string UserQueueName = "user_deleted_workflow_engine";
+            public static readonly string UserRoutingKey = "user.deleted";
+
+            public static readonly string RoleQueueName = "role_deleted_workflow_engine";
+            public static readonly string RoleRoutingKey = "role.deleted";
+
+        }
     }
 }

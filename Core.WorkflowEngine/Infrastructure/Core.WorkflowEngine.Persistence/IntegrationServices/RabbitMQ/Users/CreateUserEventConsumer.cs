@@ -3,6 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Constants;
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands.SyncedUserCommands;
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
+using Core.WorkflowEngine.Domain.Entities;
 using Core.WorkflowEngine.Persistence.Commons.Helpers;
 using Core.WorkflowEngine.Persistence.Commons.Helpers.Abstracts;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,10 +17,10 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ.Users
 {
-    public class CreateUserEventConsumer : RabbitMQConsumerHelper<SyncUserEvent, CreateSyncUserEventCommand>
+    public class CreateUserEventConsumer : RabbitMQConsumerHelper<SyncUserEvent, SyncedUser, CreateSyncUserEventCommand>
     {
-        protected override string QueueName => RabbitMQConstants.CreateQueueName;
-        protected override string RoutingKey => RabbitMQConstants.CreateRoutingKey;
+        protected override string QueueName => RabbitMQConstants.Create.UserQueueName;
+        protected override string RoutingKey => RabbitMQConstants.Create.UserRoutingKey;
 
         public CreateUserEventConsumer(
                 IOptions<RabbitMQOptions> options,

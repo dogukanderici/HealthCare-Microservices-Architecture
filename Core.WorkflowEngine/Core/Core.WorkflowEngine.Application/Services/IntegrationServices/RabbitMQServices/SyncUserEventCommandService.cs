@@ -5,6 +5,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.IntegrationServices.RabbitMQServices;
+using Core.WorkflowEngine.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -16,34 +17,36 @@ namespace Core.WorkflowEngine.Application.Services.IntegrationServices.RabbitMQS
 {
     public class SyncUserEventCommandService : ISyncUserEventCommandService
     {
-        private readonly IRepository<SyncUserEvent> _repository;
+        private readonly IRepository<SyncedUser> _repository;
+        private readonly IMapper _mapper;
 
-        public SyncUserEventCommandService(IRepository<SyncUserEvent> repository)
+        public SyncUserEventCommandService(IRepository<SyncedUser> repository, IMapper mapper)
         {
             _repository = repository;
+            _mapper = mapper;
         }
 
-        public async Task<InternalServiceResponse<SyncUserEvent>> GetDataForUpdateAsync(Guid id)
+        public async Task<InternalServiceResponse<SyncedUser>> GetDataForUpdateAsync(Guid id)
         {
-            DBQueryOptions<SyncUserEvent> dBQueryOptions = new DBQueryOptions<SyncUserEvent>();
+            DBQueryOptions<SyncedUser> dBQueryOptions = new DBQueryOptions<SyncedUser>();
             dBQueryOptions.filter = x => x.Id == id;
 
-            SyncUserEvent existedData = await _repository.GetDataAsync(dBQueryOptions);
+            SyncedUser existedData = await _repository.GetDataAsync(dBQueryOptions);
 
             if (existedData == null)
-                return InternalServiceResponse<SyncUserEvent>.Failure(InternalServiceResponseConstants.DataNotFound);
+                return InternalServiceResponse<SyncedUser>.Failure(InternalServiceResponseConstants.DataNotFound);
 
-            return InternalServiceResponse<SyncUserEvent>.Success(existedData);
+            return InternalServiceResponse<SyncedUser>.Success(existedData);
         }
 
-        public async Task<InternalServiceResponse<Guid>> CreateAsync(SyncUserEvent entity, CancellationToken cancellationToken)
+        public async Task<InternalServiceResponse<Guid>> CreateAsync(SyncedUser entity, CancellationToken cancellationToken)
         {
             Guid id = await _repository.CreateDataAsync(entity);
 
             return InternalServiceResponse<Guid>.Success(id);
         }
 
-        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(SyncUserEvent entity)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(SyncedUser entity)
         {
             DateTimeOffset updatedDate = await _repository.UpdateDataAsync(entity);
 
@@ -52,7 +55,7 @@ namespace Core.WorkflowEngine.Application.Services.IntegrationServices.RabbitMQS
 
         public async Task<InternalServiceResponse<bool>> DeleteAsync(Guid id)
         {
-            InternalServiceResponse<SyncUserEvent> existedData = await GetDataForUpdateAsync(id);
+            InternalServiceResponse<SyncedUser> existedData = await GetDataForUpdateAsync(id);
 
             if (existedData.IsSuccess)
                 return InternalServiceResponse<bool>.Failure(existedData.ServiceMessage);

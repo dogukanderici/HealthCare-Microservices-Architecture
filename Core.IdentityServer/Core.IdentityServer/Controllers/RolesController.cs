@@ -1,5 +1,8 @@
-﻿using Core.IdentityServer.Commons.Constants;
+﻿using AutoMapper;
+using Core.IdentityServer.Commons.Constants;
 using Core.IdentityServer.Dtos.RoleDtos;
+using Core.IdentityServer.Services.RabbitMQ.Events.Roles;
+using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,12 +13,16 @@ namespace Core.IdentityServer.Controllers
     [ApiController]
     public class RolesController : BaseController
     {
+        private readonly RoleCreateEventPublisher _publisher;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IMapper _mapper;
         private readonly ILogger<RolesController> _logger;
 
-        public RolesController(RoleManager<IdentityRole> roleManager, ILogger<RolesController> logger)
+        public RolesController(RoleCreateEventPublisher publisher, RoleManager<IdentityRole> roleManager, IMapper mapper, ILogger<RolesController> logger)
         {
+            _publisher = publisher;
             _roleManager = roleManager;
+            _mapper = mapper;
             _logger = logger;
         }
 
@@ -25,10 +32,14 @@ namespace Core.IdentityServer.Controllers
         {
             if (!await _roleManager.RoleExistsAsync(createRoleDto.RoleName))
             {
-                IdentityResult result = await _roleManager.CreateAsync(new IdentityRole(createRoleDto.RoleName));
+                IdentityRole role = new IdentityRole(createRoleDto.RoleName);
+
+                IdentityResult result = await _roleManager.CreateAsync(role);
 
                 if (result.Succeeded)
                 {
+                    bool publiherResponse = await _publisher.PublishEventAsync(_mapper.Map<RoleCreatedEvent>(role));
+
                     _logger.LogInformation(LogConstant.LogMessageTemplate,
                         LogConstant.ServiceName,
                         nameof(RolesController),

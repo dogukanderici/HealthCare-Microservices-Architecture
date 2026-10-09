@@ -2,7 +2,7 @@
 using Core.IdentityServer.Commons.Helpers.RabbitMQ;
 using Core.IdentityServer.Dtos.UserDtos;
 using Core.IdentityServer.Models;
-using Core.IdentityServer.Services.RabbitMQ.Events;
+using Core.IdentityServer.Services.RabbitMQ.Events.Users;
 using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

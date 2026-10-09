@@ -1,4 +1,4 @@
-﻿namespace Core.IdentityServer.Services.RabbitMQ.Events
+﻿namespace Core.IdentityServer.Services.RabbitMQ.Events.Users
 {
     public class UserSoftDeletedEvent : IRabbitMQEvent
     {

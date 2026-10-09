@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mappings
 {
-    public class SyncUserEventMappings : Profile
+    public class SyncedUserMappings : Profile
     {
-        public SyncUserEventMappings()
+        public SyncedUserMappings()
         {
+            CreateMap<SyncUserEvent, SyncUserEvent>();
+
             CreateMap<SyncUserEvent, CreateSyncUserEventCommand>().ReverseMap();
             CreateMap<SyncUserEvent, UpdateSyncUserEventCommand>().ReverseMap();
         }
