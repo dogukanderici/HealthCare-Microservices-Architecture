@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Persistence.Commons.Helpers
 {
-    public abstract class RabbitMQConsumerHelper<TEvent, TCommand> : BackgroundService
+    public abstract class RabbitMQConsumerHelper<TEvent, TEntity> : BackgroundService
     {
         protected abstract string QueueName { get; }
         protected abstract string RoutingKey { get; }
@@ -27,9 +27,9 @@ namespace Core.WorkflowEngine.Persistence.Commons.Helpers
         private readonly IRabbitMQConnectionHelper _connectionHelper;
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly IMapper _mapper;
-        private readonly ILogger<RabbitMQConsumerHelper<TEvent, TCommand>> _logger;
+        private readonly ILogger<RabbitMQConsumerHelper<TEvent, TEntity>> _logger;
 
-        public RabbitMQConsumerHelper(IOptions<RabbitMQOptions> options, IRabbitMQConnectionHelper connectionHelper, IServiceScopeFactory scopeFactory, IMapper mapper, ILogger<RabbitMQConsumerHelper<TEvent, TCommand>> logger)
+        public RabbitMQConsumerHelper(IOptions<RabbitMQOptions> options, IRabbitMQConnectionHelper connectionHelper, IServiceScopeFactory scopeFactory, IMapper mapper, ILogger<RabbitMQConsumerHelper<TEvent, TEntity>> logger)
         {
             _connectionHelper = connectionHelper;
             _scopeFactory = scopeFactory;
@@ -83,7 +83,7 @@ namespace Core.WorkflowEngine.Persistence.Commons.Helpers
                         using (var scope = _scopeFactory.CreateScope())
                         {
                             var mediator = scope.ServiceProvider.GetService<IMediator>();
-                            TCommand command = _mapper.Map<TCommand>(syncEvent);
+                            TEntity command = _mapper.Map<TEntity>(syncEvent);
 
                             await mediator.Send(command);
 

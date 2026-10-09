@@ -1,4 +1,4 @@
-﻿using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ;
+﻿using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Domain.Abstractions;
 using Core.WorkflowEngine.Domain.Entities;
@@ -102,8 +102,11 @@ namespace Core.WorkflowEngine.Persistence.Context
         public DbSet<ProcessTask> ProcessTasks { get; set; }
         public DbSet<ProcessTaskAction> ProcessTaskActions { get; set; }
         public DbSet<ProcessTaskTransition> ProcessTaskTransitions { get; set; }
+        public DbSet<DynamicPolicy> DynamicPolicies { get; set; }
+        public DbSet<DynamicRole> DynamicRoles { get; set; }
 
         // RabbitMQ SyncUserEvent
         public DbSet<SyncUserEvent> SyncUserEvents { get; set; }
+        public DbSet<SyncedRole> SyncedRoles { get; set; }
     }
 }

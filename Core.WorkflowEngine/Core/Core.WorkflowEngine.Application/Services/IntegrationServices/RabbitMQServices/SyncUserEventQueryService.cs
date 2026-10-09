@@ -1,6 +1,6 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ;
+using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.IntegrationServices.RabbitMQServices;
 using System;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ
+namespace Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent
 {
     public class SyncUserEvent : IEntity, IRabbitMQEvent
     {

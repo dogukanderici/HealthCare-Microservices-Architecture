@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Constants;
 using Core.WorkflowEngine.Application.Commons.Parameters;
-using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands;
-using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ;
+using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands.SyncedUserCommands;
+using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using Core.WorkflowEngine.Persistence.Commons.Helpers;
 using Core.WorkflowEngine.Persistence.Commons.Helpers.Abstracts;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands;
-using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ;
+using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands.SyncedUserCommands;
+using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using System;
 using System.Collections.Generic;
 using System.Linq;

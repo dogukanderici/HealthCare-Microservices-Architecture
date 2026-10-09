@@ -1,4 +1,4 @@
-﻿using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ;
+﻿using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using Core.WorkflowEngine.Application.Interfaces.Services;
 using System;
 using System.Collections.Generic;

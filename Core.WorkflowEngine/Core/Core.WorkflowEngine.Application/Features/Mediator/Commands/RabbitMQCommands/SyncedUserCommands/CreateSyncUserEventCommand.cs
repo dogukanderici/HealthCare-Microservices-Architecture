@@ -7,9 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands
+namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands.SyncedUserCommands
 {
-    public class UpdateSyncUserEventCommand : IRequest<InternalHandlerResponse<DateTimeOffset>>, ITransactionalRequest
+    public class CreateSyncUserEventCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
