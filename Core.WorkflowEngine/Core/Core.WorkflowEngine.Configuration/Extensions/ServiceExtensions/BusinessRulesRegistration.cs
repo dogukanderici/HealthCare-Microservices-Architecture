@@ -3,6 +3,7 @@ using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessDefinitionPo
 using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActionPolicies;
 using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskPolicies;
 using Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskTransitionPolicies;
+using Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemExecutionPolicies;
 using Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemPolicies;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -29,6 +30,9 @@ namespace Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions
 
             services.AddScoped(typeof(IWorkItemCreatePolicy), typeof(WorkItemCreatePolicy));
             services.AddScoped(typeof(IWorkItemUpdatePolicy), typeof(WorkItemUpdatePolicy));
+
+            services.AddScoped(typeof(IWorkItemExecutionCreatePolicy), typeof(WorkItemExecutionCreatePolicy));
+            services.AddScoped(typeof(IWorkItemExecutionUpdatePolicy), typeof(WorkItemExecutionUpdatePolicy));
 
             return services;
         }

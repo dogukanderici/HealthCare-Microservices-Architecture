@@ -3,6 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.IntegrationServices.RabbitMQServices;
+using Core.WorkflowEngine.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,16 +14,16 @@ namespace Core.WorkflowEngine.Application.Services.IntegrationServices.RabbitMQS
 {
     public class SyncUserEventQueryService : ISyncUserEventQueryService
     {
-        private readonly IRepository<SyncUserEvent> _repository;
+        private readonly IRepository<SyncedUser> _repository;
 
-        public SyncUserEventQueryService(IRepository<SyncUserEvent> repository)
+        public SyncUserEventQueryService(IRepository<SyncedUser> repository)
         {
             _repository = repository;
         }
 
         public async Task<InternalServiceResponse<int>> CheckActiveUserAsync(Guid userId)
         {
-            DBQueryOptions<SyncUserEvent> dBQueryOptions = new DBQueryOptions<SyncUserEvent>();
+            DBQueryOptions<SyncedUser> dBQueryOptions = new DBQueryOptions<SyncedUser>();
             dBQueryOptions.filter = x => (
                 (x.Id == userId) &&
                 (x.IsAvailable == true)

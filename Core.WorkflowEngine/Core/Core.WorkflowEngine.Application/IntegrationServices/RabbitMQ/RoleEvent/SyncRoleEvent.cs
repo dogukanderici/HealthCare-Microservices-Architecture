@@ -12,7 +12,7 @@ namespace Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.RoleEvent
     public class SyncRoleEvent : IRabbitMQEvent
     {
         public Guid Id { get; set; }
-        public string RoleName { get; set; }
+        public string Name { get; set; }
         public bool IsActive { get; set; }
     }
 }

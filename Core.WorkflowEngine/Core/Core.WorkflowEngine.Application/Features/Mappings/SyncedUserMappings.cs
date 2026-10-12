@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands.SyncedUserCommands;
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.UserEvent;
+using Core.WorkflowEngine.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,10 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
     {
         public SyncedUserMappings()
         {
-            CreateMap<SyncUserEvent, SyncUserEvent>();
+            CreateMap<SyncedUser, SyncUserEvent>().ReverseMap();
 
-            CreateMap<SyncUserEvent, CreateSyncUserEventCommand>().ReverseMap();
-            CreateMap<SyncUserEvent, UpdateSyncUserEventCommand>().ReverseMap();
+            CreateMap<SyncedUser, CreateSyncUserEventCommand>().ReverseMap();
+            CreateMap<SyncedUser, UpdateSyncUserEventCommand>().ReverseMap();
         }
     }
 }

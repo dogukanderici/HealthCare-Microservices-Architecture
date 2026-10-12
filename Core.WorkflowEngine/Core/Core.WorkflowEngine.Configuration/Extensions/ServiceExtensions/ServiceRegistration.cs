@@ -1,15 +1,21 @@
 ﻿using Core.WorkflowEngine.Application.Features.Commons.Utilities;
 using Core.WorkflowEngine.Application.Interfaces;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.DynamicPolicyServices;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.DynamicRoleServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.IntegrationServices.RabbitMQServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
+using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskActionServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessTaskService;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
+using Core.WorkflowEngine.Application.Services.DynamicPolicyServices;
+using Core.WorkflowEngine.Application.Services.DynamicRoleServices;
 using Core.WorkflowEngine.Application.Services.InstanceServices;
 using Core.WorkflowEngine.Application.Services.IntegrationServices.RabbitMQServices;
 using Core.WorkflowEngine.Application.Services.ProcessDefiniitonServices;
 using Core.WorkflowEngine.Application.Services.ProcessDefinitonServices;
+using Core.WorkflowEngine.Application.Services.ProcessTaskActionServices;
 using Core.WorkflowEngine.Application.Services.ProcessTaskServices;
 using Core.WorkflowEngine.Application.Services.TaskTransitionServices;
 using Core.WorkflowEngine.Application.Services.WorkItemServices;
@@ -28,17 +34,26 @@ namespace Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions
             services.AddScoped(typeof(IWorkItemQueryService), typeof(WorkItemQueryService));
             services.AddScoped(typeof(IWorkItemCommandService), typeof(WorkItemCommandService));
 
-            services.AddScoped(typeof(ITaskTransitionQueryService), typeof(TaskTransitionQueryService));
-            services.AddScoped(typeof(ITaskTransitionCommandService), typeof(TaskTransitionCommandService));
-
             services.AddScoped(typeof(IProcessDefinitionQueryService), typeof(ProcessDefinitionQueryService));
             services.AddScoped(typeof(IProcessDefinitionCommandService), typeof(ProcessDefinitionCommandService));
 
             services.AddScoped(typeof(IProcessTaskQueryService), typeof(ProcessTaskQueryService));
             services.AddScoped(typeof(IProcessTaskCommandService), typeof(ProcessTaskCommandService));
 
+            services.AddScoped(typeof(IProcessTaskActionQueryService), typeof(ProcessTaskActionQueryService));
+            services.AddScoped(typeof(IProcessTaskActionCommandService), typeof(ProcessTaskActionCommandService));
+
+            services.AddScoped(typeof(ITaskTransitionQueryService), typeof(TaskTransitionQueryService));
+            services.AddScoped(typeof(ITaskTransitionCommandService), typeof(TaskTransitionCommandService));
+
             services.AddScoped(typeof(ISyncUserEventQueryService), typeof(SyncUserEventQueryService));
             services.AddScoped(typeof(ISyncUserEventCommandService), typeof(SyncUserEventCommandService));
+
+            services.AddScoped(typeof(IDynamicPolicyQueryService), typeof(DynamicPolicyQueryService));
+            services.AddScoped(typeof(IDynamicPolicyCommandService), typeof(DynamicPolicyCommandService));
+
+            services.AddScoped(typeof(IDynamicRoleQueryService), typeof(DynamicRoleQueryService));
+            services.AddScoped(typeof(IDynamicRoleCommandService), typeof(DynamicRoleCommandService));
 
             services.AddScoped(typeof(ICurrentUserService), typeof(CurrentUserService));
             services.AddScoped(typeof(IDynamicPropertyJoiner), typeof(DynamicPropertyJoiner));

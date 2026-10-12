@@ -106,7 +106,7 @@ namespace Core.WorkflowEngine.Persistence.Context
         public DbSet<DynamicRole> DynamicRoles { get; set; }
 
         // RabbitMQ SyncUserEvent
-        public DbSet<SyncUserEvent> SyncUserEvents { get; set; }
+        public DbSet<SyncedUser> SyncUserEvents { get; set; }
         public DbSet<SyncedRole> SyncedRoles { get; set; }
     }
 }

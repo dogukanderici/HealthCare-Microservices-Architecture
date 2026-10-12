@@ -10,7 +10,8 @@ namespace Core.WorkflowEngine.Domain.Entities
     public class SyncedRole : IEntity, IRabbitMQEntity
     {
         public Guid Id { get; set; }
-        public string RoleName { get; set; }
+        public Guid RoleId { get; set; }
+        public string Name { get; set; }
         public bool IsActive { get; set; } = true;
         public DateTimeOffset CreatedAt { get; set; }
         public Guid CreatedBy { get; set; }

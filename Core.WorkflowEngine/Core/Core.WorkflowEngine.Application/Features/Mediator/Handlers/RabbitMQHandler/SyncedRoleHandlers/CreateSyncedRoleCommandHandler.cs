@@ -26,6 +26,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.RabbitMQHan
         public async Task<InternalHandlerResponse<Guid>> Handle(CreateSyncedRoleCommand request, CancellationToken cancellationToken)
         {
             SyncedRole dataFromDto = _mapper.Map<SyncedRole>(request);
+            dataFromDto.RoleId = request.Id;
 
             Guid repoResponse = await _repository.CreateDataAsync(dataFromDto);
 

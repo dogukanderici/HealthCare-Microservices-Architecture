@@ -12,7 +12,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCom
     public class CreateSyncedRoleCommand : IRequest<InternalHandlerResponse<Guid>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
-        public string RoleName { get; set; }
+        public string Name { get; set; }
         public bool IsActive { get; set; }
     }
 }

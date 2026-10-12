@@ -2,6 +2,7 @@
 using Core.IdentityServer.Dtos.RoleDtos;
 using Core.IdentityServer.Models;
 using Core.IdentityServer.Services.RabbitMQ.Events.Roles;
+using Microsoft.AspNetCore.Identity;
 
 namespace Core.IdentityServer.Mappings
 {
@@ -12,6 +13,8 @@ namespace Core.IdentityServer.Mappings
             CreateMap<ApplicationRole, CreateRoleDto>().ReverseMap();
             CreateMap<ApplicationRole, RoleCreatedEvent>().ReverseMap();
             CreateMap<ApplicationRole, RoleUpdatedEvent>().ReverseMap();
+            CreateMap<IdentityRole, RoleCreatedEvent>().ReverseMap();
+            CreateMap<IdentityRole, RoleUpdatedEvent>().ReverseMap();
         }
     }
 }

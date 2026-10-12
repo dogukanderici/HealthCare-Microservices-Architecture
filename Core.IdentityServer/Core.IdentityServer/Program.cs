@@ -6,6 +6,7 @@ using Core.IdentityServer.Commons.Utilities;
 using Core.IdentityServer.Commons.Validators;
 using Core.IdentityServer.Context;
 using Core.IdentityServer.Models;
+using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Roles;
 using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users;
 using Duende.IdentityServer.Validation;
 using Microsoft.AspNetCore.Identity;
@@ -77,6 +78,8 @@ builder.Services.AddSingleton(typeof(IRabbitMQConnectionHelper), typeof(RabbitMQ
 builder.Services.AddScoped(typeof(IRabbitMQPublisherHelper<>), typeof(RabbitMQPublisherHelper<>));
 builder.Services.AddScoped<UserCreateEventPublisher>();
 builder.Services.AddScoped<UserUpdateEventPublisher>();
+builder.Services.AddScoped<RoleCreateEventPublisher>();
+builder.Services.AddScoped<RoleUpdateEventPublisher>();
 
 
 var app = builder.Build();

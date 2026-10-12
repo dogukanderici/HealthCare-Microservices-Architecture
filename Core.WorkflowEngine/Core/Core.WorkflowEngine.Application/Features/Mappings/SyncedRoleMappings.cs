@@ -18,7 +18,7 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
             CreateMap<SyncedRole, UpdateSyncedRoleCommand>().ReverseMap();
 
             // For RabbitMQ Response
-            CreateMap<SyncedRole, SyncRoleEvent>();
+            CreateMap<SyncedRole, SyncRoleEvent>().ReverseMap();
         }
     }
 }
