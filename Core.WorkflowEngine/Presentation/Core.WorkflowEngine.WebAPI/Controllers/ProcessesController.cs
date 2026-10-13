@@ -7,10 +7,11 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using static Core.WorkflowEngine.WebAPI.Constants.LogConstants;
+using Core.WorkflowEngine.WebAPI.Policies;
+using Core.WorkflowEngine.WebAPI.Policies.DynamicRole;
 
 namespace Core.WorkflowEngine.WebAPI.Controllers
 {
-    [Authorize(AuthenticationSchemes = "IdentityServerAccessToken", Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class ProcessesController : BaseController
@@ -25,6 +26,7 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
         }
 
         [HttpGet]
+        [DynamicRole]
         public async Task<IActionResult> GetProcesses()
         {
             return await _controllerReponseHelper.ExecuteAsync(

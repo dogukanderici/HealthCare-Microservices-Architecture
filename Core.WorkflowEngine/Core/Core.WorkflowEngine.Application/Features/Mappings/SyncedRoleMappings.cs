@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommands.SyncedRoleCommands;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.SyncedRoleResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.SyncedRoleResults.Shared;
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.RoleEvent;
 using Core.WorkflowEngine.Domain.Entities;
 using System;
@@ -14,11 +16,21 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
     {
         public SyncedRoleMappings()
         {
-            CreateMap<SyncedRole, CreateSyncedRoleCommand>().ReverseMap();
-            CreateMap<SyncedRole, UpdateSyncedRoleCommand>().ReverseMap();
+            CreateMap<SyncedRole, GetSyncedRolesQueryResult>().ReverseMap();
+            CreateMap<SyncedRole, GetSyncedRoleByIdQueryResult>().ReverseMap();
+
+            CreateMap<SyncedRole, CreateSyncedRoleCommand>()
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Name))
+                .ReverseMap();
+            CreateMap<SyncedRole, UpdateSyncedRoleCommand>()
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Name))
+                .ReverseMap();
 
             // For RabbitMQ Response
             CreateMap<SyncedRole, SyncRoleEvent>().ReverseMap();
+
+            // For Realations
+            CreateMap<SyncedRole, SharedSyncedRoleResult>().ReverseMap();
         }
     }
 }

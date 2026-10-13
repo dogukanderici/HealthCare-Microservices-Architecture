@@ -11,8 +11,10 @@ using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ;
 using Core.WorkflowEngine.Persistence.Repositories;
 using Core.WorkflowEngine.Persistence.UnitOfWork;
 using Core.WorkflowEngine.WebAPI.Configurations;
+using Core.WorkflowEngine.WebAPI.Policies.DynamicRole;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -105,6 +107,18 @@ builder.Services.AddHelperServiceConfiguration();
 
 // RabbitMQ Cnfigurations
 builder.Services.AddRabbitMQConfiguration(builder.Configuration);
+
+// Dynamic Role-Based Authorization Configurations
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("DynamicRolePolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new DynamicRoleRequirement());
+    });
+});
+
+builder.Services.AddScoped<IAuthorizationHandler, DynamicRoleHandler>();
 
 builder.Services.AddSwaggerGen(options =>
 {

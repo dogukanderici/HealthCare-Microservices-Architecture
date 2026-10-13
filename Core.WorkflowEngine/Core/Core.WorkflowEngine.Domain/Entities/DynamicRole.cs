@@ -21,6 +21,9 @@ namespace Core.WorkflowEngine.Domain.Entities
 
 
         [ForeignKey(nameof(DynamicPolicyId))]
-        public DynamicPolicy SyncedDynamicPolicy { get; set; }
+        public DynamicPolicy DynamicPolicy { get; set; }
+
+        [ForeignKey(nameof(AllowedRoleId))]
+        public SyncedRole SyncedRole { get; set; }
     }
 }

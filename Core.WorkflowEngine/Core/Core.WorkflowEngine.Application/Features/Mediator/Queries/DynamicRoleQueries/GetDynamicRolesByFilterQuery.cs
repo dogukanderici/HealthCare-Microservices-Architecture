@@ -14,6 +14,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.DynamicRoleQ
     {
         public Guid? DynamicPolicyId { get; set; }
         public Guid? AllowedRoleId { get; set; }
+        public string? Methode { get; set; }
+        public string? Endpoint { get; set; }
         public bool? IsActive { get; set; }
 
         [JsonConstructor]
@@ -22,11 +24,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.DynamicRoleQ
 
         }
 
-        public static GetDynamicRolesByFilterQuery Filter(Guid? dynamicRoleId, Guid? allowedRoleId, bool? isActive) =>
+        public static GetDynamicRolesByFilterQuery Filter(Guid? dynamicRoleId, Guid? allowedRoleId, string? methode, string? endpoint, bool? isActive) =>
             new GetDynamicRolesByFilterQuery
             {
                 DynamicPolicyId = dynamicRoleId,
                 AllowedRoleId = allowedRoleId,
+                Methode = methode,
+                Endpoint = endpoint,
                 IsActive = isActive
             };
     }

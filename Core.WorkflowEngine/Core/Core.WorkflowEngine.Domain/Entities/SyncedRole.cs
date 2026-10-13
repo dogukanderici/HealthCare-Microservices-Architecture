@@ -17,5 +17,7 @@ namespace Core.WorkflowEngine.Domain.Entities
         public Guid CreatedBy { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public Guid UpdatedBy { get; set; }
+
+        public ICollection<DynamicRole> DynamicRoles { get; set; }
     }
 }

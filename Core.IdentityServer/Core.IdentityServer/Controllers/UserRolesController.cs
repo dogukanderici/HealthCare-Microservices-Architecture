@@ -102,9 +102,9 @@ namespace Core.IdentityServer.Controllers
                         LogConstant.ServiceName,
                         nameof(UserRolesController),
                         nameof(GetUserRoles),
-                        LogConstant.SuccessMessages.UserRoleAssignedSuccessfully);
+                        LogConstant.SuccessMessages.UserRoleAssigned);
 
-                    return StatusCode(200, LogConstant.SuccessMessages.UserRoleAssignedSuccessfully);
+                    return StatusCode(200, LogConstant.SuccessMessages.UserRoleAssigned);
                 }
 
                 _logger.LogError(LogConstant.LogMessageTemplate,

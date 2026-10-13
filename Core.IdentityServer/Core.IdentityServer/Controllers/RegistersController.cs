@@ -91,9 +91,9 @@ namespace Core.IdentityServer.Controllers
                     LogConstant.ServiceName,
                     nameof(RegistersController),
                     nameof(UserRegister),
-                    LogConstant.SuccessMessages.UserCreatedSuccessfully);
+                    LogConstant.SuccessMessages.UserCreated);
 
-                return StatusCode(200, LogConstant.SuccessMessages.UserCreatedSuccessfully);
+                return StatusCode(200, LogConstant.SuccessMessages.UserCreated);
             }
 
             return StatusCode(400, result.Errors.Select(e => e.Description).ToArray());

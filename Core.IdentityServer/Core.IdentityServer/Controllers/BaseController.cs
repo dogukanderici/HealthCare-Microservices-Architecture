@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Core.IdentityServer.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "IdentityServerAccessToken", Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class BaseController : ControllerBase

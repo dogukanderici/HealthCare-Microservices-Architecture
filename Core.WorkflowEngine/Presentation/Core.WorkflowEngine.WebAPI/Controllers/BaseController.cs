@@ -5,7 +5,7 @@ using System.Security.Claims;
 
 namespace Core.WorkflowEngine.WebAPI.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = "IdentityServerAccessToken")]
     [Route("api/[controller]")]
     [ApiController]
     public class BaseController : ControllerBase

@@ -13,10 +13,11 @@ public static class LogConstant
     public static class SuccessMessages
     {
         public const string ProcessSuccessed = "Process Successed.";
-        public const string UserCreatedSuccessfully = "User Created Successfully.";
-        public const string UserRegisteredSuccessfully = "User Registered Successfully.";
-        public const string RoleCreatedSuccessfully = "Role Created Successfully.";
-        public const string UserRoleAssignedSuccessfully = "User Role Assigned Successfully.";
+        public const string UserCreated = "User Created Successfully.";
+        public const string UserRegistered = "User Registered Successfully.";
+        public const string RoleCreated = "Role Created Successfully.";
+        public const string RoleUpdated = "Role Updated Successfully.";
+        public const string UserRoleAssigned = "User Role Assigned Successfully.";
     }
 
     // Error Messages
@@ -30,5 +31,6 @@ public static class LogConstant
         public const string RoleAlreadyExists = "Role Already Exists.";
         public const string UserRoleAlreadyExists = "User Role Already Exists.";
         public const string AddNewRoleFailed = "An Error Occured While New Role Save.";
+        public const string UpdateRoleFailed = "An Error Occured While Role Update.";
     }
 }

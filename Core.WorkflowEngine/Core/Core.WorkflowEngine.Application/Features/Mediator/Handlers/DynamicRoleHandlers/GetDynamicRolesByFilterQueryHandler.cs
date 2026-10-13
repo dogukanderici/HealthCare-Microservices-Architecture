@@ -10,6 +10,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,8 +31,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.DynamicRole
             dBQueryOptions.filter = x => (
                 (!request.DynamicPolicyId.HasValue || x.DynamicPolicyId == request.DynamicPolicyId) &&
                 (!request.AllowedRoleId.HasValue || x.AllowedRoleId == request.AllowedRoleId) &&
+                (string.IsNullOrEmpty(request.Methode) || x.DynamicPolicy.Methode == request.Methode) &&
+                (string.IsNullOrEmpty(request.Endpoint) || x.DynamicPolicy.Endpoint == request.Endpoint) &&
                 (!request.IsActive.HasValue || x.IsActive == request.IsActive)
             );
+
+            dBQueryOptions.includes = [
+                    x=>x.SyncedRole
+                ];
 
             InternalServiceResponse<IReadOnlyCollection<GetDynamicRolesByFilterQueryResult>> serviceResponse =
                 await _queryService.GetDatasByFilterAsync<GetDynamicRolesByFilterQueryResult>(dBQueryOptions);

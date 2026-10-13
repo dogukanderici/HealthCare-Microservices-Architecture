@@ -11,6 +11,7 @@ namespace Core.IdentityServer.Mappings
         public RoleMappingProfile()
         {
             CreateMap<ApplicationRole, CreateRoleDto>().ReverseMap();
+            CreateMap<ApplicationRole, UpdateRoleDto>().ReverseMap();
             CreateMap<ApplicationRole, RoleCreatedEvent>().ReverseMap();
             CreateMap<ApplicationRole, RoleUpdatedEvent>().ReverseMap();
             CreateMap<IdentityRole, RoleCreatedEvent>().ReverseMap();
