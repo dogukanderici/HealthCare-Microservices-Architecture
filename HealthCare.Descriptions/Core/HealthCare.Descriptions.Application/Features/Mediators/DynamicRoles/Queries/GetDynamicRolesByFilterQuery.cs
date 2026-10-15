@@ -14,6 +14,8 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Qu
     {
         public Guid? DynamicPolicyId { get; set; }
         public Guid? AllowedRoleId { get; set; }
+        public string? Methode { get; set; }
+        public string? Endpoint { get; set; }
         public bool? IsActive { get; set; }
 
         [JsonConstructor]
@@ -22,11 +24,13 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Qu
 
         }
 
-        public static GetDynamicRolesByFilterQuery Filter(Guid? dynamicPolicyId, Guid? allowedRolewId, bool? isActive) =>
+        public static GetDynamicRolesByFilterQuery Filter(Guid? dynamicPolicyId, Guid? allowedRolewId, string? methode, string? endpoint, bool? isActive) =>
             new GetDynamicRolesByFilterQuery
             {
                 DynamicPolicyId = dynamicPolicyId,
                 AllowedRoleId = allowedRolewId,
+                Methode = methode,
+                Endpoint = endpoint,
                 IsActive = isActive
             };
     }

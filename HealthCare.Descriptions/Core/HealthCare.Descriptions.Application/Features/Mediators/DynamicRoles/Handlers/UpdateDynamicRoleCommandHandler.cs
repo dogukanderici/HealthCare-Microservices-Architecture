@@ -1,5 +1,10 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Commands;
+﻿using AutoMapper;
+using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.Extensions;
+using HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Commands;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.DynamicRoles;
+using HealthCare.Descriptions.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,9 +16,26 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Ha
 {
     public class UpdateDynamicRoleCommandHandler : IRequestHandler<UpdateDynamicRoleCommand, InternalHandlerResponse<DateTimeOffset>>
     {
-        public Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateDynamicRoleCommand request, CancellationToken cancellationToken)
+        private readonly IDynamicRoleCommandService _commandService;
+        private readonly IMapper _mapper;
+
+        public UpdateDynamicRoleCommandHandler(IDynamicRoleCommandService commandService, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _commandService = commandService;
+            _mapper = mapper;
+        }
+        public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateDynamicRoleCommand request, CancellationToken cancellationToken)
+        {
+            InternalServiceResponse<DynamicRole> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
+
+            if (!existedData.IsSuccess)
+                return InternalHandlerResponse<DateTimeOffset>.Failure(existedData.ServiceMessage);
+
+            _mapper.Map(request, existedData.Data);
+
+            InternalServiceResponse<DateTimeOffset> serviceResponse = await _commandService.UpdateAsync(existedData.Data);
+
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

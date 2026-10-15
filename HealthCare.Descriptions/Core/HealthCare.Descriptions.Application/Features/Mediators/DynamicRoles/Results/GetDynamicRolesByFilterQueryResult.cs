@@ -1,4 +1,6 @@
-﻿using HealthCare.Descriptions.Application.Interfaces.HandlerServices;
+﻿using HealthCare.Descriptions.Application.Features.Mediators.DynamicPolicies.Results.Shared;
+using HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.RoleEvent.Results.Shared;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,5 +15,8 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Re
         public Guid DynamicPolicyId { get; set; }
         public Guid AllowedRoleId { get; set; }
         public bool IsAvailable { get; set; }
+
+        public SharedSyncedRoleResult SyncedRole { get; set; }
+        public SharedDynamicPolicyResult DynamicPolicy { get; set; }
     }
 }

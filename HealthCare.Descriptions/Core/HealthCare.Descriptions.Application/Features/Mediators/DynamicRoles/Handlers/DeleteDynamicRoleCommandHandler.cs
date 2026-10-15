@@ -1,5 +1,8 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Commands;
+﻿using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.Extensions;
+using HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Commands;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.DynamicRoles;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,9 +14,18 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Ha
 {
     public class DeleteDynamicRoleCommandHandler : IRequestHandler<DeleteDynamicRoleCommand, InternalHandlerResponse<bool>>
     {
-        public Task<InternalHandlerResponse<bool>> Handle(DeleteDynamicRoleCommand request, CancellationToken cancellationToken)
+        private readonly IDynamicRoleCommandService _commandService;
+
+        public DeleteDynamicRoleCommandHandler(IDynamicRoleCommandService commandService)
         {
-            throw new NotImplementedException();
+            _commandService = commandService;
+        }
+
+        public async Task<InternalHandlerResponse<bool>> Handle(DeleteDynamicRoleCommand request, CancellationToken cancellationToken)
+        {
+            InternalServiceResponse<bool> serviceResponse = await _commandService.RemoveAsync(request.Id);
+
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

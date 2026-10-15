@@ -1,6 +1,9 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.DynamicPolicies.Queries;
+﻿using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.Extensions;
+using HealthCare.Descriptions.Application.Features.Mediators.DynamicPolicies.Queries;
 using HealthCare.Descriptions.Application.Features.Mediators.DynamicPolicies.Results;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.DynamicPolicies;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -12,9 +15,19 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.DynamicPolicies
 {
     public class GetDynamicPoliciesQueryHandler : IRequestHandler<GetDynamicPoliciesQuery, InternalHandlerResponse<IReadOnlyCollection<GetDynamicPoliciesQueryResult>>>
     {
-        public Task<InternalHandlerResponse<IReadOnlyCollection<GetDynamicPoliciesQueryResult>>> Handle(GetDynamicPoliciesQuery request, CancellationToken cancellationToken)
+        private readonly IDynamicPolicyQueryService _queryService;
+
+        public GetDynamicPoliciesQueryHandler(IDynamicPolicyQueryService queryService)
         {
-            throw new NotImplementedException();
+            _queryService = queryService;
+        }
+
+        public async Task<InternalHandlerResponse<IReadOnlyCollection<GetDynamicPoliciesQueryResult>>> Handle(GetDynamicPoliciesQuery request, CancellationToken cancellationToken)
+        {
+            InternalServiceResponse<IReadOnlyCollection<GetDynamicPoliciesQueryResult>> serviceResponse =
+                await _queryService.GetDatasAsync<GetDynamicPoliciesQueryResult>();
+
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

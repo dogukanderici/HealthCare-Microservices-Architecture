@@ -1,5 +1,10 @@
-﻿using HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Commands;
+﻿using AutoMapper;
+using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Features.Extensions;
+using HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Commands;
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.DynamicRoles;
+using HealthCare.Descriptions.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -11,9 +16,22 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Ha
 {
     public class CreateDynamicRoleCommandHandler : IRequestHandler<CreateDynamicRoleCommand, InternalHandlerResponse<Guid>>
     {
-        public Task<InternalHandlerResponse<Guid>> Handle(CreateDynamicRoleCommand request, CancellationToken cancellationToken)
+        private readonly IDynamicRoleCommandService _commandService;
+        private readonly IMapper _mapper;
+
+        public CreateDynamicRoleCommandHandler(IDynamicRoleCommandService commandService, IMapper mapper)
         {
-            throw new NotImplementedException();
+            _commandService = commandService;
+            _mapper = mapper;
+        }
+
+        public async Task<InternalHandlerResponse<Guid>> Handle(CreateDynamicRoleCommand request, CancellationToken cancellationToken)
+        {
+            DynamicRole dataFromDto = _mapper.Map<DynamicRole>(request);
+
+            InternalServiceResponse<Guid> serviceResponse = await _commandService.CreateAsync(dataFromDto);
+
+            return serviceResponse.ToHandlerResponse();
         }
     }
 }

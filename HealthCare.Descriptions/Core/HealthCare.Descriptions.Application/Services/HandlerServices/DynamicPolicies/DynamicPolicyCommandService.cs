@@ -1,4 +1,7 @@
-﻿using HealthCare.Descriptions.Application.Common.Wrappers;
+﻿using AutoMapper;
+using HealthCare.Descriptions.Application.Common.Parameters;
+using HealthCare.Descriptions.Application.Common.Wrappers;
+using HealthCare.Descriptions.Application.Interfaces;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.DynamicPolicies;
 using HealthCare.Descriptions.Domain.Entities;
 using System;
@@ -11,25 +14,50 @@ namespace HealthCare.Descriptions.Application.Services.HandlerServices.DynamicPo
 {
     public class DynamicPolicyCommandService : IDynamicPolicyCommandService
     {
+        private readonly IRepository<DynamicPolicy> _repository;
 
-        public Task<InternalServiceResponse<DynamicPolicy>> GetDataForUpdateAsync(Guid id)
+        public DynamicPolicyCommandService(IRepository<DynamicPolicy> repository)
         {
-            throw new NotImplementedException();
+            _repository = repository;
         }
 
-        public Task<InternalServiceResponse<Guid>> CreateAsync(DynamicPolicy entity)
+        public async Task<InternalServiceResponse<DynamicPolicy>> GetDataForUpdateAsync(Guid id)
         {
-            throw new NotImplementedException();
+            DBQueryOptions<DynamicPolicy> options = new DBQueryOptions<DynamicPolicy>();
+            options.filter = x => x.Id == id;
+
+            DynamicPolicy repoResponse = await _repository.GetByIdAsync(options);
+
+            if (repoResponse == null)
+                return InternalServiceResponse<DynamicPolicy>.Failure("Data not found!");
+
+            return InternalServiceResponse<DynamicPolicy>.Success(repoResponse);
         }
 
-        public Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(DynamicPolicy entity)
+        public async Task<InternalServiceResponse<Guid>> CreateAsync(DynamicPolicy entity)
         {
-            throw new NotImplementedException();
+            Guid repoResponse = await _repository.CreateAsync(entity);
+
+            return InternalServiceResponse<Guid>.Success(repoResponse);
         }
 
-        public Task<InternalServiceResponse<bool>> RemoveAsync(Guid id)
+        public async Task<InternalServiceResponse<DateTimeOffset>> UpdateAsync(DynamicPolicy entity)
         {
-            throw new NotImplementedException();
+            DateTimeOffset repoResponse = await _repository.UpdateAsync(entity);
+
+            return InternalServiceResponse<DateTimeOffset>.Success(repoResponse);
+        }
+
+        public async Task<InternalServiceResponse<bool>> RemoveAsync(Guid id)
+        {
+            InternalServiceResponse<DynamicPolicy> existedData = await GetDataForUpdateAsync(id);
+
+            if (!existedData.IsSuccess)
+                return InternalServiceResponse<bool>.Failure(existedData.ServiceMessage);
+
+            await _repository.DeleteAsync(existedData.Data);
+
+            return InternalServiceResponse<bool>.Success(true);
         }
     }
 }
