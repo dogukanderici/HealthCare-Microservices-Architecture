@@ -16,6 +16,7 @@ namespace Core.IdentityServer.Mappings
             CreateMap<ApplicationRole, RoleUpdatedEvent>().ReverseMap();
             CreateMap<IdentityRole, RoleCreatedEvent>().ReverseMap();
             CreateMap<IdentityRole, RoleUpdatedEvent>().ReverseMap();
+            CreateMap<IdentityRole, RoleSoftDeletedEvent>().ReverseMap();
         }
     }
 }

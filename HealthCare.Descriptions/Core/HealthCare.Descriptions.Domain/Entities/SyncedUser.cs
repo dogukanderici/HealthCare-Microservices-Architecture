@@ -1,14 +1,13 @@
-﻿using HealthCare.Descriptions.Application.Interfaces.IntegrationServices.RabbitMQ;
-using HealthCare.Descriptions.Domain.Abstracts;
+﻿using HealthCare.Descriptions.Domain.Abstracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Application.IntegrationServices.RabbitMQ
+namespace HealthCare.Descriptions.Domain.Entities
 {
-    public class UpdateUserEvent : IEntity, ISyncUserEvent
+    public class SyncedUser : IEntity
     {
         public Guid Id { get; set; }
         public string Name { get; set; }

@@ -24,4 +24,9 @@
     <ProjectReference Include="..\HealthCare.Descriptions.Domain\HealthCare.Descriptions.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\HandlerServices\IntegrationServices\RabbitMQ\SyncedUsers\" />
+    <Folder Include="Services\HandlerServices\IntegrationServices\RabbitMQ\SyncedUsers\" />
+  </ItemGroup>
+
 </Project>

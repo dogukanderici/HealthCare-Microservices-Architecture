@@ -3,6 +3,7 @@ using HealthCare.Descriptions.Application.Common.Constants;
 using HealthCare.Descriptions.Application.Common.Parameters;
 using HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.UserEvent.Commands;
 using HealthCare.Descriptions.Application.IntegrationServices.RabbitMQ;
+using HealthCare.Descriptions.Domain.Entities;
 using HealthCare.Descriptions.Persistence.Helpers.RabbitMQHelpers;
 using HealthCare.Descriptions.Persistence.Helpers.RabbitMQHelpers.Abstraction;
 using Microsoft.Extensions.DependencyInjection;
@@ -14,18 +15,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HealthCare.Descriptions.Persistence.IntegrationServices.RabbitMQ
+namespace HealthCare.Descriptions.Persistence.IntegrationServices.RabbitMQ.UserEvent
 {
-    public class UserCreateEventConsumer : RabbitMQConsumerHelper<SyncUserEvent, CreateUserEventCommand>
+    public class UserUpdateEventConsumer : RabbitMQConsumerHelper<SyncedUser, SyncUserEvent, UpdateUserEventCommand>
     {
-        protected override string QueueName => "user_created_description_service";
-        protected override string RoutingKey => RabbitMQRoutingKey.Create;
+        protected override string QueueName => RabbitMQQueueKey.Update.User;
+        protected override string RoutingKey => RabbitMQRoutingKey.Update.User;
 
-        public UserCreateEventConsumer(
+        public UserUpdateEventConsumer(
                 IOptions<RabbitMQOptions> options,
                 IRabbitMQConnectionHelper connectionHelper,
                 IMapper mapper,
-                ILogger<UserCreateEventConsumer> logger,
+                ILogger<UserUpdateEventConsumer> logger,
                 IServiceScopeFactory scopeFactory
             ) : base(options, connectionHelper, mapper, logger, scopeFactory)
         {

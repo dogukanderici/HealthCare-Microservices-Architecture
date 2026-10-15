@@ -1,5 +1,6 @@
 ﻿using HealthCare.Descriptions.Application.Common.Parameters;
-using HealthCare.Descriptions.Persistence.IntegrationServices.RabbitMQ;
+using HealthCare.Descriptions.Persistence.IntegrationServices.RabbitMQ.RoleEvent;
+using HealthCare.Descriptions.Persistence.IntegrationServices.RabbitMQ.UserEvent;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -19,6 +20,9 @@ namespace HealthCare.Descriptions.Configuration.Extentions
             );
             services.AddHostedService<UserCreateEventConsumer>();
             services.AddHostedService<UserUpdateEventConsumer>();
+
+            services.AddHostedService<RoleCreateEventConsumer>();
+            services.AddHostedService<RoleUpdateEventConsumer>();
 
             return services;
         }

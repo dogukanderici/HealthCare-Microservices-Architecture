@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Application.Interfaces.IntegrationServices.RabbitMQ
 {
-    public interface ISyncUserEvent
+    public interface IRabbitMQEvent
     {
     }
 }

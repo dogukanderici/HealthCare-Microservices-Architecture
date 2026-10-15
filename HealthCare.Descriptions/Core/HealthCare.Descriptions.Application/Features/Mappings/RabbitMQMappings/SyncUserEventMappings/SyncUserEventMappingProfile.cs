@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.UserEvent.Commands;
 using HealthCare.Descriptions.Application.IntegrationServices.RabbitMQ;
+using HealthCare.Descriptions.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +14,9 @@ namespace HealthCare.Descriptions.Application.Features.Mappings.RabbitMQMappings
     {
         public SyncUserEventMappingProfile()
         {
-            CreateMap<SyncUserEvent, CreateUserEventCommand>().ReverseMap();
-            CreateMap<SyncUserEvent, UpdateUserEventCommand>().ReverseMap();
+            CreateMap<SyncedUser, SyncUserEvent>().ReverseMap();
+            CreateMap<SyncedUser, CreateUserEventCommand>().ReverseMap();
+            CreateMap<SyncedUser, UpdateUserEventCommand>().ReverseMap();
         }
     }
 }

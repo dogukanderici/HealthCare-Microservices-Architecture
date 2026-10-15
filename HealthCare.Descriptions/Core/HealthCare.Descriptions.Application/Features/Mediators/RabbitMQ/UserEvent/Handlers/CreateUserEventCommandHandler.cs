@@ -5,6 +5,7 @@ using HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.UserEvent.
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using HealthCare.Descriptions.Application.IntegrationServices.RabbitMQ;
 using HealthCare.Descriptions.Application.Services.HandlerServices.RabbitMQ;
+using HealthCare.Descriptions.Domain.Entities;
 using MediatR;
 
 namespace HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.UserEvent.Handlers
@@ -22,7 +23,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.UserEv
 
         public async Task<InternalHandlerResponse<Guid>> Handle(CreateUserEventCommand request, CancellationToken cancellationToken)
         {
-            SyncUserEvent dataFromDto = _mapper.Map<SyncUserEvent>(request);
+            SyncedUser dataFromDto = _mapper.Map<SyncedUser>(request);
 
             InternalServiceResponse<Guid> serviceResponse = await _commandService.CreateAsync(dataFromDto);
 

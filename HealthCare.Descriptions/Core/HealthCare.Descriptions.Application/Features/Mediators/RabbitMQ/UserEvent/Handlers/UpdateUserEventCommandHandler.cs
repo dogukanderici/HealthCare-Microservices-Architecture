@@ -5,6 +5,7 @@ using HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.UserEvent.
 using HealthCare.Descriptions.Application.Features.Wrappers.Responses;
 using HealthCare.Descriptions.Application.IntegrationServices.RabbitMQ;
 using HealthCare.Descriptions.Application.Services.HandlerServices.RabbitMQ;
+using HealthCare.Descriptions.Domain.Entities;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -27,7 +28,7 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.RabbitMQ.UserEv
 
         public async Task<InternalHandlerResponse<DateTimeOffset>> Handle(UpdateUserEventCommand request, CancellationToken cancellationToken)
         {
-            InternalServiceResponse<SyncUserEvent> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
+            InternalServiceResponse<SyncedUser> existedData = await _commandService.GetDataForUpdateAsync(request.Id);
 
             if (existedData.Data == null)
             {

@@ -17,6 +17,7 @@ public static class LogConstant
         public const string UserRegistered = "User Registered Successfully.";
         public const string RoleCreated = "Role Created Successfully.";
         public const string RoleUpdated = "Role Updated Successfully.";
+        public const string RoleDeleted = "Role Deleted Successfully.";
         public const string UserRoleAssigned = "User Role Assigned Successfully.";
     }
 
@@ -32,5 +33,6 @@ public static class LogConstant
         public const string UserRoleAlreadyExists = "User Role Already Exists.";
         public const string AddNewRoleFailed = "An Error Occured While New Role Save.";
         public const string UpdateRoleFailed = "An Error Occured While Role Update.";
+        public const string DeleteRoleFailed = "An Error Occured While Role Delete.";
     }
 }

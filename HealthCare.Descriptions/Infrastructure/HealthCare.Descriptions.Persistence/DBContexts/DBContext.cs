@@ -68,6 +68,7 @@ namespace HealthCare.Descriptions.Persistence.DBContexts
         public DbSet<HospitalService> HospitalServices { get; set; }
 
         // RabbitMQ ile IdentityServer'daki Kullanıcıları Tutar. (Master-Slave)
-        public DbSet<SyncUserEvent> SyncUserEvents { get; set; }
+        public DbSet<SyncedUser> SyncedUsers { get; set; }
+        public DbSet<SyncedRole> SyncedRoles { get; set; }
     }
 }

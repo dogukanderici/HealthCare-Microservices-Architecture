@@ -2,18 +2,24 @@
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.AppointmentStatutes;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Cities;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Districts;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.DynamicPolicies;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.DynamicRoles;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.HospitalPoliclinicQuotas;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.HospitalPoliclinics;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Hospitals;
+using HealthCare.Descriptions.Application.Interfaces.HandlerServices.IntegrationServices.RabbitMQ.SyncedRoles;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.Policlinics;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.QuotaTypes;
 using HealthCare.Descriptions.Application.Interfaces.HandlerServices.ServiceType;
 using HealthCare.Descriptions.Application.Services.HandlerServices.AppointmentStatuses;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Cities;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Districts;
+using HealthCare.Descriptions.Application.Services.HandlerServices.DynamicPolicies;
+using HealthCare.Descriptions.Application.Services.HandlerServices.DynamicRoles;
 using HealthCare.Descriptions.Application.Services.HandlerServices.HospitalPoliclinicQuotas;
 using HealthCare.Descriptions.Application.Services.HandlerServices.HospitalPoliclinics;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Hospitals;
+using HealthCare.Descriptions.Application.Services.HandlerServices.IntegrationServices.RabbitMQ.SyncedRoles;
 using HealthCare.Descriptions.Application.Services.HandlerServices.Policlinics;
 using HealthCare.Descriptions.Application.Services.HandlerServices.QuotaTypes;
 using HealthCare.Descriptions.Application.Services.HandlerServices.RabbitMQ;
@@ -57,6 +63,15 @@ namespace HealthCare.Descriptions.Configuration.Extentions
             services.AddScoped(typeof(IHospitalPoliclinicQuotaCommandService), typeof(HospitalPoliclinicQuotaCommandService));
 
             services.AddScoped(typeof(ISyncUserEventCommandService), typeof(SyncUserEventCommandService));
+
+            services.AddScoped(typeof(ISyncedRoleQueryService), typeof(SyncedRoleQueryService));
+            services.AddScoped(typeof(ISyncedRoleCommandService), typeof(SyncedRoleCommandService));
+
+            services.AddScoped(typeof(IDynamicPolicyQueryService), typeof(DynamicPolicyQueryService));
+            services.AddScoped(typeof(IDynamicPolicyCommandService), typeof(DynamicPolicyCommandService));
+
+            services.AddScoped(typeof(IDynamicRoleQueryService), typeof(DynamicRoleQueryService));
+            services.AddScoped(typeof(IDynamicRoleCommandService), typeof(DynamicRoleCommandService));
 
             return services;
         }

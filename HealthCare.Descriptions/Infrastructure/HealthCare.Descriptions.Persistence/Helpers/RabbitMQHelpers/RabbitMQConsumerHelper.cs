@@ -17,11 +17,11 @@ using System.Threading.Tasks;
 
 namespace HealthCare.Descriptions.Persistence.Helpers.RabbitMQHelpers
 {
-    public abstract class RabbitMQConsumerHelper<TEvent, TCommand> : BackgroundService
+    public abstract class RabbitMQConsumerHelper<TEntity, TEvent, TCommand> : BackgroundService
     {
         private readonly IRabbitMQConnectionHelper _connectionHelper;
         private readonly IMapper _mapper;
-        private readonly ILogger<RabbitMQConsumerHelper<TEvent, TCommand>> _logger;
+        private readonly ILogger<RabbitMQConsumerHelper<TEntity, TEvent, TCommand>> _logger;
         private readonly IServiceScopeFactory _scopeFactory;
 
         // IOptions ile appsetting'te tanımlanan değerleri alır.
@@ -32,7 +32,7 @@ namespace HealthCare.Descriptions.Persistence.Helpers.RabbitMQHelpers
         protected abstract string QueueName { get; }
         protected abstract string RoutingKey { get; }
 
-        public RabbitMQConsumerHelper(IOptions<RabbitMQOptions> options, IRabbitMQConnectionHelper connectionHelper, IMapper mapper, ILogger<RabbitMQConsumerHelper<TEvent, TCommand>> logger, IServiceScopeFactory scopeFactory)
+        public RabbitMQConsumerHelper(IOptions<RabbitMQOptions> options, IRabbitMQConnectionHelper connectionHelper, IMapper mapper, ILogger<RabbitMQConsumerHelper<TEntity, TEvent, TCommand>> logger, IServiceScopeFactory scopeFactory)
         {
             _connectionHelper = connectionHelper;
             _mapper = mapper;
@@ -96,7 +96,8 @@ namespace HealthCare.Descriptions.Persistence.Helpers.RabbitMQHelpers
                         using (var scopeFactory = _scopeFactory.CreateScope())
                         {
                             var mediator = scopeFactory.ServiceProvider.GetService<IMediator>();
-                            var command = _mapper.Map<TCommand>(syncEvent);
+                            var eventEntity = _mapper.Map<TEntity>(syncEvent);
+                            var command = _mapper.Map<TCommand>(eventEntity);
 
                             await mediator.Send(command);
                         }

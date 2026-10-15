@@ -15,6 +15,7 @@ namespace Core.IdentityServer.Controllers
     {
         private readonly RoleCreateEventPublisher _createPublisher;
         private readonly RoleUpdateEventPublisher _updatePublisher;
+        private readonly RoleSoftDeleteEventPublisher _deletePublisher;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IMapper _mapper;
         private readonly ILogger<RolesController> _logger;
@@ -71,7 +72,7 @@ namespace Core.IdentityServer.Controllers
         [HttpPut]
         public async Task<IActionResult> UpdateRole(UpdateRoleDto updateRoleDto)
         {
-            var existedRole = await _roleManager.FindByIdAsync(Convert.ToString(updateRoleDto.Id));
+            IdentityRole existedRole = await _roleManager.FindByIdAsync(Convert.ToString(updateRoleDto.Id));
 
             if (existedRole != null)
             {
@@ -105,6 +106,49 @@ namespace Core.IdentityServer.Controllers
                     LogConstant.ServiceName,
                     nameof(RolesController),
                     nameof(UpdateRole),
+                    LogConstant.ErrorMessages.RoleNotFound);
+
+            return StatusCode(400, LogConstant.ErrorMessages.RoleNotFound);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRole(Guid id)
+        {
+            IdentityRole existedRole = await _roleManager.FindByIdAsync(Convert.ToString(id));
+
+            if (existedRole != null)
+            {
+                IdentityResult result = await _roleManager.DeleteAsync(existedRole);
+
+                if (result.Succeeded)
+                {
+                    RoleSoftDeletedEvent deletedEvent = _mapper.Map<RoleSoftDeletedEvent>(existedRole);
+                    deletedEvent.IsActive = false;
+
+                    bool publiherResponse = await _deletePublisher.PublishEventAsync(deletedEvent);
+
+                    _logger.LogInformation(LogConstant.LogMessageTemplate,
+                        LogConstant.ServiceName,
+                        nameof(RolesController),
+                        nameof(DeleteRole),
+                        LogConstant.SuccessMessages.RoleDeleted);
+
+                    return StatusCode(200, LogConstant.SuccessMessages.RoleUpdated);
+                }
+
+                _logger.LogError(LogConstant.LogMessageTemplate,
+                    LogConstant.ServiceName,
+                    nameof(RolesController),
+                    nameof(DeleteRole),
+                    LogConstant.ErrorMessages.DeleteRoleFailed);
+
+                return StatusCode(400, LogConstant.ErrorMessages.DeleteRoleFailed);
+            }
+
+            _logger.LogError(LogConstant.LogMessageTemplate,
+                    LogConstant.ServiceName,
+                    nameof(RolesController),
+                    nameof(DeleteRole),
                     LogConstant.ErrorMessages.RoleNotFound);
 
             return StatusCode(400, LogConstant.ErrorMessages.RoleNotFound);
