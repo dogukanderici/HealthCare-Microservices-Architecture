@@ -1,26 +1,15 @@
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Features.Configurations;
-using Core.WorkflowEngine.Application.Features.Mappings.Configurations;
-using Core.WorkflowEngine.Application.Interfaces;
-using Core.WorkflowEngine.Application.Interfaces.Services;
-using Core.WorkflowEngine.Application.Services;
 using Core.WorkflowEngine.Configuration.Extensions.ServiceExtensions;
-using Core.WorkflowEngine.Persistence.CacheProvider;
-using Core.WorkflowEngine.Persistence.Context;
-using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ;
-using Core.WorkflowEngine.Persistence.Repositories;
-using Core.WorkflowEngine.Persistence.UnitOfWork;
 using Core.WorkflowEngine.WebAPI.Configurations;
 using Core.WorkflowEngine.WebAPI.Policies.DynamicRole;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -107,6 +96,11 @@ builder.Services.AddHelperServiceConfiguration();
 
 // RabbitMQ Cnfigurations
 builder.Services.AddRabbitMQConfiguration(builder.Configuration);
+
+// Cryption Settings
+builder.Services.Configure<CryptionOption>(
+        builder.Configuration.GetSection("CryptionSettings")
+    );
 
 // Dynamic Role-Based Authorization Configurations
 builder.Services.AddAuthorization(options =>

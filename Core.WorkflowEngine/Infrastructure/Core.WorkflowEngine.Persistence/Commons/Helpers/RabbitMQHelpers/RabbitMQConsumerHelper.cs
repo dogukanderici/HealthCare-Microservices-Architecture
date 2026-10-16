@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Commons.Parameters;
-using Core.WorkflowEngine.Persistence.Commons.Helpers.Abstracts;
+using Core.WorkflowEngine.Persistence.Commons.Helpers.RabbitMQHelpers.Abstracts;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +15,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Persistence.Commons.Helpers
+namespace Core.WorkflowEngine.Persistence.Commons.Helpers.RabbitMQHelpers
 {
     public abstract class RabbitMQConsumerHelper<TEvent, TEntity, TCommand> : BackgroundService
     {

@@ -5,8 +5,8 @@ using Core.WorkflowEngine.Application.Features.Mediator.Commands.RabbitMQCommand
 using Core.WorkflowEngine.Application.IntegrationServices.RabbitMQ.RoleEvent;
 using Core.WorkflowEngine.Domain.Abstractions;
 using Core.WorkflowEngine.Domain.Entities;
-using Core.WorkflowEngine.Persistence.Commons.Helpers;
-using Core.WorkflowEngine.Persistence.Commons.Helpers.Abstracts;
+using Core.WorkflowEngine.Persistence.Commons.Helpers.RabbitMQHelpers;
+using Core.WorkflowEngine.Persistence.Commons.Helpers.RabbitMQHelpers.Abstracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;

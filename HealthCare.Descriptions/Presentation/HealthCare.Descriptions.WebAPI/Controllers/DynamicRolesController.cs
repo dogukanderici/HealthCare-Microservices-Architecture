@@ -2,14 +2,16 @@
 using HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Queries;
 using HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthCare.Descriptions.WebAPI.Controllers
 {
+    [Authorize(AuthenticationSchemes = "IdentityServerAccessToken", Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class DynamicRolesController : BaseController
+    public class DynamicRolesController : ControllerBase
     {
         private IControllerHelper<DynamicRolesController> _controllerHelper;
         private readonly IMediator _mediator;

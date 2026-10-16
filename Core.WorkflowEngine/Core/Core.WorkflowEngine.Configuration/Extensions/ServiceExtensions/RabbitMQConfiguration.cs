@@ -1,6 +1,6 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Parameters;
-using Core.WorkflowEngine.Persistence.Commons.Helpers;
-using Core.WorkflowEngine.Persistence.Commons.Helpers.Abstracts;
+using Core.WorkflowEngine.Persistence.Commons.Helpers.RabbitMQHelpers;
+using Core.WorkflowEngine.Persistence.Commons.Helpers.RabbitMQHelpers.Abstracts;
 using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ;
 using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ.Roles;
 using Core.WorkflowEngine.Persistence.IntegrationServices.RabbitMQ.Users;

@@ -76,7 +76,7 @@ namespace HealthCare.Descriptions.Persistence.Helpers.CryptionHelpers
             }
             catch (Exception ex)
             {
-                return CryptionResponse<string>.Success(ex.Message);
+                return CryptionResponse<string>.Fail(ex.Message);
             }
         }
     }

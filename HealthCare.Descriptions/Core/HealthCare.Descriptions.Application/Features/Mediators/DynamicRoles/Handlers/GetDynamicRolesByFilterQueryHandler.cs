@@ -10,6 +10,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,7 +36,12 @@ namespace HealthCare.Descriptions.Application.Features.Mediators.DynamicRoles.Ha
                 (!request.IsActive.HasValue || x.IsAvailable == request.IsActive)
             );
 
-            dBQueryOptions.includes = [x => x.DynamicPolicy, x => x.SyncedRole];
+            List<Expression<Func<DynamicRole, object>>> includes = [
+                x=>x.DynamicPolicy,
+                x=>x.SyncedRole
+                ];
+
+            dBQueryOptions.includes = includes;
 
             InternalServiceResponse<IReadOnlyCollection<GetDynamicRolesByFilterQueryResult>> serviceResponse =
                 await _queryService.GetDatasAsync<GetDynamicRolesByFilterQueryResult>(dBQueryOptions);

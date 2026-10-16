@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Core.WorkflowEngine.Persistence.Commons.Helpers.Abstracts
+namespace Core.WorkflowEngine.Persistence.Commons.Helpers.RabbitMQHelpers.Abstracts
 {
     public interface IRabbitMQConnectionHelper
     {

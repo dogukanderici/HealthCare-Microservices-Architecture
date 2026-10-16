@@ -6,12 +6,63 @@ using HealthCare.Descriptions.Configuration.Extentions;
 using HealthCare.Descriptions.WebAPI.Common.Helpers.ControllerHelpers;
 using HealthCare.Descriptions.WebAPI.Common.Helpers.ValidationHelper;
 using HealthCare.Descriptions.WebAPI.Common.Middlewares;
+using HealthCare.Descriptions.WebAPI.Policies.DynamicPolicy;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// JWT Configuration
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "IdentityServerAccessToken";
+    options.DefaultChallengeScheme = "IdentityServerAccessToken";
+}).AddJwtBearer("IdentityServerAccessToken", options =>
+    {
+        options.Authority = "http://Core_IdentityServer_API:8080";
+        options.Audience = "HealthCareFullPermission";
+        options.RequireHttpsMetadata = false;
+        options.SaveToken = true;
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = "http://localhost:5001",
+            ValidateAudience = true,
+            ValidAudience = "HealthCareFullPermission",
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+            RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+        };
+
+        // Docker loglarına düşmesi için eklendi.
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+                logger.LogError($"Authentication Error: {context.Exception.Message}");
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+// Dynamic Role-Based Authorization Configurations
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("DynamicRolePolicy", policy =>
+    {
+        policy.RequireAuthenticatedUser();
+        policy.Requirements.Add(new DynamicRoleRequirement());
+    });
+});
+
+builder.Services.AddScoped<IAuthorizationHandler, DynamicRoleHandler>();
 
 //Serilog Configuration
 var logPath = "/app/logs/descriptions";
@@ -112,6 +163,7 @@ app.UseHttpsRedirection();
 
 app.UseMiddleware<GlobalExceptionMiddleware>();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

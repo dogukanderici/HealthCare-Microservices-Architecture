@@ -19,6 +19,6 @@ namespace HealthCare.Descriptions.Domain.Entities
 
 
         // Relations
-        public ICollection<DynamicRole> DynamicRoles { get; set; }
+        public List<DynamicRole> DynamicRoles { get; set; }
     }
 }
