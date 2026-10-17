@@ -1,7 +1,7 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefinitionCommands;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
 using MediatR;
 

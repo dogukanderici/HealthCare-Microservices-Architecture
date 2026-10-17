@@ -4,7 +4,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.InboxQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.InboxResults;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.WorkItemResults;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;

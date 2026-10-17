@@ -6,7 +6,7 @@ using Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemExecutionPo
 using Core.WorkflowEngine.Application.Features.Constants;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExecutionCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskTransitionResults;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.TaskTransitionServices;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.WorkItemServices;

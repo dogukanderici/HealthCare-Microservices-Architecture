@@ -2,7 +2,7 @@
 using Core.WorkflowEngine.Application.Commons.Parameters;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.SyncedRoleQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.SyncedRoleResults;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;

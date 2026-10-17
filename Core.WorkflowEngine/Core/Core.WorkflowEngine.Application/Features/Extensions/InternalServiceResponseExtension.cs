@@ -1,5 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Commons.Wrappers;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using System;
 using System.Collections.Generic;
 using System.Linq;

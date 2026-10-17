@@ -2,7 +2,7 @@
 using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.ProcessDefitinionsServices;
 using MediatR;
 

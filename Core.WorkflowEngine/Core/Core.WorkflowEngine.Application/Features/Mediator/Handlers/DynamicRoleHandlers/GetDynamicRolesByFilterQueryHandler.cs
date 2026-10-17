@@ -3,7 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.Extensions;
 using Core.WorkflowEngine.Application.Features.Mediator.Queries.DynamicRoleQueries;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.DynamicRoleResults;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.DynamicRoleServices;
 using Core.WorkflowEngine.Domain.Entities;
 using MediatR;

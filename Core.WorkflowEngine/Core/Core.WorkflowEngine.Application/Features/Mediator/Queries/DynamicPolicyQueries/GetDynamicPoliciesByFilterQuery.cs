@@ -1,5 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.DynamicPolicyResults;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using MediatR;
 using System;
 using System.Collections.Generic;

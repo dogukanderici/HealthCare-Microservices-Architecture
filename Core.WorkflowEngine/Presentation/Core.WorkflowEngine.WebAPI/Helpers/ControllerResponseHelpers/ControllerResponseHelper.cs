@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using static Core.WorkflowEngine.WebAPI.Constants.LogConstants;
 using static Core.WorkflowEngine.WebAPI.Constants.APIConstants;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 
 namespace Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers
 {

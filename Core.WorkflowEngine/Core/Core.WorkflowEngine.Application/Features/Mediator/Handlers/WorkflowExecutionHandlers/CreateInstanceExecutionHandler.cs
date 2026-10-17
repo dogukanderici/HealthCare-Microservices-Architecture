@@ -3,7 +3,7 @@ using Core.WorkflowEngine.Application.Commons.Wrappers;
 using Core.WorkflowEngine.Application.Features.BusinessRules.Commons.Wrapper;
 using Core.WorkflowEngine.Application.Features.BusinessRules.WorkItemExecutionPolicies;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.WorkflowExecutionCommands;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces.HandlerServices.InstanceServices;
 using Core.WorkflowEngine.Domain.Abstractions;
 using Core.WorkflowEngine.Domain.Entities;

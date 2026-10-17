@@ -1,4 +1,4 @@
-﻿using Core.WorkflowEngine.Application.Features.Mediator.Wrappers;
+﻿using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Application.Interfaces;
 using MediatR;
 

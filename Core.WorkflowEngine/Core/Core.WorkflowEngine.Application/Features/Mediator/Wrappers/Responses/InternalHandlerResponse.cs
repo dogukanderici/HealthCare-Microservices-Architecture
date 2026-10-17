@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using JsonConstructorAttribute = System.Text.Json.Serialization.JsonConstructorAttribute;
 
-namespace Core.WorkflowEngine.Application.Features.Mediator.Wrappers
+namespace Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses
 {
     public class InternalHandlerResponse<T> : IInternalCommandResponse, IValidationResult
     {
