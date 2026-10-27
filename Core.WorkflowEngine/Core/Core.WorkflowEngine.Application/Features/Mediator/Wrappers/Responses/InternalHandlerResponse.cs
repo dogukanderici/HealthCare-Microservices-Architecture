@@ -15,8 +15,11 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses
         public string InternalMessage { get; set; }
 
         [JsonProperty]
-        public T Data { get; private set; }
+        public T Data { get; set; }
         public List<string>? ValidationErrors { get; set; }
+
+        public string PagingToken { get; set; }
+        public bool IsLastPage { get; set; }
 
         [JsonConstructor]
         private InternalHandlerResponse()
@@ -24,13 +27,15 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses
 
         }
 
-        public static InternalHandlerResponse<T> Success(T data, string internalMessage = "Success")
+        public static InternalHandlerResponse<T> Success(T data, string internalMessage = "Success", string pagingToken = "", bool isLastPage = false)
         {
             return new InternalHandlerResponse<T>
             {
                 IsSuccess = true,
                 InternalMessage = internalMessage,
-                Data = data
+                Data = data,
+                PagingToken = pagingToken,
+                IsLastPage = isLastPage
             };
         }
 

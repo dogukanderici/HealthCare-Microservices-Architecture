@@ -1,4 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
+﻿using Core.WorkflowEngine.Application.Commons.Wrappers;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
 using Core.WorkflowEngine.Domain.Abstractions;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,6 @@ namespace Core.WorkflowEngine.Application.Commons.Parameters
         public Func<TDto, TPropertType> CursorSelector { get; set; } // Sayfada gösterilecek ilk ve son veriyi bulmak için kullanılır.
         public Func<TDto, DateTimeOffset> CreatedAtCursor { get; set; } // Sayfadaki son verinin oluşturulma tarihi verisi.
         public Func<DBQueryOptions<TEntity>?, Task<int>> GetTotalCountAsync { get; set; } // Kayıtlı toplam veriyi bulmak kullanılır.
-        public Func<DBQueryOptions<TEntity>, Task<InternalHandlerResponse<IReadOnlyCollection<TDto>>>> FetchDataAsync { get; set; } // Verileri DB'den getirecek metot.
+        public Func<DBQueryOptions<TEntity>, Task<InternalServiceResponse<IReadOnlyCollection<TDto>>>> FetchDataAsync { get; set; } // Verileri DB'den getirecek metot.
     }
 }

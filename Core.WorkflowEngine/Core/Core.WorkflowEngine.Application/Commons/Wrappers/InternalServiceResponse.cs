@@ -10,7 +10,7 @@ namespace Core.WorkflowEngine.Application.Commons.Wrappers
     {
         public bool IsSuccess { get; private set; }
         public string ServiceMessage { get; private set; }
-        public T Data { get; private set; }
+        public T Data { get; set; }
 
         public static InternalServiceResponse<T> Success(T data, string message = "Success")
         {
