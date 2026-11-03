@@ -1,6 +1,5 @@
 html {
     font-size: 14px;
-    font-family: "Euclid Circular B", system-ui, sans-serif;
 }
 
 @media (min-width: 768px) {
@@ -19,7 +18,8 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    font-family: "Euclid Circular B", system-ui, sans-serif;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
