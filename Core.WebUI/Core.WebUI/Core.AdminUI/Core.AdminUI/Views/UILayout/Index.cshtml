@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+@await Component.InvokeAsync("_UILayoutHeadComponentPartial")
+
+<body class="d-flex">
+
+    <div class="container-fluid p-0">
+        <div class="row g-0 min-vh-100">
+
+            <!-- 1. Sidebar: Sayfa boyunca yükseklik (min-vh-100 ile sağlanan yüksekliği kaplar) -->
+            <div class="col-2">
+                <div class="w-100 h-100 sidebar-body">
+                    @await Component.InvokeAsync("_UILayoutSidebarComponentPartial")
+                </div>
+            </div>
+
+            <!-- Sağ Alan: Esnek Dikey Konteyner -->
+            <div class="col-10 d-flex flex-column">
+
+                <!-- 2. Navbar: Sabit 2.5rem yükseklik -->
+                <div class="row g-0" style="height: 2.5rem;">
+                    <div class="w-100 h-100" style="background: blue; color: white">
+                        @await Component.InvokeAsync("_UILayoutNavbarComponentPartial")
+                    </div>
+                </div>
+
+                <!-- 4. Content: Kalan tüm dikey boşluğu doldurur -->
+                <div class="row g-0 flex-grow-1">
+                    <div class="w-100 h-100">
+                        @RenderBody()
+                    </div>
+                </div>
+
+                <!-- 3. Footer: Sabit 2rem yükseklik -->
+                <div class="row g-0" style="height: 2rem;">
+                    <div class="w-100 h-100">
+                        @await Component.InvokeAsync("_UILayoutFooterComponentPartial")
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    @await Component.InvokeAsync("_UILayoutScriptComponentPartial")
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

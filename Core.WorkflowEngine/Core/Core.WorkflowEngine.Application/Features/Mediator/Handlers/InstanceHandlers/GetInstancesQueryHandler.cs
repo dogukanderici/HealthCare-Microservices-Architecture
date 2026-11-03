@@ -15,20 +15,53 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.InstanceHan
     public class GetInstancesQueryHandler : IRequestHandler<GetInstancesQuery, InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>>
     {
         private readonly IInstanceQueryService _queryService;
+        private readonly ITokenBasedPaginationHelper<Instance, int, GetInstancesQueryResult> _paginationHelper;
 
-        public GetInstancesQueryHandler(IInstanceQueryService queryService)
+        public GetInstancesQueryHandler(IInstanceQueryService queryService, ITokenBasedPaginationHelper<Instance, int, GetInstancesQueryResult> paginationHelper)
         {
             _queryService = queryService;
+            _paginationHelper = paginationHelper;
         }
 
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>> Handle(GetInstancesQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<Instance> dBQueryOptions = new DBQueryOptions<Instance>();
 
-            InternalServiceResponse<IReadOnlyCollection<GetInstancesQueryResult>> serviceResponse =
-                await _queryService.GetDatasAsync<GetInstancesQueryResult>(dBQueryOptions);
+            PaginationConfig<Instance, int, GetInstancesQueryResult> config = new PaginationConfig<Instance, int, GetInstancesQueryResult>
+            {
+                Token = request.Token,
+                OrderBy = x => x.Number,
+                CursorSelector = x => x.Number,
+                CreatedAtCursor = x => x.CreatedAt,
 
-            return serviceResponse.ToHandlerResponse();
+                ForwardFilter = lastNumber => x => x.Number > lastNumber,
+                BackwardFilter = firstNumber => x => x.Number < firstNumber,
+
+                GetTotalCountAsync = async (options) =>
+                {
+                    InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCount(options);
+
+                    if (!serviceResponse.IsSuccess)
+                        return 0;
+
+                    return serviceResponse.Data;
+                },
+
+                FetchDataAsync = async (options) =>
+                {
+                    InternalServiceResponse<IReadOnlyCollection<GetInstancesQueryResult>> serviceResponse =
+                    await _queryService.GetDatasAsync<GetInstancesQueryResult>(options);
+
+                    return serviceResponse;
+                }
+            };
+
+            return await _paginationHelper.PaginationAsync(config, dBQueryOptions);
+
+            //InternalServiceResponse<IReadOnlyCollection<GetInstancesQueryResult>> serviceResponse =
+            //    await _queryService.GetDatasAsync<GetInstancesQueryResult>(dBQueryOptions);
+
+            //return serviceResponse.ToHandlerResponse();
         }
     }
 }

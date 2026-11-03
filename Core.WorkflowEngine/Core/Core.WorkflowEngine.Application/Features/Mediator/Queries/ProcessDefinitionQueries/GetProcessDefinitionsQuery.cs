@@ -8,6 +8,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefin
 {
     public class GetProcessDefinitionsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>>, ICacheableQuery
     {
+        public string? Token { get; set; }
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey(typeof(GetProcessDefinitionsQuery).Name);
 
         public TimeSpan ExpirationTime => TimeSpan.FromHours(1);

@@ -9,6 +9,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQuer
 {
     public class GetInstanceByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>>, ICacheableQuery
     {
+        public string Token { get; set; }
         public int? Number { get; set; }
         public Guid? InitiatorWorkItemId { get; set; }
         public int? Status { get; set; }

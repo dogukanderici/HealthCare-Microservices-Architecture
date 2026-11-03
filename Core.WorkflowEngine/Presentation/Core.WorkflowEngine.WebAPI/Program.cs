@@ -90,6 +90,9 @@ builder.Services.AddBusinessRulesRegistration();
 // Service ( used in handler classes ) Configuration
 builder.Services.AddServiceRegistration();
 
+// Helper class configurations
+builder.Services.AddHelperConfiguration();
+
 builder.Services.AddValidatorsFromAssembly(typeof(ValidatorAssemblyMarker).Assembly);
 
 builder.Services.AddHelperServiceConfiguration();

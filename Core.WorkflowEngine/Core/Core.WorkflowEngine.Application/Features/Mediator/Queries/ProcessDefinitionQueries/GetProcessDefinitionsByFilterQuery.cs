@@ -13,6 +13,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefin
         public string? ProcessName { get; set; }
         public bool? IsActive { get; set; }
 
+        public string? Token { get; set; }
+
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey(
             [
                 typeof(GetProcessDefinitionsByFilterQuery).Name,
