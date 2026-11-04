@@ -1,3 +1,12 @@
 <Solution>
-  <Project Path="Core.AdminUI/Core.AdminUI/Core.AdminUI.csproj" />
+  <Folder Name="/Core/">
+    <Project Path="Core.WebUI.Application/Core.WebUI.Application.csproj" Id="f0e90c05-6d90-4451-bef0-a2b2e78f0e00" />
+    <Project Path="Core.WebUI.Configuration/Core.WebUI.Configuration.csproj" Id="025d51bb-5791-4bf9-9ef4-22d11160a5e0" />
+  </Folder>
+  <Folder Name="/Infrastructure/">
+    <Project Path="Core.WebUI.Persistence/Core.WebUI.Persistence.csproj" Id="d4340eb7-fb21-44bf-bd9d-114626fc30f3" />
+  </Folder>
+  <Folder Name="/Presentation/">
+    <Project Path="Core.AdminUI/Core.AdminUI/Core.AdminUI.csproj" />
+  </Folder>
 </Solution>
