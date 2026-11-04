@@ -10,8 +10,9 @@ namespace Core.WebUI.Application.Interfaces.Services.AuthService
 {
     public interface IAuthService
     {
-        Task<UIApiResponse<bool>> LoginAsync(LoginDto loginDto);
-        Task<UIApiResponse<bool>> RegisterAsync(RegisterDto registerDto);
-        Task<UIApiResponse<bool>> ChangePasswordAsync(ChangePasswordDto changePasswordDto);
+        Task<bool> LoginAsync(LoginDto loginDto);
+        Task<bool> LogoutAsync(LogoutDto logoutDto);
+        Task<bool> RegisterAsync(RegisterDto registerDto);
+        Task<bool> ChangePasswordAsync(ChangePasswordDto changePasswordDto);
     }
 }

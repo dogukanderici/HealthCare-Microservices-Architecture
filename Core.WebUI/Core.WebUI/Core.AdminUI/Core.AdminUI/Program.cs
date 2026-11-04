@@ -1,7 +1,11 @@
+using Core.WebUI.Application.Commons.Parameters;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.Configure<ApiSetting>(builder.Configuration.GetSection("ApiSetting"));
 
 var app = builder.Build();
 
