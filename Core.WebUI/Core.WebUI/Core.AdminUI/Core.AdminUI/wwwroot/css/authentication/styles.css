@@ -59,6 +59,18 @@ body {
     }
 }
 
+.row {
+    display: flex;
+}
+
+.col-6 {
+    width: 50%;
+}
+
+.mr-1rem {
+    margin-right: 1rem;
+}
+
 /* Input Group & Floating Labels */
 .input-group {
     position: relative;

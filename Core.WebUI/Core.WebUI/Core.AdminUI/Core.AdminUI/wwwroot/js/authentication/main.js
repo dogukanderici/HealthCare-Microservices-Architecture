@@ -2,35 +2,8 @@
 // Form Logic & Button Animation
 // ----------------------------------------------------
 const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
 const submitBtn = document.getElementById('submitBtn');
-
-loginForm.addEventListener('submit', (e) => {
-    e.preventDefault(); // Prevent page reload
-
-    // Add loading state
-    submitBtn.classList.add('loading');
-    submitBtn.disabled = true;
-
-    // Simulate API Call / Processing time
-    setTimeout(() => {
-        submitBtn.classList.remove('loading');
-        submitBtn.disabled = false;
-
-        // Show a success indication (optional visual feedback)
-        const btnText = submitBtn.querySelector('.btn-text');
-        const originalText = btnText.innerText;
-        btnText.innerText = "Success!";
-        submitBtn.style.background = "linear-gradient(135deg, #10b981, #059669)"; // Emerald green
-
-        // Reset after 2 seconds
-        setTimeout(() => {
-            btnText.innerText = originalText;
-            submitBtn.style.background = "";
-            loginForm.reset();
-        }, 2000);
-
-    }, 2000);
-});
 
 // ----------------------------------------------------
 // Canvas Particle Background System

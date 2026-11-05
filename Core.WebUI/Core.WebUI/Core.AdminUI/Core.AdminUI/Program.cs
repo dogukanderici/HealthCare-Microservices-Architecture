@@ -33,6 +33,7 @@ builder.Services.AddHttpClient("IdentityServerClient", cfg =>
     cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:IdentityServerBaseUrl"]);
 }).AddHttpMessageHandler<AccessTokenDelegationHandler>();
 
+// Services Configuration
 builder.Services.AddHttpClientServices();
 
 builder.Services.Configure<ApiSetting>(builder.Configuration.GetSection("ApiSetting"));

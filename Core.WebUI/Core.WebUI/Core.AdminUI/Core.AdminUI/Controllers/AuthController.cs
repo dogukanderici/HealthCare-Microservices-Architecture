@@ -1,10 +1,18 @@
 ﻿using Core.AdminUI.Models.AuthViewModels;
+using Core.WebUI.Application.Interfaces.Services.AuthService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Core.AdminUI.Controllers
 {
     public class AuthController : Controller
     {
+        private readonly IAuthService _authService;
+
+        public AuthController(IAuthService authService)
+        {
+            _authService = authService;
+        }
+
         public IActionResult Login()
         {
             LoginViewModel model = new LoginViewModel();
@@ -13,8 +21,10 @@ namespace Core.AdminUI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
+            var result = await _authService.LoginAsync(model.Login);
+
             return View();
         }
 

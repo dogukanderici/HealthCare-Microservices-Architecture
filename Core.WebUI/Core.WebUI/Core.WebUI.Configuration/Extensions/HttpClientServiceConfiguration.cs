@@ -14,7 +14,7 @@ namespace Core.WebUI.Configuration.Extensions
     {
         public static IServiceCollection AddHttpClientServices(this IServiceCollection services)
         {
-            services.AddHttpClient<IAuthService, AuthService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }

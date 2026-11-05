@@ -3,4 +3,87 @@
     Layout = "~/Views/AuthLayout/Index.cshtml";
 }
 
-<p>Kaydol</p>
+<div class="register-wrapper w-full max-w-[650px] px-6">
+    <div class="register-card">
+        <div class="text-center mb-10">
+            <div class="w-16 h-16 bg-indigo-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-indigo-500/30">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
+                </svg>
+            </div>
+            <h1 class="text-3xl font-bold text-white mb-2 tracking-tight">Merhaba</h1>
+            <p class="text-slate-400 text-sm">Aramıza katıldığın için çok mutluyuz. Lütfen bilgilerinizi giriniz.</p>
+        </div>
+
+        <form id="registerForm" autocomplete="off" onsubmit="event.preventDefault();">
+
+            <div class="row">
+                <div class="col-6 mr-1rem">
+                    <div class="input-group">
+                        <input type="text" id="name" class="input-control" placeholder=" " required autocomplete="off">
+                        <label for="name" class="input-label">Ad</label>
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group">
+                        <input type="text" id="surname" class="input-control" placeholder=" " required>
+                        <label for="surname" class="input-label">Soyad</label>
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mr-1rem">
+                    <div class="input-group">
+                        <input type="email" id="email" class="input-control" placeholder=" " required autocomplete="off">
+                        <label for="email" class="input-label">E-Posta</label>
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group">
+                        <input type="text" id="username" class="input-control" placeholder=" " required>
+                        <label for="username" class="input-label">Kullanıcı Adı</label>
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-6 mr-1rem">
+                    <div class="input-group">
+                        <input type="password" id="password" class="input-control" placeholder=" " required autocomplete="off">
+                        <label for="password" class="input-label">Şifre</label>
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="input-group">
+                        <input type="password" id="confirmpassword" class="input-control" placeholder=" " required>
+                        <label for="confirmpassword" class="input-label">Şifre Tekrar</label>
+                        <div class="input-glow"></div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="register-btn" id="submitBtn">
+                <span class="btn-text">Kaydol</span>
+                <div class="loader"></div>
+            </button>
+        </form>
+
+        <p class="text-center text-sm text-slate-400 mt-8">
+            Zaten hesabınız var mı?
+            <a href="/auth/login" class="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">Giriş Yap</a>
+        </p>
+    </div>
+
+    <p class="text-left text-sm text-slate-400 mt-8">
+        Kayıt yaparak
+        <button class="btn-terms text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">Kullanım Koşulları</button>nı ve
+        <button class="btn-privacy text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">Gizlilk Politasını</button>
+        kabul etmiş olursunuz.
+    </p>
+</div>
