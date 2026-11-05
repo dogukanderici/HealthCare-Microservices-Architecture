@@ -1,0 +1,21 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+@await Component.InvokeAsync("_AuthLayoutHeadComponentPartial")
+
+<body>
+    <!-- Background Canvas -->
+    <canvas id="particle-canvas"></canvas>
+
+    @RenderBody()
+
+</div>
+
+@await Component.InvokeAsync("_AuthLayoutScriptComponentPartial")
+
+</body>
+</html>

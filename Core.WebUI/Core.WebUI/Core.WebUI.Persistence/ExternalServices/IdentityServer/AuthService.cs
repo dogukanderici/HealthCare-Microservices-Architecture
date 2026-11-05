@@ -67,11 +67,11 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
             }
 
             // JWT içerisindeki claim bilgileri okunur.
-            var handler = new JwtSecurityTokenHandler();
-            var jwt = handler.ReadJwtToken(token.AccessToken);
+            JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            JwtSecurityToken jwt = handler.ReadJwtToken(token.AccessToken);
 
-            var claimsIdentity = new ClaimsIdentity(jwt.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var claimPrincipal = new ClaimsPrincipal(claimsIdentity);
+            ClaimsIdentity claimsIdentity = new ClaimsIdentity(jwt.Claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            ClaimsPrincipal claimPrincipal = new ClaimsPrincipal(claimsIdentity);
 
             // Token Cookie içerisinde saklanır.
             AuthenticationProperties authProperties = new AuthenticationProperties();

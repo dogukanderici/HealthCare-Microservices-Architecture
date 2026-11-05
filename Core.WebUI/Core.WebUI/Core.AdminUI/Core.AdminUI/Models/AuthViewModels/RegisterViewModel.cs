@@ -1,6 +1,6 @@
 ﻿using Core.WebUI.Application.Dtos.IdentityDtos;
 
-namespace Core.AdminUI.Models.IdentityViewModels
+namespace Core.AdminUI.Models.AuthViewModels
 {
     public class RegisterViewModel
     {

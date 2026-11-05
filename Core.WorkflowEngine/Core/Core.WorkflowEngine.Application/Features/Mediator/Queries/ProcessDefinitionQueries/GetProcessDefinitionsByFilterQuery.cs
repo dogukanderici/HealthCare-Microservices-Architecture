@@ -32,12 +32,13 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefin
 
         }
 
-        public static GetProcessDefinitionsByFilterQuery Filter(Guid? processSpecId, string? processName, bool? isActive) =>
+        public static GetProcessDefinitionsByFilterQuery Filter(Guid? processSpecId, string? processName, bool? isActive, string? token) =>
             new GetProcessDefinitionsByFilterQuery
             {
                 ProcessSpecId = processSpecId,
                 ProcessName = processName,
-                IsActive = isActive
+                IsActive = isActive,
+                Token = token
             };
     }
 }

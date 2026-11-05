@@ -8,12 +8,12 @@ namespace Core.IdentityServer
         // API'ye erişim sağlacak kaynak ve kaynağın kapsamları
         public static IEnumerable<ApiResource> ApiResources => new ApiResource[]
         {
-            new ApiResource("HealthCareFullPermission")
+            new ApiResource("ApplicationPermission")
             {
                 Scopes =
                 {
                     "ReadPermission",
-                    "FullPermission"
+                    "TokenPermission",
                 }
             }
         };
@@ -21,8 +21,8 @@ namespace Core.IdentityServer
         // Kaynak tanımları
         public static IEnumerable<ApiScope> ApiScopes => new ApiScope[]
         {
-            new ApiScope("ReadPermission","Read Permission For Users",new[]{"scope"}),
-            new ApiScope("FullPermission","Read and Write Full Permission For Users",new[]{"scopes"}),
+            new ApiScope("ReadPermission","Just Read Permission For Not Member Users",new[]{"scope"}),
+            new ApiScope("TokenPermission","Application Permission For Users",new[]{"scope"}),
             new ApiScope(IdentityServerConstants.LocalApi.ScopeName)
         };
 
@@ -38,7 +38,7 @@ namespace Core.IdentityServer
         {
             new Client()
             {
-                ClientId="HealthCareMember",
+                ClientId="AppBasicUser",
                 ClientName="Basic User",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
                 ClientSecrets={new Secret("HealthCareMemberHealthCareMember".Sha256()) },
@@ -54,18 +54,22 @@ namespace Core.IdentityServer
             },
             new Client()
             {
-                ClientId="HealthCareAdmin",
+                ClientId="AppMemberUser",
                 ClientName="Admin User",
                 AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
                 ClientSecrets={new Secret("HealthCareAdminsHealthCareAdmins".Sha256()) },
+                AllowOfflineAccess = true, // Refresh Token için eklenmesi gereklidir.
+                RefreshTokenUsage = TokenUsage.OneTimeOnly, // Her access_token isteğinde yeni bir refresh token üretir.
+                RefreshTokenExpiration = TokenExpiration.Absolute, // Refresh token süresi dolduğunda yeni refresh token üretmez.
+                AbsoluteRefreshTokenLifetime = 3600 * 24 * 30, // Refresh token süresi 30 gün
                 AllowedScopes =
                 {
-                    "ReadPermission",
-                    "FullPermission",
+                    "TokenPermission",
                     IdentityServerConstants.LocalApi.ScopeName,
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Email,
-                    IdentityServerConstants.StandardScopes.Profile
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.OfflineAccess // Refresh Token için gereklidir.
                 },
                 AccessTokenLifetime = 3600
             }

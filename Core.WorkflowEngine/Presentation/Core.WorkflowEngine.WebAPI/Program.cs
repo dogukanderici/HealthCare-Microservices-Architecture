@@ -25,17 +25,17 @@ builder.Services.AddAuthentication(options =>
 })
     .AddJwtBearer("IdentityServerAccessToken", options =>
     {
-        options.Authority = "http://Core_IdentityServer_API:8080";
-        options.Audience = "HealthCareFullPermission";
+        options.Authority = builder.Configuration["IdentityServerSettings:Authority"];
+        options.Audience = builder.Configuration["IdentityServerSettings:Audience"];
         options.RequireHttpsMetadata = false;
         options.SaveToken = true;
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = "http://loacalhost:5001",
+            ValidIssuer = builder.Configuration["IdentityServerSettings:ValidIssuer"],
             ValidateAudience = true,
-            ValidAudience = "HealthCareFullPermission",
+            ValidAudience = builder.Configuration["IdentityServerSettings:ValidAudience"],
             ValidateLifetime = true,
             ClockSkew = TimeSpan.Zero,
             RoleClaimType = "http://schemas.microsoft.com/ws/2008/06/identity/claims/role" // [Authorize(Roles="...")] için önemli.
