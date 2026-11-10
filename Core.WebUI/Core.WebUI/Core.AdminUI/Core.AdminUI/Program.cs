@@ -13,7 +13,7 @@ builder.Services.AddHttpContextAccessor();
 
 // Cookie Authentication Configurations
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme, options =>
     {
         options.LoginPath = "/Auth/Login";
         options.LogoutPath = "/Auth/Logout";
@@ -31,7 +31,12 @@ builder.Services.AddTransient<AccessTokenDelegationHandler>();
 builder.Services.AddHttpClient("IdentityServerClient", cfg =>
 {
     cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:IdentityServerBaseUrl"]);
-}).AddHttpMessageHandler<AccessTokenDelegationHandler>();
+});
+
+//builder.Services.AddHttpClient("IdentityServerClient", cfg =>
+//{
+//    cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:IdentityServerBaseUrl"]);
+//}).AddHttpMessageHandler<AccessTokenDelegationHandler>();
 
 // Services Configuration
 builder.Services.AddHttpClientServices();

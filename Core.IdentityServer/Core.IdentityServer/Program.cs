@@ -55,7 +55,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 // Config dosyasý tanýmlarý
 builder.Services.AddIdentityServer(opt =>
 {
-    opt.IssuerUri = "http://localhost:5001"; // Token'ýn hangi URL tarafýndan verildiðini belirtir. Prod ortamýnda gerçek domain adresi olmalý.
+    opt.IssuerUri = "http://core_identityserver_api:8080"; // Token'ýn hangi URL tarafýndan verildiðini belirtir. Prod ortamýnda gerçek domain adresi olmalý.
 })
     .AddInMemoryApiResources(Config.ApiResources)
     .AddInMemoryApiScopes(Config.ApiScopes)

@@ -25,7 +25,7 @@ namespace Core.AdminUI.Controllers
         {
             var result = await _authService.LoginAsync(model.Login);
 
-            return View();
+            return Redirect("/home/index");
         }
 
         public IActionResult Register()

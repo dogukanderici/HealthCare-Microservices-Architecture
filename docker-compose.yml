@@ -138,6 +138,26 @@ services:
       # Bilgisayarım (Host) | Konteyner içi (Container)
       - E:\Logs\WorkflowEngine:/app/logs/workflowengine
     tty: true
+  
+  core-admin-ui:
+     image: core_admin_ui
+     build:
+        context: ./Core.WebUI/Core.WebUI
+        dockerfile: Core.AdminUI/Core.AdminUI/Dockerfile
+     ports:
+        - "5110:8080"
+     container_name: Core_AdminUI
+     restart: always
+     networks:
+        - HealthCare_Network
+     environment:
+        - ASPNETCORE_ENVIRONMENT=Development
+     depends_on:
+        rabbitmq:
+           condition: service_healthy
+     volumes:
+        - E:\Logs\CoreAdminUI:/app/logs/coreadminui
+     tty: true
 
   descriptions-api:
     image: healthcare_descriptions_api

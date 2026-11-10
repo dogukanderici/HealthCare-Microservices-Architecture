@@ -14,11 +14,16 @@ namespace Core.AdminUI.Middlewares.BearerMiddleware
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+            HttpContext httpContext = _httpContextAccessor.HttpContext;
 
-            if (!string.IsNullOrEmpty(accessToken))
+            if (httpContext != null)
             {
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+
+                if (!string.IsNullOrEmpty(accessToken))
+                {
+                    request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                }
             }
 
             return await base.SendAsync(request, cancellationToken);

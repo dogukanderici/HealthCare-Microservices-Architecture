@@ -20,12 +20,14 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
         private readonly string _identityServerBaseUrl;
         private readonly string _clientId;
         private readonly string _clientSecret;
+        private readonly string _httpClientName;
 
         public AuthService(IOptions<ApiSetting> option, IHttpClientFactory httpClientFactory, IHttpContextAccessor httpContextAccessor)
         {
             _identityServerBaseUrl = option.Value.IdentityServerBaseUrl;
             _clientId = option.Value.ClientId;
             _clientSecret = option.Value.ClientSecret;
+            _httpClientName = option.Value.HttpClientName;
 
             _httpClientFactory = httpClientFactory;
             _httpContextAccessor = httpContextAccessor;
@@ -36,7 +38,7 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
             // IdentityServer'dan Token Talep Edilir.
             // Kullanıcı Adı - Şifre bilgisi kullanıldığı için Resource Owner Password tipi kullanılır.
 
-            HttpClient client = _httpClientFactory.CreateClient();
+            HttpClient client = _httpClientFactory.CreateClient(_httpClientName);
 
             // GetDiscoveryDocumentAsync kullanılacak request nesnesi oluşturulur.
             DiscoveryDocumentRequest discoveryDocumentRequest = new DiscoveryDocumentRequest
@@ -45,8 +47,16 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
                 Policy = new DiscoveryPolicy { RequireHttps = false }
             };
 
+
             // Duende.IdentityModel.Client kütüphanesi ile IdentityServer'dan discovery document alınır.
             DiscoveryDocumentResponse discoveryDocument = await client.GetDiscoveryDocumentAsync(discoveryDocumentRequest);
+
+            if (discoveryDocument.IsError)
+            {
+                // Gerçek hatayı (örneğin "Error connecting to http://Core_IdentityServer_API:8080...") konsola veya loglara yazdırın.
+                Console.WriteLine($"Discovery Error: {discoveryDocument.Error}");
+                throw new Exception($"Discovery endpoint'ine ulaşılamadı: {discoveryDocument.Error}");
+            }
 
             // Token talebi için gerekli olan request nesnesi oluşturulur.
             PasswordTokenRequest passwordTokenRequest = new PasswordTokenRequest
@@ -55,7 +65,7 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
                 ClientSecret = _clientSecret,
                 UserName = loginDto.Username,
                 Password = loginDto.Password,
-                Address = discoveryDocument.TokenEndpoint
+                Address = discoveryDocument.TokenEndpoint,
             };
 
             // IdentityServer'dan token bilgisi alınır.

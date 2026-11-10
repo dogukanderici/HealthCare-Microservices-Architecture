@@ -11,5 +11,6 @@ namespace Core.WebUI.Application.Commons.Parameters
         public string IdentityServerBaseUrl { get; set; }
         public string ClientId { get; set; }
         public string ClientSecret { get; set; }
+        public string HttpClientName { get; set; }
     }
 }
