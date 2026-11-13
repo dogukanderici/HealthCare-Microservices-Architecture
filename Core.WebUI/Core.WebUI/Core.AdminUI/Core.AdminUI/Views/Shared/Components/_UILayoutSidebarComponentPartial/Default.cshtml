@@ -1,25 +1,36 @@
 ﻿<aside class="menu-sidebar" id="main-sidebar">
     <div class="logo">
-        <a class="logo-link" href="index.html" aria-label="CoolAdmin home"><span class="logo-mark" aria-hidden="true">C</span><span class="logo-text">CoolAdmin</span></a>
+        <a class="logo-link" href="index.html" aria-label="CoolAdmin home"><span class="logo-mark" aria-hidden="true">C</span><span class="logo-text">Administrator</span></a>
         <button class="sidebar-close js-sidebar-toggle" type="button" aria-label="Close navigation"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
     </div>
     <div class="menu-sidebar__content js-scrollbar1">
         <nav class="navbar-sidebar">
             <ul class="list-unstyled navbar__list">
                 <li class="has-sub">
-                    <a class="js-arrow" href="#"><i class="fa-solid fa-tachometer-alt"></i>Dashboard</a>
+                    <a class="js-arrow" href="#"><i class="fa-solid fa-tachometer-alt"></i>API Yetkilendirme</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list">
-                        <li><a href="index.html">Dashboard 1</a></li>
-                        <li><a href="index2.html">Dashboard 2</a></li>
-                        <li><a href="index3.html">Dashboard 3</a></li>
-                        <li><a href="index4.html">Dashboard 4</a></li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#"><i class="fa-solid fa-tachometer-alt"></i>Workflow Engine</a>
+                            <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                <li><a href="/dynamicpolicy">Dynamic Policy</a></li>
+                                <li><a href="/dynamicrole">Dynamic Role</a></li>
+                            </ul>
+                        </li>
+                        <li class="has-sub">
+                            <a class="js-arrow" href="#"><i class="fa-solid fa-tachometer-alt"></i>HealtCare - Descriptions</a>
+                            <ul class="list-unstyled navbar__sub-list js-sub-list">
+                                <li><a href="/healthcare/appointmentstatus">Randevu Durumu</a></li>
+                                <li><a href="/healthcare/cities">İl</a></li>
+                                <li><a href="/healthcare/districts">İlçeler</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </li>
                 <li><a href="chart.html"><i class="fa-solid fa-chart-bar"></i>Charts</a></li>
-                <li class="active has-sub">
+                <li class="has-sub">
                     <a class="js-arrow open" href="#"><i class="fa-solid fa-table"></i>Tables</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: block;">
-                        <li class="active"><a href="table.html">Tables</a></li>
+                        <li><a href="table.html">Tables</a></li>
                         <li><a href="data-table.html">Data table</a></li>
                     </ul>
                 </li>

@@ -33,10 +33,10 @@ builder.Services.AddHttpClient("IdentityServerClient", cfg =>
     cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:IdentityServerBaseUrl"]);
 });
 
-//builder.Services.AddHttpClient("IdentityServerClient", cfg =>
-//{
-//    cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:IdentityServerBaseUrl"]);
-//}).AddHttpMessageHandler<AccessTokenDelegationHandler>();
+builder.Services.AddHttpClient("ApiHttpClient", cfg =>
+{
+    cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:WorkflowEngine:ServiceBaseUrl"]);
+}).AddHttpMessageHandler<AccessTokenDelegationHandler>();
 
 // Services Configuration
 builder.Services.AddHttpClientServices();

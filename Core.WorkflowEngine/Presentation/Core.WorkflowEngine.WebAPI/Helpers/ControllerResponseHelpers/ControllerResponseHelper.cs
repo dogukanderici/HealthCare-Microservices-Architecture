@@ -48,7 +48,7 @@ namespace Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers
                     actionName,
                     SuccessMessage.CallingSuccess);
 
-                return new OkObjectResult(GenericAPIResponse<TData>.SuccessAPIResponse(result.Data));
+                return new OkObjectResult(GenericAPIResponse<TData>.SuccessAPIResponse(result.Data, result.PagingToken, result.IsLastPage));
             }
             catch (Exception ex)
             {

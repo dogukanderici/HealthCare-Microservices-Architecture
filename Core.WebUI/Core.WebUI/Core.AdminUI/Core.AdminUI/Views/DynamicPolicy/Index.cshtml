@@ -1,0 +1,94 @@
+﻿@model DynamicPolicyResultModel<IReadOnlyCollection<DynamicPolicyResultDto>>
+
+@{
+    ViewData["Title"] = "Dinamik Yetkilendirme";
+    Layout = "~/Views/UILayout/Index.cshtml";
+}
+
+<div class="row row-tight" style="margin-top: 16px;">
+    <div class="col-md-12">
+        <section class="m-card" aria-labelledby="dynamicpolicy-title">
+            <header class="m-card__header">
+                <div>
+                    <h2 class="m-card__title" id="dynamicpolicy-title">Dinamik Api Yetkilendirme</h2>
+                    <p class="m-card__subtitle">Api endpoint erişim sağlayacak kullanıcı rolleri tanımları</p>
+                </div>
+            </header>
+            <div class="table-data__tool">
+                <div class="table-data__tool-left">
+                    <div class="select-wrapper">
+                        <select class="form-select" aria-label="Filter properties">
+                            <option selected>- Seçiniz -</option>
+                            <option>Dynamic Policy</option>
+                            <option>Dynamic Role</option>
+                            <option>Process Definiiton</option>
+                            <option>Process Task</option>
+                        </select>
+                    </div>
+                    <div class="select-wrapper">
+                        <select class="form-select" aria-label="İstek Tipi">
+                            <option selected>- Seçiniz -</option>
+                            <option>GET</option>
+                            <option>POST</option>
+                            <option>PUT</option>
+                            <option>DELETE</option>
+                        </select>
+                    </div>
+                    <button class="au-btn-filter" type="button">
+                        <i class="fa-solid fa-filter" aria-hidden="true"></i> Ara
+                    </button>
+                </div>
+                <div class="table-data__tool-right">
+                    <button class="au-btn au-btn--green au-btn--small" type="button">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni Yetki Ekle
+                    </button>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-data2">
+                    <thead>
+                        <tr>
+                            <th>İstek Tipi</th>
+                            <th>Endpoint</th>
+                            <th>Durum</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ModelData)
+                        {
+                            <tr>
+                                <td>@item.Methode</td>
+                                <td>@item.Endpoint</td>
+                                @if (@item.IsActive)
+                                {
+                                    <td>
+                                        <section class="notice-card--success">
+                                            <span class="notice-card__icon"><i class="fa-solid fa-circle-check"></i></span>
+                                        </section>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <section class="notice-card--danger">
+                                            <span class="notice-card__icon"><i class="fa-solid fa-circle-xmark"></i></span>
+                                        </section>
+                                    </td>
+                                }
+                                <td>
+                                    <div class="table-data-feature">
+                                        <a href="#" class="item" type="button" data-bs-toggle="tooltip" title="Send"><i class="fa-solid fa-paper-plane"></i></a>
+                                        <a href="#" class="item" type="button" data-bs-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="#" class="item" type="button" data-bs-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash"></i></a>
+                                        <a href="#" class="item" type="button" data-bs-toggle="tooltip" title="More"><i class="fa-solid fa-ellipsis-vertical"></i></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>

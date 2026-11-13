@@ -1,5 +1,7 @@
 ﻿using Core.WebUI.Application.Interfaces.Services.AuthService;
+using Core.WebUI.Application.Interfaces.Services.WorkflowEngine;
 using Core.WebUI.Persistence.ExternalServices.IdentityServer;
+using Core.WebUI.Persistence.ExternalServices.WorkflowEngine;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections;
@@ -15,6 +17,9 @@ namespace Core.WebUI.Configuration.Extensions
         public static IServiceCollection AddHttpClientServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+
+            services.AddScoped<IProcessDefinitionService, ProcessDefinitionService>();
+            services.AddScoped<IDynamicPolicyService, DynamicPolicyService>();
 
             return services;
         }

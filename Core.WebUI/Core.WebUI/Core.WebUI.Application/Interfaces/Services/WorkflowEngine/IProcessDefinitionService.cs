@@ -10,10 +10,5 @@ namespace Core.WebUI.Application.Interfaces.Services.WorkflowEngine
 {
     public interface IProcessDefinitionService : IBaseService<ProcessDefinitionResultDto, ProcessDefinitionCreateDto, ProcessDefinitionUpdateDto>
     {
-        Task<UIApiResponse<IReadOnlyCollection<ProcessDefinitionResultDto>>> GetListAsync();
-        Task<UIApiResponse<ProcessDefinitionResultDto>> GetAsync(Guid id);
-        Task<UIApiResponse<bool>> CreateAsync(ProcessDefinitionCreateDto dto);
-        Task<UIApiResponse<bool>> UpdateAsync(ProcessDefinitionUpdateDto dto);
-        Task<UIApiResponse<bool>> DeleteAsync(Guid id);
     }
 }

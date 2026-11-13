@@ -3,6 +3,7 @@ using Core.WebUI.Application.Dtos.WorkflowEngineDtos.ProcessDefinitionDtos;
 using Core.WebUI.Application.Interfaces.Services.WorkflowEngine;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,19 +21,25 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
         private readonly IHttpClientFactory _httpClientFactory;
 
-        public ProcessDefinitionService(IHttpClientFactory httpClientFactory)
+        public ProcessDefinitionService(IHttpClientFactory httpClientFactory, IConfiguration config)
         {
+            _httpClientFactory = httpClientFactory;
+            _config = config;
+
             ServiceBaseUrl = _config.GetSection("ApiSetting:WorkflowEngine:ServiceBaseUrl").Value;
             HttpClientName = _config.GetSection("ApiSetting:ApiHttpClientName").Value;
-
-            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<UIApiResponse<IReadOnlyCollection<ProcessDefinitionResultDto>>> GetListAsync()
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            var response = await client.GetAsync("processes");
+            HttpResponseMessage response = await client.GetAsync("processes");
+
+            if (response.IsSuccessStatusCode)
+            {
+                string jsonData = await response.Content.ReadAsStringAsync();
+            }
 
             throw new Exception("opps!");
         }
@@ -55,6 +62,17 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
         public Task<UIApiResponse<bool>> DeleteAsync(Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is ProcessDefinitionService service &&
+                   EqualityComparer<IConfiguration>.Default.Equals(_config, service._config);
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(_config);
         }
     }
 }
