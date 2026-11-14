@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Core.AdminUI.Controllers
 {
+    [Route("DynamicPolicy")]
     public class DynamicPolicyController : Controller
     {
         private readonly IDynamicPolicyService _service;
@@ -15,6 +16,7 @@ namespace Core.AdminUI.Controllers
             _service = service;
         }
 
+        [HttpGet("")]
         public async Task<IActionResult> Index()
         {
             UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>> serviceResponse = await _service.GetListAsync();
@@ -25,6 +27,25 @@ namespace Core.AdminUI.Controllers
             model.ModelData = serviceResponse.Data;
 
             return View(model);
+        }
+
+        [HttpGet("Create")]
+        public async Task<IActionResult> Create()
+        {
+            DynamicPolicyCreateModel model = new DynamicPolicyCreateModel();
+
+            return View(model);
+        }
+
+        [HttpPost("Create")]
+        public async Task<IActionResult> Create(DynamicPolicyCreateModel model)
+        {
+            UIApiResponse<bool> serviceResponse = await _service.CreateAsync(model.CreateDto);
+
+            if (serviceResponse.Status)
+                return Redirect("/dynamicpolicy");
+
+            return View(model.CreateDto);
         }
     }
 }

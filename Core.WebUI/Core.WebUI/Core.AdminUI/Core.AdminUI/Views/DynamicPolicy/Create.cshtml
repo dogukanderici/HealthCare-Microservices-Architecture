@@ -1,0 +1,66 @@
+﻿@model DynamicPolicyCreateModel
+
+@{
+    Layout = "~/Views/UILayout/Index.cshtml";
+    ViewData["Title"] = "Dinamik Yetkilendirme Ekleme";
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-header">Yeni API Endpoint Yetki Ekleme</div>
+            <div class="card-body">
+                <div class="card-title">
+                    <h3 class="text-center title-2">API Bilgileri</h3>
+                </div>
+                <hr>
+                <form id="add-new-api-policy" asp-controller="DynamicPolicy" asp-action="Create" method="post">
+                    <div class="mb-3">
+                        <label asp-for="@Model.CreateDto.Endpoint" class="control-label mb-1">Endpoint</label>
+                        <input asp-for="@Model.CreateDto.Endpoint" type="text" class="form-control" aria-required="true" placeholder="/api/home">
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label asp-for="@Model.CreateDto.Methode" class="control-label mb-1">HTTP Methode</label>
+                            <div class="col-12">
+                                <select id="api-methode" asp-for="@Model.CreateDto.Methode" class="form-select">
+                                    <option value="GET">GET</option>
+                                    <option value="POST">POST</option>
+                                    <option value="PUT">PUT</option>
+                                    <option value="DELETE">DELETE</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-control-label">Durum</label>
+                            <div class="col-12">
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="endpoint-status-active" asp-for="@Model.CreateDto.IsActive" value="true" class="form-check-input">
+                                    <label asp-for="@Model.CreateDto.IsActive" class="form-check-label">Aktif</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="endpoint-status-pasive" asp-for="@Model.CreateDto.IsActive" value="false" class="form-check-input">
+                                    <label asp-for="@Model.CreateDto.IsActive" class="form-check-label">Pasif</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <button id="api-policy-submit" type="submit" class="w-100 btn btn-lg btn-info">
+                                <i class="fa-regular fa-floppy-disk"></i>&nbsp;
+                                <span id="api-policy-submit-amount">Kaydet</span>
+                            </button>
+                        </div>
+                        <div class="col-4">
+                            <button id="api-policy-submit" type="submit" class="w-100 btn btn-lg btn-outline-danger">
+                                <i class="fa-solid fa-arrow-left-long"></i>&nbsp;
+                                <span id="api-policy-submit-amount">Vazgeç</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

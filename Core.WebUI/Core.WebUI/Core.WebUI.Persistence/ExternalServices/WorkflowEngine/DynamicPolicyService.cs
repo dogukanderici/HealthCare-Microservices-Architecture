@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Json;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,17 +60,34 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
             throw new NotImplementedException();
         }
 
-        public Task<UIApiResponse<bool>> CreateAsync(DynamicPolicyCreateDto createDto)
+        public async Task<UIApiResponse<bool>> CreateAsync(DynamicPolicyCreateDto createDto)
+        {
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            string createData = JsonConvert.SerializeObject(createDto);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync("dynamicpolicies", createDto);
+
+            if (response.IsSuccessStatusCode)
+            {
+                string responseContent = await response.Content.ReadAsStringAsync();
+                ApiServiceResponse<Guid> apiResponse = JsonConvert.DeserializeObject<ApiServiceResponse<Guid>>(responseContent);
+
+                if (apiResponse.IsSuccess)
+                    return UIApiResponse<bool>.Success(true);
+                else
+                    return UIApiResponse<bool>.Fail(apiResponse.Message);
+            }
+
+            return UIApiResponse<bool>.Fail();
+        }
+
+        public Task<UIApiResponse<bool>> UpdateAsync(DynamicPolicyUpdateDto updateDto)
         {
             throw new NotImplementedException();
         }
 
         public Task<UIApiResponse<bool>> DeleteAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<UIApiResponse<bool>> UpdateAsync(DynamicPolicyUpdateDto updateDto)
         {
             throw new NotImplementedException();
         }
