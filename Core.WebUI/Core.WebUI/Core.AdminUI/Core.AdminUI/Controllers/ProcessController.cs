@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Core.AdminUI.Controllers
 {
-    public class ProcessController : Controller
+    public class ProcessController : BaseController
     {
         private readonly IProcessDefinitionService _service;
 

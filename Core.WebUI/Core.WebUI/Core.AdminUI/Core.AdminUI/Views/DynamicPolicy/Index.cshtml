@@ -1,8 +1,10 @@
-﻿@model DynamicPolicyResultModel<IReadOnlyCollection<DynamicPolicyResultDto>>
+﻿@using Core.AdminUI.Commons.Extensions
+@model DynamicPolicyResultModel<IReadOnlyCollection<DynamicPolicyResultDto>>
 
 @{
     ViewData["Title"] = "Dinamik Yetkilendirme";
     Layout = "~/Views/UILayout/Index.cshtml";
+    string methodeType = "notice-card--info";
 }
 
 <div class="row row-tight" style="margin-top: 16px;">
@@ -58,7 +60,29 @@
                         @foreach (var item in Model.ModelData)
                         {
                             <tr>
-                                <td>@item.Methode</td>
+                                @if (item.Methode == "GET")
+                                {
+                                    methodeType = "notice-card--info";
+                                }
+                                else if (item.Methode == "POST")
+                                {
+                                    methodeType = "notice-card--success";
+                                }
+                                else if (item.Methode == "PUT")
+                                {
+                                    methodeType = "notice-card--warning";
+                                }
+                                else if (item.Methode == "DELETE")
+                                {
+                                    methodeType = "notice-card--danger";
+                                }
+                                
+                                <td>
+                                    <section class="w-100 @methodeType">
+                                        <span class="notice-card__icon">@item.Methode</span>
+                                    </section>
+                                </td>
+
                                 <td>@item.Endpoint</td>
                                 @if (@item.IsActive)
                                 {
@@ -78,10 +102,8 @@
                                 }
                                 <td>
                                     <div class="table-data-feature">
-                                        <a href="#" class="item" type="button" data-bs-toggle="tooltip" title="Send"><i class="fa-solid fa-paper-plane"></i></a>
-                                        <a href="#" class="item" type="button" data-bs-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="#" class="item" type="button" data-bs-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash"></i></a>
-                                        <a href="#" class="item" type="button" data-bs-toggle="tooltip" title="More"><i class="fa-solid fa-ellipsis-vertical"></i></a>
+                                        <a href="/dynamicpolicy/update?id=@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="/dynamicpolicy/delete?id=@item.Id" class="item btn-delete" type="button" data-bs-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -92,3 +114,34 @@
         </section>
     </div>
 </div>
+
+@if (TempData[TempDataExtension.NotificationKey] is string notificationJson)
+{
+    @section Scripts {
+        <script>
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const payload = @Html.Raw(notificationJson);
+
+                // 1. Konsola teknik detayları gruplanmış şekilde bas
+                console.groupCollapsed(`%c[UI API Error] ${payload.statusCode} ${payload.statusText}`, "color: #ff4d4f; font-weight: bold;");
+                console.error("Teknik Mesaj:", payload.technicalMessage || "Detay belirtilmemiş");
+                console.info("Zaman (UTC):", payload.timestamp);
+                console.debug("Ham Payload:", payload);
+                console.groupEnd();
+
+                // 2. Arayüze sadece kullanıcının anlayacağı sade pop-up'ı bas
+                if (typeof Swal !== "undefined") {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: payload.type,
+                        title: payload.title,
+                        text: payload.userMessage,
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                }
+            });
+        </script>
+    }
+}

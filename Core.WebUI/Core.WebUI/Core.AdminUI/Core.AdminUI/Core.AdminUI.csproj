@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="17.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Core.WebUI.Application\Core.WebUI.Application.csproj" />
     <ProjectReference Include="..\..\Core.WebUI.Configuration\Core.WebUI.Configuration.csproj" />
   </ItemGroup>

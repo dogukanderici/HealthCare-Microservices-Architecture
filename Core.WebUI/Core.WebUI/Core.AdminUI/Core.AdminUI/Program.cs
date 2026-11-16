@@ -1,3 +1,4 @@
+using Core.AdminUI.Mappings;
 using Core.AdminUI.Middlewares.BearerMiddleware;
 using Core.WebUI.Application.Commons.Parameters;
 using Core.WebUI.Configuration.Extensions;
@@ -37,6 +38,9 @@ builder.Services.AddHttpClient("ApiHttpClient", cfg =>
 {
     cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:WorkflowEngine:ServiceBaseUrl"]);
 }).AddHttpMessageHandler<AccessTokenDelegationHandler>();
+
+// Auto Mapper Configuration
+builder.Services.AddAutoMapper(cfg => { }, typeof(AutoMapperAssemblyMarker));
 
 // Services Configuration
 builder.Services.AddHttpClientServices();
