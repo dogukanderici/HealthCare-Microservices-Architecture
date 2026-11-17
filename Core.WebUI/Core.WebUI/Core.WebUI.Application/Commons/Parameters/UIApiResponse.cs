@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http.Json;
 using System.Net.Mail;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -50,8 +51,33 @@ namespace Core.WebUI.Application.Commons.Parameters
             };
         }
 
-        public static UIApiResponse<T> Error(HttpResponseMessage response)
+        public static async Task<UIApiResponse<T>> ErrorAsync(HttpResponseMessage response)
         {
+            if (response.Content.Headers.ContentLength == 0)
+                return Fail($"Server Error: {(int)response.StatusCode} ({response.ReasonPhrase})");
+
+            try
+            {
+                SystemProblemDetails problems = await response.Content.ReadFromJsonAsync<SystemProblemDetails>();
+
+                if (problems.Errors.Any())
+                {
+                    string combinedErrors = string.Join(" | ", problems.Errors.SelectMany(e => e.Value));
+
+                    return Fail(combinedErrors);
+                }
+
+                if (!string.IsNullOrWhiteSpace(problems?.Detail))
+                    return Fail(problems.Detail);
+
+                if (!string.IsNullOrWhiteSpace(problems?.Title))
+                    return Fail(problems.Title);
+            }
+            catch(JsonException)
+            {
+
+            }
+
             return new UIApiResponse<T>
             {
                 Status = false,

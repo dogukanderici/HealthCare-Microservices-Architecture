@@ -1,0 +1,61 @@
+﻿<!-- Silme Onay Pop-up (Command Palette iskeleti) -->
+<div id="delete-policy-modal" class="cmdk-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+    <div class="cmdk-panel" style="max-width: 520px; padding: 0; overflow: hidden;">
+        
+        <!-- Başlık -->
+        <div class="cmdk-input-wrap" style="justify-content: space-between; border-bottom: 1px solid #eef0f3;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <i class="fa-solid fa-triangle-exclamation text-danger" aria-hidden="true"></i>
+                <strong id="delete-modal-title" style="font-size: 15px;">API Endpoint Silme Onayı</strong>
+            </div>
+            <kbd class="cmdk-hint" id="btn-close-delete-modal" style="cursor: pointer;">esc</kbd>
+        </div>
+
+        <!-- Salt Okunur Bilgiler & Form -->
+        <form id="delete-api-policy-form" asp-controller="DynamicPolicy" asp-action="Delete" method="post" style="padding: 20px;">
+            <input type="hidden" id="delete-policy-id" name="id" value="" />
+
+            <p class="text-muted mb-3" style="font-size: 13.5px;">
+                Aşağıdaki API endpoint kaydını kalıcı olarak silmek istediğinize emin misiniz?
+            </p>
+
+            <!-- Endpoint Bilgisi -->
+            <div class="mb-3 p-2 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                <label class="d-block text-muted mb-1" style="font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px;">Endpoint</label>
+                <label id="lbl-delete-endpoint" class="fw-semibold text-dark mb-0" style="font-size: 14px; word-break: break-all;">-</label>
+            </div>
+
+            <!-- HTTP Methode ve Durum -->
+            <div class="row mb-4 g-2">
+                <div class="col-6">
+                    <div class="p-2 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                        <label class="d-block text-muted mb-1" style="font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px;">HTTP Methode</label>
+                        <label id="lbl-delete-methode" class="fw-semibold text-dark mb-0" style="font-size: 14px;">-</label>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="p-2 rounded" style="background-color: #f8fafc; border: 1px solid #e2e8f0;">
+                        <label class="d-block text-muted mb-1" style="font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.5px;">Durum</label>
+                        <label id="lbl-delete-status" class="fw-semibold text-dark mb-0" style="font-size: 14px;">-</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Aksiyon Butonları -->
+            <div class="d-flex justify-content-end gap-2">
+                <button type="button" id="btn-cancel-delete" class="btn btn-outline-secondary">
+                    <i class="fa-regular fa-circle-xmark"></i>&nbsp;Vazgeç
+                </button>
+                <button type="submit" class="btn btn-danger">
+                    <i class="fa-solid fa-trash"></i>&nbsp;Evet, Sil
+                </button>
+            </div>
+        </form>
+
+        <!-- Alt Bilgi -->
+        <div class="cmdk-footer">
+            <span>Bu işlem geri alınamaz</span>
+            <span><kbd>ESC</kbd> kapat</span>
+        </div>
+    </div>
+</div>

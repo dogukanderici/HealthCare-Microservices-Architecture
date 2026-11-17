@@ -30,9 +30,10 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.GetAsync("dynamicpolicies");
 
+            string jsonData = await response.Content.ReadAsStringAsync();
+
             if (response.IsSuccessStatusCode)
             {
-                string jsonData = await response.Content.ReadAsStringAsync();
 
                 ApiServiceResponse<IReadOnlyCollection<DynamicPolicyResultDto>> apiServiceResponse =
                     JsonConvert.DeserializeObject<ApiServiceResponse<IReadOnlyCollection<DynamicPolicyResultDto>>>(jsonData);
@@ -45,7 +46,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
                 return UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>>.Fail(apiServiceResponse.Message);
             }
 
-            return UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>>.Error(response);
+            return await UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>>.ErrorAsync(response);
         }
 
         public async Task<UIApiResponse<DynamicPolicyResultDto>> GetAsync(Guid id)
@@ -54,9 +55,10 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.GetAsync($"dynamicpolicies/{id}");
 
+            string jsonData = await response.Content.ReadAsStringAsync();
+
             if (response.IsSuccessStatusCode)
             {
-                string jsonData = await response.Content.ReadAsStringAsync();
 
                 ApiServiceResponse<DynamicPolicyResultDto> apiServiceResponse =
                     JsonConvert.DeserializeObject<ApiServiceResponse<DynamicPolicyResultDto>>(jsonData);
@@ -67,20 +69,19 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
                 return UIApiResponse<DynamicPolicyResultDto>.Fail(apiServiceResponse.Message);
             }
 
-            return UIApiResponse<DynamicPolicyResultDto>.Error(response);
+            return await UIApiResponse<DynamicPolicyResultDto>.ErrorAsync(response);
         }
 
         public async Task<UIApiResponse<bool>> CreateAsync(DynamicPolicyCreateDto createDto)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            string createData = JsonConvert.SerializeObject(createDto);
-
             HttpResponseMessage response = await client.PostAsJsonAsync("dynamicpolicies", createDto);
+
+            string responseContent = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
             {
-                string responseContent = await response.Content.ReadAsStringAsync();
                 ApiServiceResponse<Guid> apiResponse = JsonConvert.DeserializeObject<ApiServiceResponse<Guid>>(responseContent);
 
                 if (apiResponse.IsSuccess)
@@ -89,20 +90,19 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
                     return UIApiResponse<bool>.Fail(apiResponse.Message);
             }
 
-            return UIApiResponse<bool>.Error(response);
+            return await UIApiResponse<bool>.ErrorAsync(response);
         }
 
         public async Task<UIApiResponse<bool>> UpdateAsync(DynamicPolicyUpdateDto updateDto)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            string jsonData = JsonConvert.SerializeObject(updateDto);
+            HttpResponseMessage response = await client.PutAsJsonAsync("dynamicpolicies", updateDto);
 
-            HttpResponseMessage response = await client.PutAsJsonAsync("dynamicpolicies", jsonData);
+            string strData = await response.Content.ReadAsStringAsync();
 
             if (response.IsSuccessStatusCode)
             {
-                string strData = await response.Content.ReadAsStringAsync();
 
                 ApiServiceResponse<DateTimeOffset> apiServiceResponse = JsonConvert.DeserializeObject<ApiServiceResponse<DateTimeOffset>>(strData);
 
@@ -112,7 +112,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
                 return UIApiResponse<bool>.Fail(apiServiceResponse.Message);
             }
 
-            return UIApiResponse<bool>.Error(response);
+            return await UIApiResponse<bool>.ErrorAsync(response);
         }
 
         public async Task<UIApiResponse<bool>> DeleteAsync(Guid id)
@@ -121,9 +121,10 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.DeleteAsync($"dynamicpolicies/{id}");
 
+            string strData = await response.Content.ReadAsStringAsync();
+
             if (response.IsSuccessStatusCode)
             {
-                string strData = await response.Content.ReadAsStringAsync();
 
                 ApiServiceResponse<bool> apiServiceResponse = JsonConvert.DeserializeObject<ApiServiceResponse<bool>>(strData);
 
@@ -133,7 +134,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
                 return UIApiResponse<bool>.Fail(apiServiceResponse.Message);
             }
 
-            return UIApiResponse<bool>.Error(response);
+            return await UIApiResponse<bool>.ErrorAsync(response);
         }
     }
 }

@@ -77,7 +77,7 @@ namespace Core.AdminUI.Controllers
             return Redirect("/dynamicpolicy");
         }
 
-        [HttpPut("Update")]
+        [HttpPost("Update")]
         public async Task<IActionResult> Update(DynamicPolicyUpdateModel model)
         {
             UIApiResponse<bool> serviceResponse = await _service.UpdateAsync(model.ModelData);
@@ -94,7 +94,7 @@ namespace Core.AdminUI.Controllers
             return View(model);
         }
 
-        [HttpDelete]
+        [HttpPost("Delete")]
         public async Task<IActionResult> Delete(Guid id)
         {
             UIApiResponse<bool> serviceResponse = await _service.DeleteAsync(id);
