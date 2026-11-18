@@ -15,6 +15,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
     public class ProcessDefinitionService : BaseService, IProcessDefinitionService
     {
         protected override string ServiceBaseUrl { get; set; }
+        protected override string Endpoint { get; set; }
         protected override string HttpClientName { get; set; }
 
         private readonly IConfiguration _config;
@@ -27,6 +28,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
             _config = config;
 
             ServiceBaseUrl = _config.GetSection("ApiSetting:WorkflowEngine:ServiceBaseUrl").Value;
+            Endpoint = _config.GetSection("ApiSetting:WorkflowEngine:ProcessDefinition").Value;
             HttpClientName = _config.GetSection("ApiSetting:ApiHttpClientName").Value;
         }
 
@@ -34,7 +36,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            HttpResponseMessage response = await client.GetAsync("processes");
+            HttpResponseMessage response = await client.GetAsync(Endpoint);
 
             if (response.IsSuccessStatusCode)
             {
@@ -73,6 +75,11 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
         public override int GetHashCode()
         {
             return HashCode.Combine(_config);
+        }
+
+        public Task<UIApiResponse<IReadOnlyCollection<ProcessDefinitionResultDto>>> GetListAsync(Guid? id = null)
+        {
+            throw new NotImplementedException();
         }
     }
 }

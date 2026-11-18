@@ -10,7 +10,7 @@ namespace Core.WebUI.Application.Interfaces.Services
 {
     public interface IBaseService<TResultDto, TCreateDto, TUpdateDto>
     {
-        Task<UIApiResponse<IReadOnlyCollection<TResultDto>>> GetListAsync();
+        Task<UIApiResponse<IReadOnlyCollection<TResultDto>>> GetListAsync(Guid? id = null);
         Task<UIApiResponse<TResultDto>> GetAsync(Guid id);
         Task<UIApiResponse<bool>> CreateAsync(TCreateDto createDto);
         Task<UIApiResponse<bool>> UpdateAsync(TUpdateDto updateDto);

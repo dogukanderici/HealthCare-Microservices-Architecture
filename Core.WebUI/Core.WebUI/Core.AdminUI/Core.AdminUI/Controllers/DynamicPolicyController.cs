@@ -31,7 +31,10 @@ namespace Core.AdminUI.Controllers
             model.Status = serviceResponse.Status;
             model.ModelData = serviceResponse.Data;
 
-            return View(model);
+            ViewResult view = View(model); // İsteğin başarılı olması durumu
+            RedirectResult redirect = Redirect("/home/index"); // İsteğin başarız olması durumu
+
+            return serviceResponse.ReturnControllerResult(view, redirect);
         }
 
         [HttpGet("Create")]
@@ -47,15 +50,20 @@ namespace Core.AdminUI.Controllers
         {
             UIApiResponse<bool> serviceResponse = await _service.CreateAsync(model.CreateDto);
 
-            if (serviceResponse.Status)
-            {
-                TempData.SetNotification(serviceResponse, NotificationType.Success, "İşlem Başarılı!");
-                return Redirect("/dynamicpolicy");
-            }
+            RedirectResult redirect = Redirect("/dynamicpolicy"); // İsteğin başarılı olması durumu
+            ViewResult view = View(model); // İsteğin başarız olması durumu
 
-            TempData.SetNotification(serviceResponse, NotificationType.Error, "Bir Hata Oluştu!");
+            return serviceResponse.ReturnControllerResult(redirect, view, TempData);
 
-            return View(model.CreateDto);
+            //if (serviceResponse.Status)
+            //{
+            //    TempData.SetNotification(serviceResponse, NotificationType.Success, "İşlem Başarılı!");
+            //    return Redirect("/dynamicpolicy");
+            //}
+
+            //TempData.SetNotification(serviceResponse, NotificationType.Error, "Bir Hata Oluştu!");
+
+            //return View(model.CreateDto);
         }
 
         [HttpGet("Update")]
@@ -82,16 +90,21 @@ namespace Core.AdminUI.Controllers
         {
             UIApiResponse<bool> serviceResponse = await _service.UpdateAsync(model.ModelData);
 
-            if (serviceResponse.Status)
-            {
-                TempData.SetNotification(serviceResponse, NotificationType.Success, "İşlem Başarılı!");
+            RedirectResult redirect = Redirect("/dynamicpolicy"); // İsteğin başarılı olması durumu
+            ViewResult view = View(model); // İsteğin başarız olması durumu
 
-                return Redirect("/dynamicpolicy");
-            }
+            return serviceResponse.ReturnControllerResult(redirect, view, TempData);
 
-            TempData.SetNotification(serviceResponse, NotificationType.Error, "Bir Hata Oluştu!");
+            //if (serviceResponse.Status)
+            //{
+            //    TempData.SetNotification(serviceResponse, NotificationType.Success, "İşlem Başarılı!");
 
-            return View(model);
+            //    return Redirect("/dynamicpolicy");
+            //}
+
+            //TempData.SetNotification(serviceResponse, NotificationType.Error, "Bir Hata Oluştu!");
+
+            //return View(model);
         }
 
         [HttpPost("Delete")]
@@ -99,16 +112,20 @@ namespace Core.AdminUI.Controllers
         {
             UIApiResponse<bool> serviceResponse = await _service.DeleteAsync(id);
 
-            if (serviceResponse.Status)
-            {
-                TempData.SetNotification(serviceResponse, NotificationType.Success, "İşlem Başarılı!");
+            RedirectResult redirect = Redirect("/dynamicpolicy"); // İsteğin başarılı olması durumu
 
-                return Redirect("/dynamicpolicy");
-            }
+            return serviceResponse.ReturnControllerResult(redirect, TempData);
 
-            TempData.SetNotification(serviceResponse, NotificationType.Error, "Bir Hata Oluştu!");
+            //if (serviceResponse.Status)
+            //{
+            //    TempData.SetNotification(serviceResponse, NotificationType.Success, "İşlem Başarılı!");
 
-            return Redirect("/dynamicpolicy");
+            //    return Redirect("/dynamicpolicy");
+            //}
+
+            //TempData.SetNotification(serviceResponse, NotificationType.Error, "Bir Hata Oluştu!");
+
+            //return Redirect("/dynamicpolicy");
         }
     }
 }

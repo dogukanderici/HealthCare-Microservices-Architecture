@@ -1,0 +1,111 @@
+﻿@model DynamicRoleResultModel<IReadOnlyCollection<DynamicRoleResultDto>>
+@using Core.AdminUI.Commons.Extensions
+
+@{
+    ViewData["Title"] = "Dinamik Yetki Rolleri";
+    Layout = "~/Views/UILayout/Index.cshtml";
+    string methodeType = "notice-card--info";
+    string notificationJson = TempData[TempDataExtension.NotificationKey] as string;
+}
+
+<div class="row row-tight" style="margin-top: 16px;">
+    <div class="col-md-12">
+        <section class="m-card" aria-labelledby="dynamicpolicy-title">
+            <header class="m-card__header">
+                <div>
+                    <h2 class="m-card__title" id="dynamicpolicy-title">Dinamik Api Yetki Rolleri</h2>
+                    <p class="m-card__subtitle">Api endpoint erişim sağlayacak kullanıcı rolleri tanımları</p>
+                </div>
+            </header>
+            <div class="table-data__tool">
+                <div class="table-data__tool-right">
+                    <a href="/dynamicrole/create/@Model.PolicyId" class="au-btn au-btn--green au-btn--small">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni Rol Ekle
+                    </a>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-data2">
+                    <thead>
+                        <tr>
+                            <th>Methode Type</th>
+                            <th>Endpoint</th>
+                            <th>Rol Name</th>
+                            <th>Durum</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ModelData)
+                        {
+                            <tr>
+                                @Html.HiddenFor(x => item.DynamicPolicyId)
+                                @Html.HiddenFor(x => item.AllowedRoleId)
+
+                                @if (item.DynamicPolicy.Methode == "GET")
+                                {
+                                    methodeType = "notice-card--info";
+                                }
+                                else if (item.DynamicPolicy.Methode == "POST")
+                                {
+                                    methodeType = "notice-card--success";
+                                }
+                                else if (item.DynamicPolicy.Methode == "PUT")
+                                {
+                                    methodeType = "notice-card--warning";
+                                }
+                                else if (item.DynamicPolicy.Methode == "DELETE")
+                                {
+                                    methodeType = "notice-card--danger";
+                                }
+                                
+                                <td>
+                                    <section class="@methodeType">
+                                        <span class="w-auto notice-card__icon">@item.DynamicPolicy.Methode</span>
+                                    </section>
+                                </td>
+                                
+                                <td>@item.DynamicPolicy.Endpoint</td>
+                                <td>@item.SyncedRole.Name</td>
+
+                                @if (@item.IsActive)
+                                {
+                                    <td>
+                                        <section class="notice-card--success">
+                                            <span class="notice-card__icon"><i class="fa-solid fa-circle-check"></i></span>
+                                        </section>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <section class="notice-card--danger">
+                                            <span class="notice-card__icon"><i class="fa-solid fa-circle-xmark"></i></span>
+                                        </section>
+                                    </td>
+                                }
+                                <td>
+                                    <div class="table-data-feature">
+                                        <a href="/dynamicrole/update/@item.DynamicPolicyId/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Güncelle"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="/dynamicrole/delete/@item.DynamicPolicyId/@item.Id" class="item btn-delete" type="button" data-bs-toggle="tooltip" title="Sil"><i class="fa-solid fa-trash"></i></a>
+                                        @* <a href="javascript:void(0)"
+                                           class="item btn-delete"
+                                           type="button"
+                                           data-bs-toggle="tooltip"
+                                           title="Delete"
+                                           data-id="@item.Id"
+                                           data-endpoint="@item.Endpoint"
+                                           data-methode="@item.Methode"
+                                           data-isactive="@(item.IsActive ? "Aktif" : "Pasif")">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a> *@
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>

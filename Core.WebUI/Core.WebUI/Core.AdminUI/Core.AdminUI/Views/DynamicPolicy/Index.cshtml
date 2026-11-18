@@ -103,13 +103,14 @@
                                 }
                                 <td>
                                     <div class="table-data-feature">
-                                        <a href="/dynamicpolicy/update?id=@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Edit"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        @* <a href="/dynamicpolicy/delete?id=@item.Id" class="item btn-delete" type="button" data-bs-toggle="tooltip" title="Delete"><i class="fa-solid fa-trash"></i></a> *@
+                                        <a href="/dynamicrole/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Yeni Rol Ekle"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        <a href="/dynamicpolicy/update?id=@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Güncelle"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        @* <a href="/dynamicpolicy/delete?id=@item.Id" class="item btn-delete" type="button" data-bs-toggle="tooltip" title="Sil"><i class="fa-solid fa-trash"></i></a> *@
                                         <a href="javascript:void(0)"
                                            class="item btn-delete"
                                            type="button"
                                            data-bs-toggle="tooltip"
-                                           title="Delete"
+                                           title="Sil"
                                            data-id="@item.Id"
                                            data-endpoint="@item.Endpoint"
                                            data-methode="@item.Methode"

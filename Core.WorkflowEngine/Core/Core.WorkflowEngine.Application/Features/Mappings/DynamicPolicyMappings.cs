@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.WorkflowEngine.Application.Features.Mediator.Commands.DynamicPolicyCommands;
 using Core.WorkflowEngine.Application.Features.Mediator.Results.DynamicPolicyResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.DynamicPolicyResults.Shared;
 using Core.WorkflowEngine.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace Core.WorkflowEngine.Application.Features.Mappings
             CreateMap<DynamicPolicy, CreateDynamicPolicyCommand>().ReverseMap();
             CreateMap<DynamicPolicy, UpdateDynamicPolicyCommand>().ReverseMap();
             CreateMap<DynamicPolicy, DeleteDynamicPolicyCommand>().ReverseMap();
+
+            CreateMap<DynamicPolicy, SharedDynamicPolicyResult>().ReverseMap();
         }
     }
 }

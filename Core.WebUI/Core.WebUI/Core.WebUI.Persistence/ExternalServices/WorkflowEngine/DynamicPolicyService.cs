@@ -11,6 +11,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
     {
 
         protected override string ServiceBaseUrl { get; set; }
+        protected override string Endpoint { get; set; }
         protected override string HttpClientName { get; set; }
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _configuration;
@@ -21,14 +22,15 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
             _configuration = configuration;
 
             ServiceBaseUrl = _configuration.GetSection("ApiSetting:WorkflowEngine:ServiceBaseUrl").Value;
+            Endpoint = _configuration.GetSection("ApiSetting:WorkflowEngine:APIUrl:DynamicPolicy").Value;
             HttpClientName = _configuration.GetSection("ApiSetting:ApiHttpClientName").Value;
         }
 
-        public async Task<UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>>> GetListAsync()
+        public async Task<UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>>> GetListAsync(Guid? id = null)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            HttpResponseMessage response = await client.GetAsync("dynamicpolicies");
+            HttpResponseMessage response = await client.GetAsync(Endpoint);
 
             string jsonData = await response.Content.ReadAsStringAsync();
 
@@ -53,7 +55,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            HttpResponseMessage response = await client.GetAsync($"dynamicpolicies/{id}");
+            HttpResponseMessage response = await client.GetAsync($"{Endpoint}/{id}");
 
             string jsonData = await response.Content.ReadAsStringAsync();
 
@@ -76,7 +78,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            HttpResponseMessage response = await client.PostAsJsonAsync("dynamicpolicies", createDto);
+            HttpResponseMessage response = await client.PostAsJsonAsync(Endpoint, createDto);
 
             string responseContent = await response.Content.ReadAsStringAsync();
 
@@ -97,7 +99,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            HttpResponseMessage response = await client.PutAsJsonAsync("dynamicpolicies", updateDto);
+            HttpResponseMessage response = await client.PutAsJsonAsync(Endpoint, updateDto);
 
             string strData = await response.Content.ReadAsStringAsync();
 
@@ -119,7 +121,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            HttpResponseMessage response = await client.DeleteAsync($"dynamicpolicies/{id}");
+            HttpResponseMessage response = await client.DeleteAsync($"{Endpoint}/{id}");
 
             string strData = await response.Content.ReadAsStringAsync();
 

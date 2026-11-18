@@ -29,8 +29,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.DynamicRole
         {
             DBQueryOptions<DynamicRole> dBQueryOptions = new DBQueryOptions<DynamicRole>();
             dBQueryOptions.filter = x => (
-                (!request.DynamicPolicyId.HasValue || x.DynamicPolicyId == request.DynamicPolicyId) &&
-                (!request.AllowedRoleId.HasValue || x.AllowedRoleId == request.AllowedRoleId) &&
+                ((!request.DynamicPolicyId.HasValue || (request.DynamicPolicyId == Guid.Empty)) || x.DynamicPolicyId == request.DynamicPolicyId) &&
+                ((!request.AllowedRoleId.HasValue || (request.AllowedRoleId == Guid.Empty)) || x.AllowedRoleId == request.AllowedRoleId) &&
                 (string.IsNullOrEmpty(request.Methode) || x.DynamicPolicy.Methode == request.Methode) &&
                 (string.IsNullOrEmpty(request.Endpoint) || x.DynamicPolicy.Endpoint == request.Endpoint) &&
                 (!request.IsActive.HasValue || x.IsActive == request.IsActive)

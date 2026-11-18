@@ -9,6 +9,7 @@ namespace Core.WebUI.Persistence.ExternalServices
     public abstract class BaseService
     {
         protected abstract string ServiceBaseUrl { get; set; }
+        protected abstract string Endpoint { get; set; }
         protected abstract string HttpClientName { get; set; }
     }
 }
