@@ -13,6 +13,6 @@ namespace Core.WebUI.Application.Dtos.WorkflowEngineDtos.DynamicRoleDtos
         public Guid allowedRoleId { get; set; }
         public string methode { get; set; }
         public string endpoint { get; set; }
-        public bool isActive { get; set; }
+        public bool isActive { get; set; } = true;
     }
 }

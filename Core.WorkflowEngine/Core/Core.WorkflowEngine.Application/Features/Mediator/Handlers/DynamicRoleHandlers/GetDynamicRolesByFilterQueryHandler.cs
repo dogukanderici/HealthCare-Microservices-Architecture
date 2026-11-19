@@ -37,8 +37,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.DynamicRole
             );
 
             dBQueryOptions.includes = [
-                    x=>x.SyncedRole
-                ];
+                x=>x.DynamicPolicy,
+                y=>y.SyncedRole
+            ];
 
             InternalServiceResponse<IReadOnlyCollection<GetDynamicRolesByFilterQueryResult>> serviceResponse =
                 await _queryService.GetDatasByFilterAsync<GetDynamicRolesByFilterQueryResult>(dBQueryOptions);

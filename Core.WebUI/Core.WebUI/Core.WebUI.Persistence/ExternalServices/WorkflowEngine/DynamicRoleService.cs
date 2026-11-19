@@ -3,6 +3,7 @@ using Core.WebUI.Application.Dtos.WorkflowEngineDtos.DynamicRoleDtos;
 using Core.WebUI.Application.Interfaces.Services.WorkflowEngine;
 using Core.WebUI.Persistence.Commons.Extensions;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using System.Net.Http.Json;
 
 namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine

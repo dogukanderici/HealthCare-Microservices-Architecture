@@ -1,4 +1,5 @@
-﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.SyncedRoleResults.Shared;
+﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.DynamicPolicyResults.Shared;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.SyncedRoleResults.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Results.DynamicRoleR
         public bool IsActive { get; set; }
 
         // Relations
+        public SharedDynamicPolicyResult DynamicPolicy { get; set; }
         public SharedSyncedRoleResult SyncedRole { get; set; }
     }
 }

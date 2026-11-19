@@ -1,4 +1,7 @@
 ﻿using Core.WebUI.Application.Interfaces.Services.AuthService;
+using Core.WebUI.Application.Interfaces.Services.IdentityServer.RoleService;
+using Core.WebUI.Application.Interfaces.Services.IdentityServer.UserRoleService;
+using Core.WebUI.Application.Interfaces.Services.IdentityServer.UserService;
 using Core.WebUI.Application.Interfaces.Services.WorkflowEngine;
 using Core.WebUI.Persistence.ExternalServices.IdentityServer;
 using Core.WebUI.Persistence.ExternalServices.WorkflowEngine;
@@ -17,6 +20,9 @@ namespace Core.WebUI.Configuration.Extensions
         public static IServiceCollection AddHttpClientServices(this IServiceCollection services)
         {
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserRoleService, UserRoleService>();
 
             services.AddScoped<IProcessDefinitionService, ProcessDefinitionService>();
             services.AddScoped<IDynamicPolicyService, DynamicPolicyService>();

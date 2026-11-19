@@ -28,7 +28,7 @@ namespace Core.AdminUI.Controllers
             DynamicRoleQueryDto filter = new DynamicRoleQueryDto();
             filter.dynamicPolicyId = policyId;
 
-            UIApiResponse<IReadOnlyCollection<DynamicRoleResultDto>> serviceResponse = await _service.GetListAsync(policyId);
+            UIApiResponse<IReadOnlyCollection<DynamicRoleResultDto>> serviceResponse = await _service.GetListWithFilterAsync(filter);
 
             DynamicRoleResultModel<IReadOnlyCollection<DynamicRoleResultDto>> model = new DynamicRoleResultModel<IReadOnlyCollection<DynamicRoleResultDto>>();
             model.ModelData = serviceResponse.Data;
@@ -55,7 +55,7 @@ namespace Core.AdminUI.Controllers
             return serviceResponse.ReturnControllerResult(view, redirect);
         }
 
-        [HttpGet("Create/{policyId}")]
+        [HttpGet("Create/{policyId:guid}")]
         public IActionResult Create(Guid policyId)
         {
             DynamicRoleCreateModel model = new DynamicRoleCreateModel();

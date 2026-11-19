@@ -42,30 +42,33 @@
                                 @Html.HiddenFor(x => item.DynamicPolicyId)
                                 @Html.HiddenFor(x => item.AllowedRoleId)
 
-                                @if (item.DynamicPolicy.Methode == "GET")
+                                @if (item.DynamicPolicy != null)
                                 {
-                                    methodeType = "notice-card--info";
-                                }
-                                else if (item.DynamicPolicy.Methode == "POST")
-                                {
-                                    methodeType = "notice-card--success";
-                                }
-                                else if (item.DynamicPolicy.Methode == "PUT")
-                                {
-                                    methodeType = "notice-card--warning";
-                                }
-                                else if (item.DynamicPolicy.Methode == "DELETE")
-                                {
-                                    methodeType = "notice-card--danger";
+                                    @if (item.DynamicPolicy.Methode == "GET")
+                                    {
+                                        methodeType = "notice-card--info";
+                                    }
+                                    else if (item.DynamicPolicy.Methode == "POST")
+                                    {
+                                        methodeType = "notice-card--success";
+                                    }
+                                    else if (item.DynamicPolicy.Methode == "PUT")
+                                    {
+                                        methodeType = "notice-card--warning";
+                                    }
+                                    else if (item.DynamicPolicy.Methode == "DELETE")
+                                    {
+                                        methodeType = "notice-card--danger";
+                                    }
                                 }
                                 
                                 <td>
                                     <section class="@methodeType">
-                                        <span class="w-auto notice-card__icon">@item.DynamicPolicy.Methode</span>
+                                        <span class="w-auto notice-card__icon">@item.DynamicPolicy?.Methode</span>
                                     </section>
                                 </td>
                                 
-                                <td>@item.DynamicPolicy.Endpoint</td>
+                                <td>@item.DynamicPolicy?.Endpoint</td>
                                 <td>@item.SyncedRole.Name</td>
 
                                 @if (@item.IsActive)
