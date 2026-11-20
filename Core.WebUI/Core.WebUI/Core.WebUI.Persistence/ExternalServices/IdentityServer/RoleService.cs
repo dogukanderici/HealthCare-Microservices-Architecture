@@ -1,7 +1,9 @@
 ﻿using Core.WebUI.Application.Commons.Parameters;
 using Core.WebUI.Application.Dtos.IdentityDtos.RoleDtos;
 using Core.WebUI.Application.Interfaces.Services.IdentityServer.RoleService;
+using Core.WebUI.Persistence.Commons.Extensions;
 using Microsoft.Extensions.Configuration;
+using System.Net.Http.Json;
 
 namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
 {
@@ -21,32 +23,64 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
 
             ServiceBaseUrl = _configuration.GetSection("ApiSetting:IdentityServerBaseUrl").Value;
             Endpoint = _configuration.GetSection("ApiSetting:IdentityServer:APIUrl:Role").Value;
-            HttpClientName = _configuration.GetSection("ApiSetting:HttpClientName").Value;
+            //HttpClientName = _configuration.GetSection("ApiSetting:HttpClientName").Value;
+            HttpClientName = _configuration.GetSection("ApiSetting:IdentityServer:APIClientName").Value;
         }
 
-        public Task<UIApiResponse<IReadOnlyCollection<RoleResultDto>>> GetListAsync(Guid? id = null)
+        public async Task<UIApiResponse<IReadOnlyCollection<RoleResultDto>>> GetListAsync(Guid? id = null)
         {
-            throw new NotImplementedException();
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.GetAsync(Endpoint);
+
+            ApiServiceResponse<IReadOnlyCollection<RoleResultDto>> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<IReadOnlyCollection<RoleResultDto>>>();
+
+            return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
-        public Task<UIApiResponse<RoleResultDto>> GetAsync(Guid id)
+        public async Task<UIApiResponse<RoleResultDto>> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.GetAsync($"{Endpoint}?id={id}");
+
+            ApiServiceResponse<RoleResultDto> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<RoleResultDto>>();
+
+            return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
-        public Task<UIApiResponse<bool>> CreateAsync(RoleCreateDto createDto)
+        public async Task<UIApiResponse<bool>> CreateAsync(RoleCreateDto createDto)
         {
-            throw new NotImplementedException();
+
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync(Endpoint, createDto);
+
+            ApiServiceResponse<bool> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+
+            return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
-        public Task<UIApiResponse<bool>> UpdateAsync(RoleUpdateDto updateDto)
+        public async Task<UIApiResponse<bool>> UpdateAsync(RoleUpdateDto updateDto)
         {
-            throw new NotImplementedException();
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.PutAsJsonAsync(Endpoint, updateDto);
+
+            ApiServiceResponse<bool> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+
+            return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
-        public Task<UIApiResponse<bool>> DeleteAsync(Guid id)
+        public async Task<UIApiResponse<bool>> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.DeleteAsync($"{Endpoint}?id={id}");
+
+            ApiServiceResponse<bool> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+
+            return await serviceResponse.ReturnServiceResultAsync(response);
         }
     }
 }

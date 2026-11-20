@@ -28,11 +28,17 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // DelegatingHandler Configuration
 builder.Services.AddTransient<AccessTokenDelegationHandler>();
 
-// HttpClient Service Configurations
+// HttpClient Service Configuration For Login ( no need bearer )
 builder.Services.AddHttpClient("IdentityServerClient", cfg =>
 {
     cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:IdentityServerBaseUrl"]);
 });
+
+// HttpClient Service Configurations
+builder.Services.AddHttpClient("IdentityServerAPIClient", cfg =>
+{
+    cfg.BaseAddress = new Uri(builder.Configuration["ApiSetting:IdentityServerBaseUrl"]);
+}).AddHttpMessageHandler<AccessTokenDelegationHandler>();
 
 builder.Services.AddHttpClient("ApiHttpClient", cfg =>
 {

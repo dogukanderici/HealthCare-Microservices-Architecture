@@ -93,7 +93,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseIdentityServer();
-//app.UseAuthentication(); // Duende IdentityServer yeni versiyonu ile bu ekleme göülü olarak yapýlýyor.
+//app.UseAuthentication(); // Duende IdentityServer yeni versiyonu ile bu ekleme gömülü olarak yapýlýyor.
 app.UseAuthorization();
 
 app.MapControllers();

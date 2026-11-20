@@ -1,26 +1,25 @@
 ﻿using AutoMapper;
-using Core.IdentityServer.Commons.Helpers.RabbitMQ;
 using Core.IdentityServer.Dtos.UserDtos;
 using Core.IdentityServer.Models;
 using Core.IdentityServer.Services.RabbitMQ.Events.Users;
 using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Users;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.IdentityServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserUpdatesController : BaseController
+    public class UsersController : BaseController
     {
         private readonly UserUpdateEventPublisher _publisher;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly ILogger<UserUpdatesController> _logger;
+        private readonly ILogger<UsersController> _logger;
 
-        public UserUpdatesController(UserUpdateEventPublisher publisher, UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<UserUpdatesController> logger)
+        public UsersController(UserUpdateEventPublisher publisher, UserManager<ApplicationUser> userManager, IMapper mapper, ILogger<UsersController> logger)
         {
             _publisher = publisher;
             _userManager = userManager;
@@ -28,9 +27,40 @@ namespace Core.IdentityServer.Controllers
             _logger = logger;
         }
 
-        [HttpPut("{email}")]
+        [HttpGet("{email}")]
+        public async Task<IActionResult> GetAsync(string email)
+        {
+            if (!_userManager.SupportsQueryableUsers)
+            {
+                return StatusCode(501, "User table does not support queryable process!");
+            }
+
+            var normalizedEmail = _userManager.NormalizeEmail(email);
+
+            var user = await _userManager.Users
+                .AsNoTracking()
+                .Where(x => x.NormalizedEmail == normalizedEmail)
+                .Select(x => new
+                {
+                    x.Id,
+                    x.Name,
+                    x.Surname,
+                    x.Email,
+                    x.UserName,
+                })
+                .FirstOrDefaultAsync();
+
+            if (user == null)
+            {
+                return StatusCode(404, "User not found!");
+            }
+
+            return StatusCode(200, user);
+        }
+
+        [HttpPut()]
         [Authorize(AuthenticationSchemes = "IdentityServerAccessToken", Roles = "Admin")]
-        public async Task<IActionResult> UserUpdate(UserUpdateDto userUpdateDto)
+        public async Task<IActionResult> UserUpdate(string email, UserUpdateDto userUpdateDto)
         {
             try
             {

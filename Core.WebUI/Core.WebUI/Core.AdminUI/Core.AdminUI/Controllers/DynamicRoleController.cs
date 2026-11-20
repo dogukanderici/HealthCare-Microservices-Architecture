@@ -2,9 +2,12 @@
 using Core.AdminUI.Commons.Extensions;
 using Core.AdminUI.Models.WorkflowEngineModels.DynamicRoleModels;
 using Core.WebUI.Application.Commons.Parameters;
+using Core.WebUI.Application.Dtos.IdentityDtos.RoleDtos;
 using Core.WebUI.Application.Dtos.WorkflowEngineDtos.DynamicRoleDtos;
+using Core.WebUI.Application.Interfaces.Services.IdentityServer.RoleService;
 using Core.WebUI.Application.Interfaces.Services.WorkflowEngine;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Core.AdminUI.Controllers
 {
@@ -12,14 +15,16 @@ namespace Core.AdminUI.Controllers
     public class DynamicRoleController : BaseController
     {
         private readonly IDynamicRoleService _service;
+        private readonly IRoleService _roleService;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
-        public DynamicRoleController(IDynamicRoleService service, IMapper mapper, IConfiguration configuration)
+        public DynamicRoleController(IDynamicRoleService service, IMapper mapper, IConfiguration configuration, IRoleService roleService)
         {
             _service = service;
             _mapper = mapper;
             _configuration = configuration;
+            _roleService = roleService;
         }
 
         [HttpGet("{policyId:guid}")]
@@ -56,10 +61,25 @@ namespace Core.AdminUI.Controllers
         }
 
         [HttpGet("Create/{policyId:guid}")]
-        public IActionResult Create(Guid policyId)
+        public async Task<IActionResult> Create(Guid policyId)
         {
             DynamicRoleCreateModel model = new DynamicRoleCreateModel();
             model.ModelData.DynamicPolicyId = policyId;
+
+            UIApiResponse<IReadOnlyCollection<RoleResultDto>> roleServiceResponse = await _roleService.GetListAsync();
+
+            if (roleServiceResponse.Status)
+            {
+                if (roleServiceResponse.Data.Any())
+                {
+                    model.Roles = (from item in roleServiceResponse.Data
+                                   select new SelectListItem
+                                   {
+                                       Text = item.Name,
+                                       Value = item.Id.ToString()
+                                   }).ToList();
+                }
+            }
 
             return View(model);
         }

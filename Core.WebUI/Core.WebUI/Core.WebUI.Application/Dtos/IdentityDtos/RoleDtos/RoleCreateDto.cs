@@ -9,6 +9,6 @@ namespace Core.WebUI.Application.Dtos.IdentityDtos.RoleDtos
 {
     public class RoleCreateDto : IDto
     {
-        public string Name { get; set; }
+        public string RoleName { get; set; }
     }
 }

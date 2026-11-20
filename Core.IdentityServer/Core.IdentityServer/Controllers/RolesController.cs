@@ -6,6 +6,7 @@ using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Roles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Core.IdentityServer.Controllers
 {
@@ -27,6 +28,59 @@ namespace Core.IdentityServer.Controllers
             _roleManager = roleManager;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetListAsync()
+        {
+            if (!_roleManager.SupportsQueryableRoles)
+            {
+                return StatusCode(501, "Role table does not support queryable process!");
+            }
+
+            var roles = await _roleManager.Roles
+               .AsNoTracking()
+               .OrderBy(x => x.Name)
+               .Select(x => new
+               {
+                   x.Id,
+                   x.Name
+               })
+               .ToListAsync();
+
+            if (!roles.Any())
+            {
+                return StatusCode(201, "Role table does not contain any role data!");
+            }
+
+            return StatusCode(200, roles);
+        }
+
+        [HttpGet("{id:guid}")]
+        public async Task<IActionResult> GetAsync(Guid id)
+        {
+            if (!_roleManager.SupportsQueryableRoles)
+            {
+                return StatusCode(501, "Role table does not support queryable process!");
+            }
+
+            var roleForId = await _roleManager.Roles
+               .AsNoTracking()
+               .Where(x => x.Id == id.ToString())
+               .OrderBy(x => x.Name)
+               .Select(x => new
+               {
+                   x.Id,
+                   x.Name
+               })
+               .FirstOrDefaultAsync();
+
+            if (roleForId == null)
+            {
+                return StatusCode(201, "Role not found!");
+            }
+
+            return StatusCode(200, roleForId);
         }
 
         [HttpPost]

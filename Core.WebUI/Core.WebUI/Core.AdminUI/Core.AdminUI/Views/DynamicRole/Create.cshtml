@@ -23,12 +23,7 @@
                         <div class="col-6">
                             <label asp-for="@Model.ModelData.AllowedRoleId" class="control-label mb-1">Kullanıcı Rolleri</label>
                             <div class="col-12">
-                                <select id="api-methode" asp-for="@Model.ModelData.AllowedRoleId" class="form-select">
-                                    <option value="GET">GET</option>
-                                    <option value="POST">POST</option>
-                                    <option value="PUT">PUT</option>
-                                    <option value="DELETE">DELETE</option>
-                                </select>
+                                <select id="api-methode" asp-for="@Model.ModelData.AllowedRoleId" asp-items="@Model.Roles" class="form-select"></select>
                             </div>
                         </div>
                         <div class="col-6">
