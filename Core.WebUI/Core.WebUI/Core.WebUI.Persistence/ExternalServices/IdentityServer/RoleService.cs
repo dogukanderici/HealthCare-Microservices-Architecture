@@ -33,6 +33,8 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
 
             HttpResponseMessage response = await client.GetAsync(Endpoint);
 
+            string jsonData = await response.Content.ReadAsStringAsync();
+
             ApiServiceResponse<IReadOnlyCollection<RoleResultDto>> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<IReadOnlyCollection<RoleResultDto>>>();
 
             return await serviceResponse.ReturnServiceResultAsync(response);
@@ -49,25 +51,27 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
             return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
-        public async Task<UIApiResponse<bool>> CreateAsync(RoleCreateDto createDto)
+        public async Task<UIApiResponse<Guid>> CreateAsync(RoleCreateDto createDto)
         {
 
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
             HttpResponseMessage response = await client.PostAsJsonAsync(Endpoint, createDto);
 
-            ApiServiceResponse<bool> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+            string jsonData = await response.Content.ReadAsStringAsync();
+
+            ApiServiceResponse<Guid> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<Guid>>();
 
             return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
-        public async Task<UIApiResponse<bool>> UpdateAsync(RoleUpdateDto updateDto)
+        public async Task<UIApiResponse<DateTimeOffset>> UpdateAsync(RoleUpdateDto updateDto)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
             HttpResponseMessage response = await client.PutAsJsonAsync(Endpoint, updateDto);
 
-            ApiServiceResponse<bool> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+            ApiServiceResponse<DateTimeOffset> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<DateTimeOffset>>();
 
             return await serviceResponse.ReturnServiceResultAsync(response);
         }

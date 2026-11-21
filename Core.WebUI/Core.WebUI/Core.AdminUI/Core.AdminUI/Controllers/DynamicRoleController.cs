@@ -35,6 +35,8 @@ namespace Core.AdminUI.Controllers
 
             UIApiResponse<IReadOnlyCollection<DynamicRoleResultDto>> serviceResponse = await _service.GetListWithFilterAsync(filter);
 
+            UIApiResponse<IReadOnlyCollection<RoleResultDto>> roleServiceResponse = await _roleService.GetListAsync();
+
             DynamicRoleResultModel<IReadOnlyCollection<DynamicRoleResultDto>> model = new DynamicRoleResultModel<IReadOnlyCollection<DynamicRoleResultDto>>();
             model.ModelData = serviceResponse.Data;
             model.PolicyId = policyId;
@@ -84,10 +86,10 @@ namespace Core.AdminUI.Controllers
             return View(model);
         }
 
-        [HttpPost("Create")]
+        [HttpPost("Create/{policyId:guid}")]
         public async Task<IActionResult> Create(DynamicRoleCreateModel model)
         {
-            UIApiResponse<bool> serviceResponse = await _service.CreateAsync(model.ModelData);
+            UIApiResponse<Guid> serviceResponse = await _service.CreateAsync(model.ModelData);
 
             RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{model.ModelData.DynamicPolicyId}");
             ViewResult view = View(model);
@@ -114,7 +116,7 @@ namespace Core.AdminUI.Controllers
         [HttpPost("Update")]
         public async Task<IActionResult> Update(DynamicRoleUpdateModel model)
         {
-            UIApiResponse<bool> serviceResponse = await _service.UpdateAsync(model.ModelData);
+            UIApiResponse<DateTimeOffset> serviceResponse = await _service.UpdateAsync(model.ModelData);
 
             RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{model.ModelData.DynamicPolicyId}");
             ViewResult view = View(model);

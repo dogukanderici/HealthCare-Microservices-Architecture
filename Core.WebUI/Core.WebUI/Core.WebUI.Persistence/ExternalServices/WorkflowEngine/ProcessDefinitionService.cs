@@ -51,12 +51,12 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
             throw new NotImplementedException();
         }
 
-        public Task<UIApiResponse<bool>> CreateAsync(ProcessDefinitionCreateDto dto)
+        public Task<UIApiResponse<Guid>> CreateAsync(ProcessDefinitionCreateDto dto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<UIApiResponse<bool>> UpdateAsync(ProcessDefinitionUpdateDto dto)
+        public Task<UIApiResponse<DateTimeOffset>> UpdateAsync(ProcessDefinitionUpdateDto dto)
         {
             throw new NotImplementedException();
         }

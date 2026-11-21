@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.IdentityServer.Commons.Constants;
+using Core.IdentityServer.Commons.Parameters;
 using Core.IdentityServer.Dtos.RoleDtos;
 using Core.IdentityServer.Services.RabbitMQ.Events.Roles;
 using Core.IdentityServer.Services.RabbitMQ.MessageBuses.Roles;
@@ -35,25 +36,21 @@ namespace Core.IdentityServer.Controllers
         {
             if (!_roleManager.SupportsQueryableRoles)
             {
-                return StatusCode(501, "Role table does not support queryable process!");
+                return StatusCode(501, InternalAPIResponse<bool>.Fail("Role table does not support queryable process!"));
             }
 
-            var roles = await _roleManager.Roles
+            IReadOnlyCollection<ResultRoleDto> roles = await _roleManager.Roles
                .AsNoTracking()
                .OrderBy(x => x.Name)
-               .Select(x => new
-               {
-                   x.Id,
-                   x.Name
-               })
+               .Select(x => new ResultRoleDto(x.Id, x.Name))
                .ToListAsync();
 
             if (!roles.Any())
             {
-                return StatusCode(201, "Role table does not contain any role data!");
+                return StatusCode(400, InternalAPIResponse<bool>.Fail("Role table does not contain any role data!"));
             }
 
-            return StatusCode(200, roles);
+            return StatusCode(200, InternalAPIResponse<IReadOnlyCollection<ResultRoleDto>>.Success(roles));
         }
 
         [HttpGet("{id:guid}")]
@@ -61,26 +58,22 @@ namespace Core.IdentityServer.Controllers
         {
             if (!_roleManager.SupportsQueryableRoles)
             {
-                return StatusCode(501, "Role table does not support queryable process!");
+                return StatusCode(501, InternalAPIResponse<bool>.Fail("Role table does not support queryable process!"));
             }
 
-            var roleForId = await _roleManager.Roles
+            ResultRoleDto roleForId = await _roleManager.Roles
                .AsNoTracking()
                .Where(x => x.Id == id.ToString())
                .OrderBy(x => x.Name)
-               .Select(x => new
-               {
-                   x.Id,
-                   x.Name
-               })
+               .Select(x => new ResultRoleDto(x.Id, x.Name))
                .FirstOrDefaultAsync();
 
             if (roleForId == null)
             {
-                return StatusCode(201, "Role not found!");
+                return StatusCode(400, InternalAPIResponse<bool>.Fail("Role not found!"));
             }
 
-            return StatusCode(200, roleForId);
+            return StatusCode(200, InternalAPIResponse<ResultRoleDto>.Success(roleForId));
         }
 
         [HttpPost]
@@ -102,7 +95,7 @@ namespace Core.IdentityServer.Controllers
                         nameof(AddNewRole),
                         LogConstant.SuccessMessages.RoleCreated);
 
-                    return StatusCode(200, LogConstant.SuccessMessages.RoleCreated);
+                    return StatusCode(200, InternalAPIResponse<bool>.Success(true, LogConstant.SuccessMessages.RoleCreated));
                 }
 
                 _logger.LogError(LogConstant.LogMessageTemplate,
@@ -111,7 +104,7 @@ namespace Core.IdentityServer.Controllers
                     nameof(AddNewRole),
                     LogConstant.ErrorMessages.AddNewRoleFailed);
 
-                return StatusCode(400, LogConstant.ErrorMessages.AddNewRoleFailed);
+                return StatusCode(400, InternalAPIResponse<bool>.Fail(LogConstant.ErrorMessages.AddNewRoleFailed));
             }
 
             _logger.LogError(LogConstant.LogMessageTemplate,
@@ -120,7 +113,7 @@ namespace Core.IdentityServer.Controllers
                     nameof(AddNewRole),
                     LogConstant.ErrorMessages.RoleAlreadyExists);
 
-            return StatusCode(400, LogConstant.ErrorMessages.RoleAlreadyExists);
+            return StatusCode(400, InternalAPIResponse<bool>.Fail(LogConstant.ErrorMessages.RoleAlreadyExists));
         }
 
         [HttpPut]
@@ -144,7 +137,7 @@ namespace Core.IdentityServer.Controllers
                         nameof(UpdateRole),
                         LogConstant.SuccessMessages.RoleUpdated);
 
-                    return StatusCode(200, LogConstant.SuccessMessages.RoleUpdated);
+                    return StatusCode(200, InternalAPIResponse<bool>.Success(true, LogConstant.SuccessMessages.RoleUpdated));
                 }
 
                 _logger.LogError(LogConstant.LogMessageTemplate,
@@ -153,7 +146,7 @@ namespace Core.IdentityServer.Controllers
                     nameof(UpdateRole),
                     LogConstant.ErrorMessages.UpdateRoleFailed);
 
-                return StatusCode(400, LogConstant.ErrorMessages.UpdateRoleFailed);
+                return StatusCode(400, InternalAPIResponse<bool>.Fail(LogConstant.ErrorMessages.UpdateRoleFailed));
             }
 
             _logger.LogError(LogConstant.LogMessageTemplate,
@@ -162,7 +155,7 @@ namespace Core.IdentityServer.Controllers
                     nameof(UpdateRole),
                     LogConstant.ErrorMessages.RoleNotFound);
 
-            return StatusCode(400, LogConstant.ErrorMessages.RoleNotFound);
+            return StatusCode(400, InternalAPIResponse<bool>.Fail(LogConstant.ErrorMessages.RoleNotFound));
         }
 
         [HttpDelete("{id}")]
@@ -187,7 +180,7 @@ namespace Core.IdentityServer.Controllers
                         nameof(DeleteRole),
                         LogConstant.SuccessMessages.RoleDeleted);
 
-                    return StatusCode(200, LogConstant.SuccessMessages.RoleUpdated);
+                    return StatusCode(200, InternalAPIResponse<bool>.Success(true, LogConstant.SuccessMessages.RoleUpdated));
                 }
 
                 _logger.LogError(LogConstant.LogMessageTemplate,
@@ -196,7 +189,7 @@ namespace Core.IdentityServer.Controllers
                     nameof(DeleteRole),
                     LogConstant.ErrorMessages.DeleteRoleFailed);
 
-                return StatusCode(400, LogConstant.ErrorMessages.DeleteRoleFailed);
+                return StatusCode(400, InternalAPIResponse<bool>.Fail(LogConstant.ErrorMessages.DeleteRoleFailed));
             }
 
             _logger.LogError(LogConstant.LogMessageTemplate,
@@ -205,7 +198,7 @@ namespace Core.IdentityServer.Controllers
                     nameof(DeleteRole),
                     LogConstant.ErrorMessages.RoleNotFound);
 
-            return StatusCode(400, LogConstant.ErrorMessages.RoleNotFound);
+            return StatusCode(400, InternalAPIResponse<bool>.Fail(LogConstant.ErrorMessages.RoleNotFound));
         }
     }
 }

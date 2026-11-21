@@ -163,50 +163,84 @@
     </script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const modal = document.getElementById('delete-policy-modal');
-            if (!modal) return;
 
-            const inputId = document.getElementById('delete-policy-id');
-            const lblEndpoint = document.getElementById('lbl-delete-endpoint');
-            const lblMethode = document.getElementById('lbl-delete-methode');
-            const lblStatus = document.getElementById('lbl-delete-status');
+        const modalElementId = "delete-policy-modal";
+        const inputElementIdList = [
+            "delete-policy-id",
+            "lbl-delete-endpoint",
+            "lbl-delete-methode",
+            "lbl-delete-status",
+        ];
 
-            function openDeleteModal(btn) {
-                inputId.value = btn.dataset.id || '';
-                lblEndpoint.textContent = btn.dataset.endpoint || '-';
-                lblMethode.textContent = btn.dataset.methode || '-';
-                lblStatus.textContent = btn.dataset.isactive || '-';
+        const triggeredElementClass = ".btn-delete";
+        const cancelBtnId = "btn-cancel-delete";
+
+        document.addEventListener('click', function (e) {
+            const deleteBtn = e.target.closest(triggeredElementClass);
+            if (deleteBtn) {
+                console.log("deleteBtn: ", deleteBtn);
+                const modalOptions = {
+                    "modalElementId": modalElementId,
+                    "inputElementIdList": inputElementIdList,
+                    "triggeredElementClass": triggeredElementClass,
+                    "cancelBtnId": cancelBtnId,
+                    "releatedBtnData": {
+                        "delete-policy-id": deleteBtn.dataset.id,
+                        "lbl-delete-endpoint": deleteBtn.dataset.endpoint,
+                        "lbl-delete-methode": deleteBtn.dataset.methode,
+                        "lbl-delete-status": deleteBtn.dataset.isactive
+                    }
+                };
+                e.preventDefault();
         
-                modal.classList.add('is-open');
+                runModalWindow(modalOptions);
             }
-
-            function closeDeleteModal() {
-                modal.classList.remove('is-open');
-            }
-
-            // Tablodaki tüm silme butonlarını dinle (Dinamik/sayfalı tablolar için event delegation)
-            document.addEventListener('click', function (e) {
-                const deleteBtn = e.target.closest('.btn-delete');
-                if (deleteBtn) {
-                    e.preventDefault();
-                    openDeleteModal(deleteBtn);
-                }
-            });
-
-            // Vazgeç, ESC etiketi veya arka plana tıklayınca kapat
-            document.getElementById('btn-cancel-delete').addEventListener('click', closeDeleteModal);
-            document.getElementById('btn-close-delete-modal').addEventListener('click', closeDeleteModal);
-            modal.addEventListener('click', function (e) {
-                if (e.target === modal) closeDeleteModal();
-            });
-
-            // Klavyeden ESC tuşuna basınca kapat
-            document.addEventListener('keydown', function (e) {
-                if (e.key === 'Escape' && modal.classList.contains('is-open')) {
-                    closeDeleteModal();
-                }
-            });
         });
+
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     const modal = document.getElementById('delete-policy-modal');
+        //     if (!modal) return;
+
+        //     const inputId = document.getElementById('delete-policy-id');
+        //     const lblEndpoint = document.getElementById('lbl-delete-endpoint');
+        //     const lblMethode = document.getElementById('lbl-delete-methode');
+        //     const lblStatus = document.getElementById('lbl-delete-status');
+
+        //     function openDeleteModal(btn) {
+        //         inputId.value = btn.dataset.id || '';
+        //         lblEndpoint.textContent = btn.dataset.endpoint || '-';
+        //         lblMethode.textContent = btn.dataset.methode || '-';
+        //         lblStatus.textContent = btn.dataset.isactive || '-';
+        
+        //         modal.classList.add('is-open');
+        //     }
+
+        //     function closeDeleteModal() {
+        //         modal.classList.remove('is-open');
+        //     }
+
+        //     // Tablodaki tüm silme butonlarını dinle (Dinamik/sayfalı tablolar için event delegation)
+        //     document.addEventListener('click', function (e) {
+        //         const deleteBtn = e.target.closest('.btn-delete');
+        //         if (deleteBtn) {
+        //             e.preventDefault();
+        //             openDeleteModal(deleteBtn);
+        //         }
+        //     });
+
+        //     // Vazgeç, ESC etiketi veya arka plana tıklayınca kapat
+        //     document.getElementById('btn-cancel-delete').addEventListener('click', closeDeleteModal);
+        //     document.getElementById('btn-close-delete-modal').addEventListener('click', closeDeleteModal);
+        //     modal.addEventListener('click', function (e) {
+        //         if (e.target === modal) closeDeleteModal();
+        //     });
+
+        //     // Klavyeden ESC tuşuna basınca kapat
+        //     document.addEventListener('keydown', function (e) {
+        //         if (e.key === 'Escape' && modal.classList.contains('is-open')) {
+        //             closeDeleteModal();
+        //         }
+        //     });
+        // });
     </script>
 }

@@ -74,7 +74,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
             return await UIApiResponse<DynamicPolicyResultDto>.ErrorAsync(response);
         }
 
-        public async Task<UIApiResponse<bool>> CreateAsync(DynamicPolicyCreateDto createDto)
+        public async Task<UIApiResponse<Guid>> CreateAsync(DynamicPolicyCreateDto createDto)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
@@ -87,15 +87,15 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
                 ApiServiceResponse<Guid> apiResponse = JsonConvert.DeserializeObject<ApiServiceResponse<Guid>>(responseContent);
 
                 if (apiResponse.IsSuccess)
-                    return UIApiResponse<bool>.Success(true);
+                    return UIApiResponse<Guid>.Success(apiResponse.Data);
                 else
-                    return UIApiResponse<bool>.Fail(apiResponse.Message);
+                    return UIApiResponse<Guid>.Fail(apiResponse.Message);
             }
 
-            return await UIApiResponse<bool>.ErrorAsync(response);
+            return await UIApiResponse<Guid>.ErrorAsync(response);
         }
 
-        public async Task<UIApiResponse<bool>> UpdateAsync(DynamicPolicyUpdateDto updateDto)
+        public async Task<UIApiResponse<DateTimeOffset>> UpdateAsync(DynamicPolicyUpdateDto updateDto)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
@@ -109,12 +109,12 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
                 ApiServiceResponse<DateTimeOffset> apiServiceResponse = JsonConvert.DeserializeObject<ApiServiceResponse<DateTimeOffset>>(strData);
 
                 if (apiServiceResponse.IsSuccess)
-                    return UIApiResponse<bool>.Success(true);
+                    return UIApiResponse<DateTimeOffset>.Success(apiServiceResponse.Data);
 
-                return UIApiResponse<bool>.Fail(apiServiceResponse.Message);
+                return UIApiResponse<DateTimeOffset>.Fail(apiServiceResponse.Message);
             }
 
-            return await UIApiResponse<bool>.ErrorAsync(response);
+            return await UIApiResponse<DateTimeOffset>.ErrorAsync(response);
         }
 
         public async Task<UIApiResponse<bool>> DeleteAsync(Guid id)

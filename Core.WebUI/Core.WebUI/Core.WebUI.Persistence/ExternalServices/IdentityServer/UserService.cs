@@ -34,12 +34,12 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
             throw new NotImplementedException();
         }
 
-        public Task<UIApiResponse<bool>> CreateAsync(UserCreateDto createDto)
+        public Task<UIApiResponse<Guid>> CreateAsync(UserCreateDto createDto)
         {
             throw new NotImplementedException();
         }
 
-        public Task<UIApiResponse<bool>> UpdateAsync(UserUpdateDto updateDto)
+        public Task<UIApiResponse<DateTimeOffset>> UpdateAsync(UserUpdateDto updateDto)
         {
             throw new NotImplementedException();
         }

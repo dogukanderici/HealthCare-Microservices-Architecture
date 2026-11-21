@@ -44,16 +44,18 @@
                         <div class="col-6">
                             <div class="row justify-content-end">
                                 <div class="col col-5">
-                                    <button id="api-policy-submit" type="submit" class="w-100 btn btn-lg btn-info">
+                                    <button id="api-policy-role-submit" type="submit" class="w-100 btn btn-lg btn-info">
                                         <i class="fa-regular fa-floppy-disk"></i>&nbsp;
                                         <span id="api-policy-submit-amount">Kaydet</span>
                                     </button>
                                 </div>
                                 <div class="col col-4">
-                                    <a href="/dynamicrole/policyid/@Model.ModelData.DynamicPolicyId" id="api-policy-submit" type="button" class="w-100 btn btn-lg btn-outline-secondary">
-                                        <i class="fa-regular fa-circle-xmark"></i>&nbsp;
-                                        <span id="api-policy-submit-amount">Vazgeç</span>
-                                    </a>
+                                    <div id ="api-policy-role-cancel" type="button" class="w-100 btn btn-lg btn-outline-secondary">
+                                        <a href="/dynamicrole/policyid/@Model.ModelData.DynamicPolicyId">
+                                            <i class="fa-regular fa-circle-xmark"></i>&nbsp;
+                                            <span id="api-policy-submit-amount">Vazgeç</span>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

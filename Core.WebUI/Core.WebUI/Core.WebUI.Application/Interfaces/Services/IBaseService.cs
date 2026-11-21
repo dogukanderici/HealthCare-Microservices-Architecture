@@ -12,8 +12,8 @@ namespace Core.WebUI.Application.Interfaces.Services
     {
         Task<UIApiResponse<IReadOnlyCollection<TResultDto>>> GetListAsync(Guid? id = null);
         Task<UIApiResponse<TResultDto>> GetAsync(Guid id);
-        Task<UIApiResponse<bool>> CreateAsync(TCreateDto createDto);
-        Task<UIApiResponse<bool>> UpdateAsync(TUpdateDto updateDto);
+        Task<UIApiResponse<Guid>> CreateAsync(TCreateDto createDto);
+        Task<UIApiResponse<DateTimeOffset>> UpdateAsync(TUpdateDto updateDto);
         Task<UIApiResponse<bool>> DeleteAsync(Guid id);
     }
 }

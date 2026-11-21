@@ -48,7 +48,7 @@ namespace Core.AdminUI.Controllers
         [HttpPost("Create")]
         public async Task<IActionResult> Create(DynamicPolicyCreateModel model)
         {
-            UIApiResponse<bool> serviceResponse = await _service.CreateAsync(model.CreateDto);
+            UIApiResponse<Guid> serviceResponse = await _service.CreateAsync(model.CreateDto);
 
             RedirectResult redirect = Redirect("/dynamicpolicy"); // İsteğin başarılı olması durumu
             ViewResult view = View(model); // İsteğin başarız olması durumu
@@ -88,7 +88,7 @@ namespace Core.AdminUI.Controllers
         [HttpPost("Update")]
         public async Task<IActionResult> Update(DynamicPolicyUpdateModel model)
         {
-            UIApiResponse<bool> serviceResponse = await _service.UpdateAsync(model.ModelData);
+            UIApiResponse<DateTimeOffset> serviceResponse = await _service.UpdateAsync(model.ModelData);
 
             RedirectResult redirect = Redirect("/dynamicpolicy"); // İsteğin başarılı olması durumu
             ViewResult view = View(model); // İsteğin başarız olması durumu

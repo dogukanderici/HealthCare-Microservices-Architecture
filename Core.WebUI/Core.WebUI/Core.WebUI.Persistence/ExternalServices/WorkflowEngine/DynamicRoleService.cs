@@ -75,26 +75,28 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
             return await apiServiceResponse.ReturnServiceResultAsync(response);
         }
 
-        public async Task<UIApiResponse<bool>> CreateAsync(DynamicRoleCreateDto createDto)
+        public async Task<UIApiResponse<Guid>> CreateAsync(DynamicRoleCreateDto createDto)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
             HttpResponseMessage response = await client.PostAsJsonAsync(Endpoint, createDto);
 
-            ApiServiceResponse<bool> apiServiceResponse =
-                await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+            string jsonData = await response.Content.ReadAsStringAsync();
+
+            ApiServiceResponse<Guid> apiServiceResponse =
+                await response.Content.ReadFromJsonAsync<ApiServiceResponse<Guid>>();
 
             return await apiServiceResponse.ReturnServiceResultAsync(response);
         }
 
-        public async Task<UIApiResponse<bool>> UpdateAsync(DynamicRoleUpdateDto updateDto)
+        public async Task<UIApiResponse<DateTimeOffset>> UpdateAsync(DynamicRoleUpdateDto updateDto)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
             HttpResponseMessage response = await client.PutAsJsonAsync(Endpoint, updateDto);
 
-            ApiServiceResponse<bool> apiServiceResponse =
-                await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+            ApiServiceResponse<DateTimeOffset> apiServiceResponse =
+                await response.Content.ReadFromJsonAsync<ApiServiceResponse<DateTimeOffset>>();
 
             return await apiServiceResponse.ReturnServiceResultAsync(response);
         }
