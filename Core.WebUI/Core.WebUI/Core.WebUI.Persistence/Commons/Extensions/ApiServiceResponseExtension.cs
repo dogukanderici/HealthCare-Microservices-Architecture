@@ -10,7 +10,7 @@ namespace Core.WebUI.Persistence.Commons.Extensions
 {
     public static class ApiServiceResponseExtension
     {
-        public static async Task<UIApiResponse<T>> ReturnServiceResultAsync<T>(this ApiServiceResponse<T> apiResponse, HttpResponseMessage response)
+        public static async Task<UIApiResponse<T>> ReturnApiResponseAsync<T>(this ApiServiceResponse<T> apiResponse, HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode)
             {

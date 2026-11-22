@@ -26,19 +26,6 @@
                                 <select id="api-methode" asp-for="@Model.ModelData.AllowedRoleId" asp-items="@Model.Roles" class="form-select"></select>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <label class="form-control-label">Durum</label>
-                            <div class="col-12">
-                                <div class="form-check form-check-inline">
-                                    <input type="radio" id="endpoint-status-active" asp-for="@Model.ModelData.IsActive" value="true" class="form-check-input">
-                                    <label asp-for="@Model.ModelData.IsActive" class="form-check-label">Aktif</label>
-                                </div>
-                                <div class="form-check form-check-inline">
-                                    <input type="radio" id="endpoint-status-pasive" asp-for="@Model.ModelData.IsActive" value="false" class="form-check-input">
-                                    <label asp-for="@Model.ModelData.IsActive" class="form-check-label">Pasif</label>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                     <div class="row justify-content-end">
                         <div class="col-6">

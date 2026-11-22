@@ -35,14 +35,12 @@ namespace Core.AdminUI.Controllers
 
             UIApiResponse<IReadOnlyCollection<DynamicRoleResultDto>> serviceResponse = await _service.GetListWithFilterAsync(filter);
 
-            UIApiResponse<IReadOnlyCollection<RoleResultDto>> roleServiceResponse = await _roleService.GetListAsync();
-
             DynamicRoleResultModel<IReadOnlyCollection<DynamicRoleResultDto>> model = new DynamicRoleResultModel<IReadOnlyCollection<DynamicRoleResultDto>>();
             model.ModelData = serviceResponse.Data;
             model.PolicyId = policyId;
 
-            ViewResult view = View(model);
-            RedirectResult redirect = Redirect(_configuration.GetSection("ApiSetting:DefaultUrl").Value);
+            ViewResult view = View(model); // Tüm işlemler başarılı ise yapılacak işlem.
+            RedirectResult redirect = Redirect(_configuration.GetSection("ApiSetting:DefaultUrl").Value); // Herhangi bir başarısız işlem olursa yapılacak işlem.
 
             return serviceResponse.ReturnControllerResult(view, redirect);
 

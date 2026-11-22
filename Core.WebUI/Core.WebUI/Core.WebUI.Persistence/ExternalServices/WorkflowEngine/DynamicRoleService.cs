@@ -3,7 +3,6 @@ using Core.WebUI.Application.Dtos.WorkflowEngineDtos.DynamicRoleDtos;
 using Core.WebUI.Application.Interfaces.Services.WorkflowEngine;
 using Core.WebUI.Persistence.Commons.Extensions;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using System.Net.Http.Json;
 
 namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
@@ -33,10 +32,12 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.GetAsync($"{Endpoint}/policyid?policyid={id}");
 
-            ApiServiceResponse<IReadOnlyCollection<DynamicRoleResultDto>> apiServiceResponse =
-                await response.Content.ReadFromJsonAsync<ApiServiceResponse<IReadOnlyCollection<DynamicRoleResultDto>>>();
+            return await response.ReturnServiceResultAsync<IReadOnlyCollection<DynamicRoleResultDto>>();
 
-            return await apiServiceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<IReadOnlyCollection<DynamicRoleResultDto>> apiServiceResponse =
+            //    await response.Content.ReadFromJsonAsync<ApiServiceResponse<IReadOnlyCollection<DynamicRoleResultDto>>>();
+
+            //return await apiServiceResponse.ReturnApiResponseAsync(response);
 
             //if (response.IsSuccessStatusCode)
             //{
@@ -57,10 +58,12 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.PostAsJsonAsync($"{Endpoint}/filter", filter);
 
-            ApiServiceResponse<IReadOnlyCollection<DynamicRoleResultDto>> apiServiceResponse =
-                await response.Content.ReadFromJsonAsync<ApiServiceResponse<IReadOnlyCollection<DynamicRoleResultDto>>>();
+            return await response.ReturnServiceResultAsync<IReadOnlyCollection<DynamicRoleResultDto>>();
 
-            return await apiServiceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<IReadOnlyCollection<DynamicRoleResultDto>> apiServiceResponse =
+            //    await response.Content.ReadFromJsonAsync<ApiServiceResponse<IReadOnlyCollection<DynamicRoleResultDto>>>();
+
+            //return await apiServiceResponse.ReturnServiceResultAsync(response);
         }
 
         public async Task<UIApiResponse<DynamicRoleResultDto>> GetAsync(Guid id)
@@ -69,10 +72,12 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.GetAsync($"{Endpoint}/{id}");
 
-            ApiServiceResponse<DynamicRoleResultDto> apiServiceResponse =
-                await response.Content.ReadFromJsonAsync<ApiServiceResponse<DynamicRoleResultDto>>();
+            return await response.ReturnServiceResultAsync<DynamicRoleResultDto>();
 
-            return await apiServiceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<DynamicRoleResultDto> apiServiceResponse =
+            //    await response.Content.ReadFromJsonAsync<ApiServiceResponse<DynamicRoleResultDto>>();
+
+            //return await apiServiceResponse.ReturnServiceResultAsync(response);
         }
 
         public async Task<UIApiResponse<Guid>> CreateAsync(DynamicRoleCreateDto createDto)
@@ -81,12 +86,12 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.PostAsJsonAsync(Endpoint, createDto);
 
-            string jsonData = await response.Content.ReadAsStringAsync();
+            return await response.ReturnServiceResultAsync<Guid>();
 
-            ApiServiceResponse<Guid> apiServiceResponse =
-                await response.Content.ReadFromJsonAsync<ApiServiceResponse<Guid>>();
+            //ApiServiceResponse<Guid> apiServiceResponse =
+            //    await response.Content.ReadFromJsonAsync<ApiServiceResponse<Guid>>();
 
-            return await apiServiceResponse.ReturnServiceResultAsync(response);
+            //return await apiServiceResponse.ReturnServiceResultAsync(response);
         }
 
         public async Task<UIApiResponse<DateTimeOffset>> UpdateAsync(DynamicRoleUpdateDto updateDto)
@@ -95,10 +100,12 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.PutAsJsonAsync(Endpoint, updateDto);
 
-            ApiServiceResponse<DateTimeOffset> apiServiceResponse =
-                await response.Content.ReadFromJsonAsync<ApiServiceResponse<DateTimeOffset>>();
+            return await response.ReturnServiceResultAsync<DateTimeOffset>();
 
-            return await apiServiceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<DateTimeOffset> apiServiceResponse =
+            //    await response.Content.ReadFromJsonAsync<ApiServiceResponse<DateTimeOffset>>();
+
+            //return await apiServiceResponse.ReturnServiceResultAsync(response);
         }
 
         public async Task<UIApiResponse<bool>> DeleteAsync(Guid id)
@@ -107,10 +114,12 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 
             HttpResponseMessage response = await client.DeleteAsync($"{Endpoint}/{id}");
 
-            ApiServiceResponse<bool> apiServiceResponse =
-                await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+            return await response.ReturnServiceResultAsync<bool>();
 
-            return await apiServiceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<bool> apiServiceResponse =
+            //    await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+
+            //return await apiServiceResponse.ReturnServiceResultAsync(response);
         }
     }
 }

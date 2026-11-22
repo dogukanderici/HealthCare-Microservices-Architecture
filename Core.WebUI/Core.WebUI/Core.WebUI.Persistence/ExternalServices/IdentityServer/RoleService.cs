@@ -33,11 +33,13 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
 
             HttpResponseMessage response = await client.GetAsync(Endpoint);
 
-            string jsonData = await response.Content.ReadAsStringAsync();
+            return await response.ReturnServiceResultAsync<IReadOnlyCollection<RoleResultDto>>();
 
-            ApiServiceResponse<IReadOnlyCollection<RoleResultDto>> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<IReadOnlyCollection<RoleResultDto>>>();
+            //string jsonData = await response.Content.ReadAsStringAsync();
 
-            return await serviceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<IReadOnlyCollection<RoleResultDto>> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<IReadOnlyCollection<RoleResultDto>>>();
+
+            //return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
         public async Task<UIApiResponse<RoleResultDto>> GetAsync(Guid id)
@@ -46,9 +48,11 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
 
             HttpResponseMessage response = await client.GetAsync($"{Endpoint}?id={id}");
 
-            ApiServiceResponse<RoleResultDto> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<RoleResultDto>>();
+            return await response.ReturnServiceResultAsync<RoleResultDto>();
 
-            return await serviceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<RoleResultDto> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<RoleResultDto>>();
+
+            //return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
         public async Task<UIApiResponse<Guid>> CreateAsync(RoleCreateDto createDto)
@@ -58,11 +62,13 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
 
             HttpResponseMessage response = await client.PostAsJsonAsync(Endpoint, createDto);
 
-            string jsonData = await response.Content.ReadAsStringAsync();
+            return await response.ReturnServiceResultAsync<Guid>();
 
-            ApiServiceResponse<Guid> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<Guid>>();
+            //string jsonData = await response.Content.ReadAsStringAsync();
 
-            return await serviceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<Guid> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<Guid>>();
+
+            //return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
         public async Task<UIApiResponse<DateTimeOffset>> UpdateAsync(RoleUpdateDto updateDto)
@@ -71,9 +77,11 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
 
             HttpResponseMessage response = await client.PutAsJsonAsync(Endpoint, updateDto);
 
-            ApiServiceResponse<DateTimeOffset> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<DateTimeOffset>>();
+            return await response.ReturnServiceResultAsync<DateTimeOffset>();
 
-            return await serviceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<DateTimeOffset> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<DateTimeOffset>>();
+
+            //return await serviceResponse.ReturnServiceResultAsync(response);
         }
 
         public async Task<UIApiResponse<bool>> DeleteAsync(Guid id)
@@ -82,9 +90,11 @@ namespace Core.WebUI.Persistence.ExternalServices.IdentityServer
 
             HttpResponseMessage response = await client.DeleteAsync($"{Endpoint}?id={id}");
 
-            ApiServiceResponse<bool> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+            return await response.ReturnServiceResultAsync<bool>();
 
-            return await serviceResponse.ReturnServiceResultAsync(response);
+            //ApiServiceResponse<bool> serviceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<bool>>();
+
+            //return await serviceResponse.ReturnServiceResultAsync(response);
         }
     }
 }
