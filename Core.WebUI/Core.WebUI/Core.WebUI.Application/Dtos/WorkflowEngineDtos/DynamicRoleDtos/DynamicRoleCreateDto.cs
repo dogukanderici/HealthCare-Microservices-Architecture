@@ -11,6 +11,6 @@ namespace Core.WebUI.Application.Dtos.WorkflowEngineDtos.DynamicRoleDtos
     {
         public Guid DynamicPolicyId { get; set; }
         public Guid AllowedRoleId { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
     }
 }

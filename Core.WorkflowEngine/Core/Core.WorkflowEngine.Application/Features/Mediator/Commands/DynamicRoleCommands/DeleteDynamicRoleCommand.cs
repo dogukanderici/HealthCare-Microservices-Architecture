@@ -1,4 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
+using Core.WorkflowEngine.Application.Interfaces;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.DynamicRoleCommands
 {
-    public class DeleteDynamicRoleCommand : IRequest<InternalHandlerResponse<bool>>
+    public class DeleteDynamicRoleCommand : IRequest<InternalHandlerResponse<bool>>, ITransactionalRequest
     {
         public Guid Id { get; set; }
 

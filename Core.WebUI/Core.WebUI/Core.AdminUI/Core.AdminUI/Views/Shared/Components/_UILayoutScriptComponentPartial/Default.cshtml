@@ -1,4 +1,14 @@
-﻿<script src="~/lib/jquery/dist/jquery.min.js"></script>
+﻿@using Core.AdminUI.Commons.Extensions
+@{
+    string notificationJson = TempData[TempDataExtension.NotificationKey] as string;
+}
+
+@if (!string.IsNullOrWhiteSpace(notificationJson))
+{
+    <div id="app-notification-data" data-payload="@notificationJson" style="display:none;"></div>
+}
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/sweetalert2/dist/sweetalert2.all.min.js"></script>
 <script src="~/js/admindashboard/vanilla-utils.js"></script>
 <script src="~/vendor/bootstrap-5.3.8.bundle.min.js"></script>
@@ -6,3 +16,5 @@
 <script src="~/js/admindashboard/main-vanilla.js"></script>
 <script src="~/js/admindashboard/modern-plugins.js"></script>
 <script src="~/js/admindashboard/custom-modal-window.js"></script>
+
+<script src="~/js/admindashboard/ui-notification.js"></script>

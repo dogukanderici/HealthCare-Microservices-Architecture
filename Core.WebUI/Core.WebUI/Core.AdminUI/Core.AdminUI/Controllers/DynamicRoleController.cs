@@ -46,7 +46,7 @@ namespace Core.AdminUI.Controllers
 
         }
 
-        [HttpGet("{policyId}/{id}")]
+        [HttpGet("GetRole/{policyId}/{id}")]
         public async Task<IActionResult> GetRole(Guid policyId, Guid id)
         {
             UIApiResponse<DynamicRoleResultDto> serviceResponse = await _service.GetAsync(id);
@@ -95,32 +95,33 @@ namespace Core.AdminUI.Controllers
             return serviceResponse.ReturnControllerResult(redirect, view, TempData);
         }
 
-        [HttpGet("Update/{policyId}/{id}")]
-        public async Task<IActionResult> Update(Guid policyId, Guid id)
-        {
-            UIApiResponse<DynamicRoleResultDto> serviceResponse = await _service.GetAsync(id);
+        // Projede gerekirse aktif hale getirilecek.
+        //[HttpGet("Update/{policyId}/{id}")]
+        //public async Task<IActionResult> Update(Guid policyId, Guid id)
+        //{
+        //    UIApiResponse<DynamicRoleResultDto> serviceResponse = await _service.GetAsync(id);
 
-            DynamicRoleUpdateDto updateDto = _mapper.Map<DynamicRoleUpdateDto>(serviceResponse.Data);
+        //    DynamicRoleUpdateDto updateDto = _mapper.Map<DynamicRoleUpdateDto>(serviceResponse.Data);
 
-            DynamicRoleUpdateModel model = new DynamicRoleUpdateModel();
-            model.ModelData = updateDto;
+        //    DynamicRoleUpdateModel model = new DynamicRoleUpdateModel();
+        //    model.ModelData = updateDto;
 
-            ViewResult view = View(model);
-            RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{model.ModelData.DynamicPolicyId}");
+        //    ViewResult view = View(model);
+        //    RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{model.ModelData.DynamicPolicyId}");
 
-            return serviceResponse.ReturnControllerResult(view, redirect);
-        }
+        //    return serviceResponse.ReturnControllerResult(view, redirect);
+        //}
 
-        [HttpPost("Update")]
-        public async Task<IActionResult> Update(DynamicRoleUpdateModel model)
-        {
-            UIApiResponse<DateTimeOffset> serviceResponse = await _service.UpdateAsync(model.ModelData);
+        //[HttpPost("Update")]
+        //public async Task<IActionResult> Update(DynamicRoleUpdateModel model)
+        //{
+        //    UIApiResponse<DateTimeOffset> serviceResponse = await _service.UpdateAsync(model.ModelData);
 
-            RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{model.ModelData.DynamicPolicyId}");
-            ViewResult view = View(model);
+        //    RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{model.ModelData.DynamicPolicyId}");
+        //    ViewResult view = View(model);
 
-            return serviceResponse.ReturnControllerResult(redirect, view, TempData);
-        }
+        //    return serviceResponse.ReturnControllerResult(redirect, view, TempData);
+        //}
 
         [HttpPost("Delete/{policyId}")]
         public async Task<IActionResult> Delete(Guid policyId, Guid id)
@@ -130,6 +131,15 @@ namespace Core.AdminUI.Controllers
             RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{policyId}");
 
             return serviceResponse.ReturnControllerResult(redirect, TempData);
+        }
+
+        [HttpGet("DeletePartial/{policyId:guid}/{id:guid}")]
+        public IActionResult DeletePartial(Guid policyId, Guid id)
+        {
+            ViewBag.PolicyId = policyId;
+            ViewBag.Id = id;
+
+            return PartialView("_DeleteConfirmPartial");
         }
     }
 }
