@@ -1,6 +1,13 @@
-﻿<aside class="menu-sidebar" id="main-sidebar">
+﻿@inject IConfiguration Configuration
+
+@{
+    var dynamicPolicyEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicPolicy"];
+    var processEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:ProcessDefinition"];
+}
+
+<aside class="menu-sidebar" id="main-sidebar">
     <div class="logo">
-        <a class="logo-link" href="index.html" aria-label="CoolAdmin home"><span class="logo-mark" aria-hidden="true">C</span><span class="logo-text">Administrator</span></a>
+        <a class="logo-link" href="index.html" aria-label="Administrator"><span class="logo-mark" aria-hidden="true">C</span><span class="logo-text">Administrator</span></a>
         <button class="sidebar-close js-sidebar-toggle" type="button" aria-label="Close navigation"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
     </div>
     <div class="menu-sidebar__content js-scrollbar1">
@@ -12,74 +19,25 @@
                         <li class="has-sub">
                             <a class="js-arrow" href="#"><i class="fa-solid fa-tachometer-alt"></i>Workflow Engine</a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
-                                <li><a href="/dynamicpolicy">Dynamic Policy</a></li>
-                                <li><a href="/dynamicrole">Dynamic Role</a></li>
+                                <li><a href="@dynamicPolicyEndpoint">Dinamik Yetki-Rol</a></li>
+                                <li><a href="@processEndpoint">Süreç Tanımları</a></li>
                             </ul>
                         </li>
                         <li class="has-sub">
                             <a class="js-arrow" href="#"><i class="fa-solid fa-tachometer-alt"></i>HealtCare - Descriptions</a>
                             <ul class="list-unstyled navbar__sub-list js-sub-list">
                                 <li><a href="/healthcare/appointmentstatus">Randevu Durumu</a></li>
-                                <li><a href="/healthcare/cities">İl</a></li>
-                                <li><a href="/healthcare/districts">İlçeler</a></li>
+                                <li><a href="/healthcare/city">İl - İlçe</a></li>
                             </ul>
                         </li>
                     </ul>
                 </li>
                 <li><a href="chart.html"><i class="fa-solid fa-chart-bar"></i>Charts</a></li>
                 <li class="has-sub">
-                    <a class="js-arrow open" href="#"><i class="fa-solid fa-table"></i>Tables</a>
+                    <a class="js-arrow" href="#"><i class="fa-solid fa-table"></i>Tables</a>
                     <ul class="list-unstyled navbar__sub-list js-sub-list" style="display: block;">
                         <li><a href="table.html">Tables</a></li>
                         <li><a href="data-table.html">Data table</a></li>
-                    </ul>
-                </li>
-                <li class="has-sub">
-                    <a class="js-arrow" href="#"><i class="fa-regular fa-square-check"></i>Forms</a>
-                    <ul class="list-unstyled navbar__sub-list js-sub-list">
-                        <li><a href="form.html">Forms</a></li>
-                        <li><a href="wizard.html">Setup wizard</a></li>
-                    </ul>
-                </li>
-                <li><a href="calendar.html"><i class="fa-solid fa-calendar-alt"></i>Calendar</a></li>
-                <li><a href="map.html"><i class="fa-solid fa-map-marker-alt"></i>Maps</a></li>
-                <li><a href="inbox.html"><i class="fa-solid fa-inbox"></i>Inbox</a></li>
-                <li><a href="kanban.html"><i class="fa-solid fa-columns"></i>Kanban</a></li>
-                <li><a href="notifications.html"><i class="fa-regular fa-bell"></i>Notifications</a></li>
-                <li><a href="docs.html"><i class="fa-regular fa-file-lines"></i>Documentation</a></li>
-                <li class="has-sub">
-                    <a class="js-arrow" href="#"><i class="fa-solid fa-user-gear"></i>Account</a>
-                    <ul class="list-unstyled navbar__sub-list js-sub-list">
-                        <li><a href="profile.html">Profile &amp; settings</a></li>
-                        <li><a href="pricing.html">Pricing</a></li>
-                        <li><a href="invoice.html">Invoice</a></li>
-                    </ul>
-                </li>
-                <li class="has-sub">
-                    <a class="js-arrow" href="#"><i class="fa-solid fa-copy"></i>Pages</a>
-                    <ul class="list-unstyled navbar__sub-list js-sub-list">
-                        <li><a href="login.html">Login</a></li>
-                        <li><a href="register.html">Register</a></li>
-                        <li><a href="forget-pass.html">Forgot password</a></li>
-                        <li><a href="404.html">404 not found</a></li>
-                        <li><a href="500.html">500 server error</a></li>
-                        <li><a href="maintenance.html">Maintenance</a></li>
-                    </ul>
-                </li>
-                <li class="has-sub">
-                    <a class="js-arrow" href="#"><i class="fa-solid fa-desktop"></i>UI Elements</a>
-                    <ul class="list-unstyled navbar__sub-list js-sub-list">
-                        <li><a href="button.html">Buttons</a></li>
-                        <li><a href="badge.html">Badges</a></li>
-                        <li><a href="tab.html">Tabs</a></li>
-                        <li><a href="card.html">Cards</a></li>
-                        <li><a href="alert.html">Alerts</a></li>
-                        <li><a href="progress-bar.html">Progress bars</a></li>
-                        <li><a href="modal.html">Modals</a></li>
-                        <li><a href="switch.html">Switches</a></li>
-                        <li><a href="grid.html">Grid system</a></li>
-                        <li><a href="fontawesome.html">Font Awesome</a></li>
-                        <li><a href="typo.html">Typography</a></li>
                     </ul>
                 </li>
             </ul>

@@ -1,10 +1,11 @@
-﻿@using Core.AdminUI.Commons.Extensions
-@model DynamicPolicyResultModel<IReadOnlyCollection<DynamicPolicyResultDto>>
+﻿@model DynamicPolicyResultModel<IReadOnlyCollection<DynamicPolicyResultDto>>
 
 @{
     ViewData["Title"] = "Dinamik Yetkilendirme";
     Layout = "~/Views/UILayout/Index.cshtml";
     string methodeType = "notice-card--info";
+    string dynamicPolicyEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicPolicy"];
+    string dynamicRoleEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicRole"];
     // string notificationJson = TempData[TempDataExtension.NotificationKey] as string;
 }
 
@@ -17,36 +18,40 @@
                     <p class="m-card__subtitle">Api endpoint erişim sağlayacak kullanıcı rolleri tanımları</p>
                 </div>
             </header>
+            
             <div class="table-data__tool">
-                <div class="table-data__tool-left">
-                    <div class="select-wrapper">
-                        <select class="form-select" aria-label="Filter properties">
-                            <option selected>- Seçiniz -</option>
-                            <option>Dynamic Policy</option>
-                            <option>Dynamic Role</option>
-                            <option>Process Definiiton</option>
-                            <option>Process Task</option>
-                        </select>
+                <form id="policy-filter-query" asp-controller="DynamicPolicy" asp-action="Index" method="post">
+                    <div class="table-data__tool-left">
+                        <div class="select-wrapper">
+                            <select class="form-select" aria-label="Filter properties">
+                                <option selected>- Seçiniz -</option>
+                                <option>Dynamic Policy</option>
+                                <option>Dynamic Role</option>
+                                <option>Process Definition</option>
+                                <option>Process Task</option>
+                            </select>
+                        </div>
+                        <div class="select-wrapper">
+                            <select asp-for="@Model.QueryFilter.Methode" class="form-select" aria-label="İstek Tipi">
+                                <option value="" selected>- Seçiniz -</option>
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                        </div>
+                        <button class="au-btn-filter" type="submit">
+                            <i class="fa-solid fa-filter" aria-hidden="true"></i> Ara
+                        </button>
                     </div>
-                    <div class="select-wrapper">
-                        <select class="form-select" aria-label="İstek Tipi">
-                            <option selected>- Seçiniz -</option>
-                            <option>GET</option>
-                            <option>POST</option>
-                            <option>PUT</option>
-                            <option>DELETE</option>
-                        </select>
-                    </div>
-                    <button class="au-btn-filter" type="button">
-                        <i class="fa-solid fa-filter" aria-hidden="true"></i> Ara
-                    </button>
-                </div>
+                </form>
                 <div class="table-data__tool-right">
-                    <a href="/dynamicpolicy/create" class="au-btn au-btn--green au-btn--small">
+                    <a href="@dynamicPolicyEndpoint/create" class="au-btn au-btn--green au-btn--small">
                         <i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni Yetki Ekle
                     </a>
                 </div>
             </div>
+
             <div class="table-responsive">
                 <table class="table table-data2">
                     <thead>
@@ -103,20 +108,16 @@
                                 }
                                 <td>
                                     <div class="table-data-feature">
-                                        <a href="/dynamicrole/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Yeni Rol Ekle"><i class="fa-solid fa-square-plus"></i></a>
-                                        <a href="/dynamicpolicy/update?id=@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Güncelle"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        @* <a href="/dynamicpolicy/delete?id=@item.Id" class="item btn-delete" type="button" data-bs-toggle="tooltip" title="Sil"><i class="fa-solid fa-trash"></i></a> *@
-                                        <a href="javascript:void(0)"
-                                           class="item btn-delete"
-                                           type="button"
-                                           data-bs-toggle="tooltip"
-                                           title="Sil"
-                                           data-id="@item.Id"
-                                           data-endpoint="@item.Endpoint"
-                                           data-methode="@item.Methode"
-                                           data-isactive="@(item.IsActive ? "Aktif" : "Pasif")">
+                                        <a href="@dynamicRoleEndpoint/@item.Id" class="item btn-update" data-bs-toggle="tooltip" title="Yeni Rol Ekle"><i class="fa-solid fa-square-plus"></i></a>
+                                        <a href="@dynamicPolicyEndpoint/update?id=@item.Id" class="item btn-update" data-bs-toggle="tooltip" title="Güncelle"><i class="fa-solid fa-pen-to-square"></i></a>
+                                        @* <a href="@dynamicPolicyEndpoint/delete?id=@item.Id" class="item btn-delete" data-bs-toggle="tooltip" title="Sil"><i class="fa-solid fa-trash"></i></a> *@
+                                        <button class="item btn-delete"
+                                                type="button"
+                                                onclick="confirmWindowAsync('@Url.Action("DeletePartial", "DynamicPolicy", new { id = item.Id })')"
+                                                data-bs-toggle="tooltip"
+                                                title="Sil">
                                             <i class="fa-solid fa-trash"></i>
-                                        </a>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -124,123 +125,7 @@
                     </tbody>
                 </table>
             </div>
+
         </section>
     </div>
 </div>
-
-@await Html.PartialAsync("_DeletePolicyPartial")
-
-@section Scripts {
-    @* <script>
-
-        var rawNotification = @Html.Raw(string.IsNullOrWhiteSpace(notificationJson) ? "null" : notificationJson);
-
-        if (rawNotification) {
-
-            document.addEventListener("DOMContentLoaded", function () {
-                const payload = @Html.Raw(notificationJson);
-
-                // 1. Konsola teknik detayları gruplanmış şekilde bas
-                console.groupCollapsed(`%c[UI API Error] ${payload.statusCode} ${payload.statusText}`, "color: #ff4d4f; font-weight: bold;");
-                console.error("Teknik Mesaj:", payload.technicalMessage || "Detay belirtilmemiş");
-                console.info("Zaman (UTC):", payload.timestamp);
-                console.debug("Ham Payload:", payload);
-                console.groupEnd();
-
-                // 2. Arayüze sadece kullanıcının anlayacağı sade pop-up'ı bas
-                if (typeof Swal !== "undefined") {
-                    Swal.fire({
-                        position: "top-end",
-                        icon: payload.type,
-                        text: payload.userMessage,
-                        showConfirmButton: false,
-                        timer: 1500
-                    });
-                }
-            });
-        }
-        
-    </script> *@
-
-    <script>
-
-        const modalElementId = "delete-policy-modal";
-        const inputElementIdList = [
-            "delete-policy-id",
-            "lbl-delete-endpoint",
-            "lbl-delete-methode",
-            "lbl-delete-status",
-        ];
-
-        const triggeredElementClass = ".btn-delete";
-        const cancelBtnId = "btn-cancel-delete";
-
-        document.addEventListener('click', function (e) {
-            const deleteBtn = e.target.closest(triggeredElementClass);
-            if (deleteBtn) {
-                console.log("deleteBtn: ", deleteBtn);
-                const modalOptions = {
-                    "modalElementId": modalElementId,
-                    "inputElementIdList": inputElementIdList,
-                    "triggeredElementClass": triggeredElementClass,
-                    "cancelBtnId": cancelBtnId,
-                    "releatedBtnData": {
-                        "delete-policy-id": deleteBtn.dataset.id,
-                        "lbl-delete-endpoint": deleteBtn.dataset.endpoint,
-                        "lbl-delete-methode": deleteBtn.dataset.methode,
-                        "lbl-delete-status": deleteBtn.dataset.isactive
-                    }
-                };
-                e.preventDefault();
-        
-                runModalWindow(modalOptions);
-            }
-        });
-
-        // document.addEventListener('DOMContentLoaded', function () {
-        //     const modal = document.getElementById('delete-policy-modal');
-        //     if (!modal) return;
-
-        //     const inputId = document.getElementById('delete-policy-id');
-        //     const lblEndpoint = document.getElementById('lbl-delete-endpoint');
-        //     const lblMethode = document.getElementById('lbl-delete-methode');
-        //     const lblStatus = document.getElementById('lbl-delete-status');
-
-        //     function openDeleteModal(btn) {
-        //         inputId.value = btn.dataset.id || '';
-        //         lblEndpoint.textContent = btn.dataset.endpoint || '-';
-        //         lblMethode.textContent = btn.dataset.methode || '-';
-        //         lblStatus.textContent = btn.dataset.isactive || '-';
-        
-        //         modal.classList.add('is-open');
-        //     }
-
-        //     function closeDeleteModal() {
-        //         modal.classList.remove('is-open');
-        //     }
-
-        //     // Tablodaki tüm silme butonlarını dinle (Dinamik/sayfalı tablolar için event delegation)
-        //     document.addEventListener('click', function (e) {
-        //         const deleteBtn = e.target.closest('.btn-delete');
-        //         if (deleteBtn) {
-        //             e.preventDefault();
-        //             openDeleteModal(deleteBtn);
-        //         }
-        //     });
-
-        //     // Vazgeç, ESC etiketi veya arka plana tıklayınca kapat
-        //     document.getElementById('btn-cancel-delete').addEventListener('click', closeDeleteModal);
-        //     document.getElementById('btn-close-delete-modal').addEventListener('click', closeDeleteModal);
-        //     modal.addEventListener('click', function (e) {
-        //         if (e.target === modal) closeDeleteModal();
-        //     });
-
-        //     // Klavyeden ESC tuşuna basınca kapat
-        //     document.addEventListener('keydown', function (e) {
-        //         if (e.key === 'Escape' && modal.classList.contains('is-open')) {
-        //             closeDeleteModal();
-        //         }
-        //     });
-        // });
-    </script>
-}

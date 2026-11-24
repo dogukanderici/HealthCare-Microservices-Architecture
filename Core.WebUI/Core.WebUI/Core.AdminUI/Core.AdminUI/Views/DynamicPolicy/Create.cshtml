@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/UILayout/Index.cshtml";
     ViewData["Title"] = "Dinamik Yetkilendirme Ekleme";
+    string dynamicPolicyEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicPolicy"];
 }
 
 <div class="row justify-content-center">
@@ -55,10 +56,10 @@
                                     </button>
                                 </div>
                                 <div class="col col-4">
-                                    <button id="api-policy-submit" type="submit" class="w-100 btn btn-lg btn-outline-danger">
+                                    <a href="@dynamicPolicyEndpoint" id="api-policy-cancel" class="w-100 btn btn-lg btn-outline-danger">
                                         <i class="fa-regular fa-circle-xmark"></i>&nbsp;
-                                        <span id="api-policy-submit-amount">Vazgeç</span>
-                                    </button>
+                                        <span id="api-policy-cancel">Vazgeç</span>
+                                    </a>
                                 </div>
                             </div>
                         </div>

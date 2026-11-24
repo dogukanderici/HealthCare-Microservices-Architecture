@@ -4,6 +4,7 @@
     ViewData["Title"] = "Dinamik Yetki Yeni Rol Ekleme";
     Layout = "~/Views/UILayout/Index.cshtml";
     string methodeType = "notice-card--info";
+    string dynamicRoleEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicRole"];
 }
 
 <div class="row justify-content-center">
@@ -38,7 +39,7 @@
                                 </div>
                                 <div class="col col-4">
                                     <div id ="api-policy-role-cancel" type="button" class="w-100 btn btn-lg btn-outline-secondary">
-                                        <a href="/dynamicrole/policyid/@Model.ModelData.DynamicPolicyId">
+                                        <a href="@dynamicRoleEndpoint/policyid/@Model.ModelData.DynamicPolicyId">
                                             <i class="fa-regular fa-circle-xmark"></i>&nbsp;
                                             <span id="api-policy-submit-amount">Vazgeç</span>
                                         </a>

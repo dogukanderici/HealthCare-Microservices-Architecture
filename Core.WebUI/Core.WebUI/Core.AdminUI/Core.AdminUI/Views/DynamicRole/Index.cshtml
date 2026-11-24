@@ -1,11 +1,11 @@
 ﻿@model DynamicRoleResultModel<IReadOnlyCollection<DynamicRoleResultDto>>
-@using Core.AdminUI.Commons.Extensions
 
 @{
     ViewData["Title"] = "Dinamik Yetki Rolleri";
     Layout = "~/Views/UILayout/Index.cshtml";
     string methodeType = "notice-card--info";
     string notificationJson = TempData[TempDataExtension.NotificationKey] as string;
+    string dynamicRoleEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicRole"];
 }
 
 <div class="row row-tight" style="margin-top: 16px;">
@@ -19,7 +19,7 @@
             </header>
             <div class="table-data__tool">
                 <div class="table-data__tool-right">
-                    <a href="/dynamicrole/create/@Model.PolicyId" class="au-btn au-btn--green au-btn--small">
+                    <a href="@dynamicRoleEndpoint/create/@Model.PolicyId" class="au-btn au-btn--green au-btn--small">
                         <i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni Rol Ekle
                     </a>
                 </div>

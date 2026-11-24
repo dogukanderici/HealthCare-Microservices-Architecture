@@ -93,11 +93,11 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
                 ErrorMessage.UpdatingDataFailed);
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteProcess(DeleteProcessDefinitionCommand deleteProcessDefinitionCommand)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteProcess(Guid id)
         {
             return await _controllerReponseHelper.ExecuteAsync(
-                () => _mediator.Send(deleteProcessDefinitionCommand),
+                () => _mediator.Send(new DeleteProcessDefinitionCommand(id)),
                 nameof(DeleteProcess),
                 SuccessMessage.DeletingDataSuccessed,
                 ErrorMessage.DeletingDataFailed);

@@ -1,14 +1,9 @@
 ﻿using Core.WebUI.Application.Commons.Parameters;
 using Core.WebUI.Application.Dtos.WorkflowEngineDtos.ProcessDefinitionDtos;
 using Core.WebUI.Application.Interfaces.Services.WorkflowEngine;
+using Core.WebUI.Persistence.Commons.Extensions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net.Http.Json;
 
 namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
 {
@@ -28,58 +23,53 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
             _config = config;
 
             ServiceBaseUrl = _config.GetSection("ApiSetting:WorkflowEngine:ServiceBaseUrl").Value;
-            Endpoint = _config.GetSection("ApiSetting:WorkflowEngine:ProcessDefinition").Value;
+            Endpoint = _config.GetSection("ApiSetting:WorkflowEngine:APIUrl:ProcessDefinition").Value;
             HttpClientName = _config.GetSection("ApiSetting:ApiHttpClientName").Value;
         }
 
-        public async Task<UIApiResponse<IReadOnlyCollection<ProcessDefinitionResultDto>>> GetListAsync()
+        public async Task<UIApiResponse<IReadOnlyCollection<ProcessDefinitionResultDto>>> GetListAsync(Guid? id = null)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
             HttpResponseMessage response = await client.GetAsync(Endpoint);
 
-            if (response.IsSuccessStatusCode)
-            {
-                string jsonData = await response.Content.ReadAsStringAsync();
-            }
-
-            throw new Exception("opps!");
+            return await response.ReturnServiceResultAsync<IReadOnlyCollection<ProcessDefinitionResultDto>>();
         }
 
-        public Task<UIApiResponse<ProcessDefinitionResultDto>> GetAsync(Guid id)
+        public async Task<UIApiResponse<ProcessDefinitionResultDto>> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.GetAsync($"{Endpoint}/{id}");
+
+            return await response.ReturnServiceResultAsync<ProcessDefinitionResultDto>();
         }
 
-        public Task<UIApiResponse<Guid>> CreateAsync(ProcessDefinitionCreateDto dto)
+        public async Task<UIApiResponse<Guid>> CreateAsync(ProcessDefinitionCreateDto dto)
         {
-            throw new NotImplementedException();
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync(Endpoint, dto);
+
+            return await response.ReturnServiceResultAsync<Guid>();
         }
 
-        public Task<UIApiResponse<DateTimeOffset>> UpdateAsync(ProcessDefinitionUpdateDto dto)
+        public async Task<UIApiResponse<DateTimeOffset>> UpdateAsync(ProcessDefinitionUpdateDto dto)
         {
-            throw new NotImplementedException();
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.PutAsJsonAsync(Endpoint, dto);
+
+            return await response.ReturnServiceResultAsync<DateTimeOffset>();
         }
 
-        public Task<UIApiResponse<bool>> DeleteAsync(Guid id)
+        public async Task<UIApiResponse<bool>> DeleteAsync(Guid id)
         {
-            throw new NotImplementedException();
-        }
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-        public override bool Equals(object? obj)
-        {
-            return obj is ProcessDefinitionService service &&
-                   EqualityComparer<IConfiguration>.Default.Equals(_config, service._config);
-        }
+            HttpResponseMessage response = await client.DeleteAsync($"{Endpoint}/{id}");
 
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(_config);
-        }
-
-        public Task<UIApiResponse<IReadOnlyCollection<ProcessDefinitionResultDto>>> GetListAsync(Guid? id = null)
-        {
-            throw new NotImplementedException();
+            return await response.ReturnServiceResultAsync<bool>();
         }
     }
 }

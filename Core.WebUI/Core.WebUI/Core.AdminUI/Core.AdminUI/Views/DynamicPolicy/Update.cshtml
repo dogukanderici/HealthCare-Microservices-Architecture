@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/UILayout/Index.cshtml";
     ViewData["Title"] = "Dinamik Yetkilendirme Güncelleme";
+    string dynamicPolicyEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicPolicy"];
 }
 
 <div class="row justify-content-center">
@@ -15,7 +16,9 @@
                 </div>
                 <hr>
                 <form id="update-api-policy" asp-controller="DynamicPolicy" asp-action="Update" method="post">
+
                     @Html.HiddenFor(x => x.ModelData.Id)
+
                     <div class="mb-3">
                         <label asp-for="@Model.ModelData.Endpoint" class="control-label mb-1">Endpoint</label>
                         <input asp-for="@Model.ModelData.Endpoint" type="text" class="form-control" aria-required="true" placeholder="/api/home">
@@ -51,7 +54,7 @@
                             <i class="fa-regular fa-floppy-disk"></i>&nbsp;
                             <span id="api-policy-submit">Güncelle</span>
                         </button>
-                        <a href="/dynamicpolicy" id="api-policy-cancel" class="btn btn-lg btn-outline-secondary">
+                        <a href="@dynamicPolicyEndpoint" id="api-policy-cancel" class="btn btn-lg btn-outline-secondary">
                             <i class="fa-regular fa-circle-xmark"></i>&nbsp;
                             <span id="api-policy-cancel">Vazgeç</span>
                         </a>

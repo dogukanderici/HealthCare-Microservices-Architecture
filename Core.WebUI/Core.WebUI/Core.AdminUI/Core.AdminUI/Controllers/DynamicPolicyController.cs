@@ -5,26 +5,60 @@ using Core.WebUI.Application.Commons.Parameters;
 using Core.WebUI.Application.Dtos.WorkflowEngineDtos.DynamicPolicyDtos;
 using Core.WebUI.Application.Interfaces.Services.WorkflowEngine;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using static Core.WebUI.Application.Commons.Parameters.UINotificaitonEnums;
 
 namespace Core.AdminUI.Controllers
 {
-    [Route("DynamicPolicy")]
+    [Route("WorkflowEngine/DynamicPolicy")]
     public class DynamicPolicyController : Controller
     {
         private readonly IDynamicPolicyService _service;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
-        public DynamicPolicyController(IDynamicPolicyService service, IMapper mapper)
+        private string DynamicPolicyEndpoint;
+
+        public DynamicPolicyController(IDynamicPolicyService service, IMapper mapper, IConfiguration configuration)
         {
             _service = service;
             _mapper = mapper;
+            _configuration = configuration;
+
+            DynamicPolicyEndpoint = _configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicPolicy").Value;
         }
 
         [HttpGet("")]
-        public async Task<IActionResult> Index()
+        [HttpPost("")]
+        public async Task<IActionResult> Index(DynamicPolicyResultModel<IReadOnlyCollection<DynamicPolicyResultDto>>? resultModel)
         {
-            UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>> serviceResponse = await _service.GetListAsync();
+
+            TempData["DynamicPolicyEndpoint"] = DynamicPolicyEndpoint;
+
+            // Gelen istek post ise filtreleme ile arama yapılıyor demektir.
+            if (HttpMethods.IsPost(Request.Method))
+            {
+                if (resultModel?.QueryFilter != null)
+                {
+                    TempData["PolicyQueryFilter"] = JsonSerializer.Serialize(resultModel.QueryFilter);
+                }
+                else
+                {
+                    TempData.Remove("PolicyQueryFilter");
+                }
+
+                // View döndürmek yerine tarayıcı GET isteğine yönlendirilir.
+                // F5 veya Geri Butonu tıklanmasında ERR_CACHE_MISS hatası alınmaması için.
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (TempData["PolicyQueryFilter"] is string filterJson && !string.IsNullOrEmpty(filterJson))
+            {
+                resultModel.QueryFilter = JsonSerializer.Deserialize<DynamicPolicyQueryDto>(filterJson);
+            }
+
+            UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>> serviceResponse =
+                resultModel?.QueryFilter == null ? await _service.GetListAsync() : await _service.GetListWithFilterAsync(resultModel.QueryFilter);
 
             DynamicPolicyResultModel<IReadOnlyCollection<DynamicPolicyResultDto>> model = new DynamicPolicyResultModel<IReadOnlyCollection<DynamicPolicyResultDto>>();
 
@@ -37,9 +71,12 @@ namespace Core.AdminUI.Controllers
             return serviceResponse.ReturnControllerResult(view, redirect);
         }
 
+
         [HttpGet("Create")]
         public async Task<IActionResult> Create()
         {
+            TempData["DynamicPolicyEndpoint"] = DynamicPolicyEndpoint;
+
             DynamicPolicyCreateModel model = new DynamicPolicyCreateModel();
 
             return View(model);
@@ -50,7 +87,7 @@ namespace Core.AdminUI.Controllers
         {
             UIApiResponse<Guid> serviceResponse = await _service.CreateAsync(model.CreateDto);
 
-            RedirectResult redirect = Redirect("/dynamicpolicy"); // İsteğin başarılı olması durumu
+            RedirectResult redirect = Redirect($"{DynamicPolicyEndpoint}"); // İsteğin başarılı olması durumu
             ViewResult view = View(model); // İsteğin başarız olması durumu
 
             return serviceResponse.ReturnControllerResult(redirect, view, TempData);
@@ -69,6 +106,8 @@ namespace Core.AdminUI.Controllers
         [HttpGet("Update")]
         public async Task<IActionResult> Update(Guid id)
         {
+            TempData["DynamicPolicyEndpoint"] = DynamicPolicyEndpoint;
+
             UIApiResponse<DynamicPolicyResultDto> serviceResponse = await _service.GetAsync(id);
 
             if (serviceResponse.Status)
@@ -90,7 +129,7 @@ namespace Core.AdminUI.Controllers
         {
             UIApiResponse<DateTimeOffset> serviceResponse = await _service.UpdateAsync(model.ModelData);
 
-            RedirectResult redirect = Redirect("/dynamicpolicy"); // İsteğin başarılı olması durumu
+            RedirectResult redirect = Redirect($"{DynamicPolicyEndpoint}"); // İsteğin başarılı olması durumu
             ViewResult view = View(model); // İsteğin başarız olması durumu
 
             return serviceResponse.ReturnControllerResult(redirect, view, TempData);
@@ -107,12 +146,20 @@ namespace Core.AdminUI.Controllers
             //return View(model);
         }
 
+        [HttpGet("DeletePartial/{id:guid}")]
+        public async Task<IActionResult> DeletePartial(Guid id)
+        {
+            ViewBag.Id = id;
+
+            return PartialView("_DeletePolicyPartial", id);
+        }
+
         [HttpPost("Delete")]
         public async Task<IActionResult> Delete(Guid id)
         {
             UIApiResponse<bool> serviceResponse = await _service.DeleteAsync(id);
 
-            RedirectResult redirect = Redirect("/dynamicpolicy"); // İsteğin başarılı olması durumu
+            RedirectResult redirect = Redirect($"{DynamicPolicyEndpoint}"); // İsteğin başarılı olması durumu
 
             return serviceResponse.ReturnControllerResult(redirect, TempData);
 

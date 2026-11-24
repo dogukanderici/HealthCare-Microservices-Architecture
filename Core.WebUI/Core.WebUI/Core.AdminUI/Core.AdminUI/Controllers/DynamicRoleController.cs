@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Core.AdminUI.Controllers
 {
-    [Route("DynamicRole")]
+    [Route("WorkflowEngine/DynamicRole")]
     public class DynamicRoleController : BaseController
     {
         private readonly IDynamicRoleService _service;
@@ -19,12 +19,16 @@ namespace Core.AdminUI.Controllers
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
+        private string DynamicRoleEndpoint;
+
         public DynamicRoleController(IDynamicRoleService service, IMapper mapper, IConfiguration configuration, IRoleService roleService)
         {
             _service = service;
             _mapper = mapper;
             _configuration = configuration;
             _roleService = roleService;
+
+            DynamicRoleEndpoint = _configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value;
         }
 
         [HttpGet("{policyId:guid}")]
@@ -55,7 +59,7 @@ namespace Core.AdminUI.Controllers
             model.ModelData = serviceResponse.Data;
 
             ViewResult view = View(model);
-            RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{policyId}");
+            RedirectResult redirect = Redirect($"{DynamicRoleEndpoint}/{policyId}");
 
             return serviceResponse.ReturnControllerResult(view, redirect);
         }
@@ -89,7 +93,7 @@ namespace Core.AdminUI.Controllers
         {
             UIApiResponse<Guid> serviceResponse = await _service.CreateAsync(model.ModelData);
 
-            RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{model.ModelData.DynamicPolicyId}");
+            RedirectResult redirect = Redirect($"{DynamicRoleEndpoint}/{model.ModelData.DynamicPolicyId}");
             ViewResult view = View(model);
 
             return serviceResponse.ReturnControllerResult(redirect, view, TempData);
@@ -123,23 +127,23 @@ namespace Core.AdminUI.Controllers
         //    return serviceResponse.ReturnControllerResult(redirect, view, TempData);
         //}
 
-        [HttpPost("Delete/{policyId}")]
-        public async Task<IActionResult> Delete(Guid policyId, Guid id)
-        {
-            UIApiResponse<bool> serviceResponse = await _service.DeleteAsync(id);
-
-            RedirectResult redirect = Redirect($"{_configuration.GetSection("ApiSetting:WorkflowEngine:UIUrl:DynamicRole").Value}/{policyId}");
-
-            return serviceResponse.ReturnControllerResult(redirect, TempData);
-        }
-
         [HttpGet("DeletePartial/{policyId:guid}/{id:guid}")]
         public IActionResult DeletePartial(Guid policyId, Guid id)
         {
             ViewBag.PolicyId = policyId;
             ViewBag.Id = id;
 
-            return PartialView("_DeleteConfirmPartial");
+            return PartialView("_DeleteRolePartial");
+        }
+
+        [HttpPost("Delete/{policyId}")]
+        public async Task<IActionResult> Delete(Guid policyId, Guid id)
+        {
+            UIApiResponse<bool> serviceResponse = await _service.DeleteAsync(id);
+
+            RedirectResult redirect = Redirect($"{DynamicRoleEndpoint}/{policyId}");
+
+            return serviceResponse.ReturnControllerResult(redirect, TempData);
         }
     }
 }

@@ -78,6 +78,16 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
             //return await UIApiResponse<DynamicPolicyResultDto>.ErrorAsync(response);
         }
 
+
+        public async Task<UIApiResponse<IReadOnlyCollection<DynamicPolicyResultDto>>> GetListWithFilterAsync(DynamicPolicyQueryDto queryDto)
+        {
+            HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
+
+            HttpResponseMessage response = await client.PostAsJsonAsync($"{Endpoint}/filter", queryDto);
+
+            return await response.ReturnServiceResultAsync<IReadOnlyCollection<DynamicPolicyResultDto>>();
+        }
+
         public async Task<UIApiResponse<Guid>> CreateAsync(DynamicPolicyCreateDto createDto)
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
