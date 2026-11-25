@@ -32,10 +32,11 @@
     }
 });
 
-async function confirmWindowAsync(url) {
+async function confirmWindowAsync(url, type) {
+    type = type || "error";
     try {
 
-        const response = await fetch(url);
+        const response = await fetch(url, { method: 'GET' });
         const fetchResponse = await response.text();
 
         if (!response.ok) {
@@ -46,15 +47,32 @@ async function confirmWindowAsync(url) {
         }
 
         if (typeof Swal !== "undefined") {
-            Swal.fire({
-                icon: "error",
-                html: fetchResponse,
-                width: "40rem",
-                showConfirmButton: false,
-                showCloseButton: false,
-                showCancelButton: false,
-                showDenyButton: false
-            });
+
+            var swalOptions = {};
+
+            if (type === 'error') {
+                swalOptions = {
+                    icon: type,
+                    html: fetchResponse,
+                    width: "40rem",
+                    showConfirmButton: false,
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    showDenyButton: false
+                }
+            }
+            else {
+                swalOptions = {
+                    html: fetchResponse,
+                    width: "60rem",
+                    showConfirmButton: false,
+                    showCloseButton: false,
+                    showCancelButton: false,
+                    showDenyButton: false
+                }
+            }
+
+            Swal.fire(swalOptions);
         }
     }
     catch (ex) {

@@ -10,8 +10,8 @@ namespace Core.WebUI.Application.Dtos.WorkflowEngineDtos.ProcessDefinitionDtos
     public class ProcessDefinitionUpdateDto : IDto
     {
         public Guid Id { get; set; }
-        public Guid ProcessSpecId { get; set; }
         public string ProcessName { get; set; }
+        public int VersionNumber { get; set; }
         public bool IsActive { get; set; }
     }
 }

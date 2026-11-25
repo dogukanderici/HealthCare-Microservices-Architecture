@@ -50,7 +50,6 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefiniitonServices
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
             dBQueryOptions.filter = x => (
-                x.ProcessSpecId == processSpecId &&
                 x.IsActive == true
             );
             dBQueryOptions.orderBy = x => x.VersionNumber;

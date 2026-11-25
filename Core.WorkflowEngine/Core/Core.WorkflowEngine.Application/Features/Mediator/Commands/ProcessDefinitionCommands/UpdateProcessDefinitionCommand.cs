@@ -8,6 +8,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Commands.ProcessDefi
     {
         public Guid Id { get; set; }
         public string ProcessName { get; set; }
+        public int VersionNumber { get; set; }
         public bool IsActive { get; set; }
     }
 }

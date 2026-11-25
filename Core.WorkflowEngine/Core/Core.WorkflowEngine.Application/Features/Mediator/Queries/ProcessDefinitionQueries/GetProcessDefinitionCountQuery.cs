@@ -7,7 +7,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefin
 {
     public class GetProcessDefinitionCountQuery : IRequest<InternalHandlerResponse<int>>
     {
-        public Guid? ProcessSpecId { get; set; }
         public string? ProcessName { get; set; }
         public bool? IsActive { get; set; }
 
@@ -18,10 +17,9 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefin
 
         }
 
-        public static GetProcessDefinitionCountQuery Filter(Guid? processSpecId, string? processName, bool? isActive) =>
+        public static GetProcessDefinitionCountQuery Filter(string? processName, bool? isActive) =>
             new GetProcessDefinitionCountQuery
             {
-                ProcessSpecId = processSpecId,
                 ProcessName = processName,
                 IsActive = isActive
             };

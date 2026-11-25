@@ -14,6 +14,8 @@ namespace Core.WebUI.Persistence.Commons.Extensions
         {
             if (response.IsSuccessStatusCode)
             {
+                string jsonData = await response.Content.ReadAsStringAsync();
+
                 ApiServiceResponse<T> apiServiceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<T>>();
 
                 return await apiServiceResponse.ReturnApiResponseAsync(response);

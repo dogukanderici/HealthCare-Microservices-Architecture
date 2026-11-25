@@ -10,8 +10,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefin
     public class GetProcessDefinitionsByFilterQueryResult : GenericAuditProperty
     {
         public Guid Id { get; set; }
-        public Guid ProcessSpecId { get; set; }
         public string ProcessName { get; set; }
+        public int VersionNumber { get; set; }
         public bool IsActive { get; set; }
     }
 }

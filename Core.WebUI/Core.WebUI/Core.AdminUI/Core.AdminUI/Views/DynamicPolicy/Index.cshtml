@@ -6,7 +6,6 @@
     string methodeType = "notice-card--info";
     string dynamicPolicyEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicPolicy"];
     string dynamicRoleEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:DynamicRole"];
-    // string notificationJson = TempData[TempDataExtension.NotificationKey] as string;
 }
 
 <div class="row row-tight" style="margin-top: 16px;">
@@ -118,6 +117,17 @@
                                                 title="Sil">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
+                                        @* <a href="javascript:void(0)"
+                                           class="item btn-delete"
+                                           type="button"
+                                           data-bs-toggle="tooltip"
+                                           title="Delete"
+                                           data-id="@item.Id"
+                                           data-endpoint="@item.Endpoint"
+                                           data-methode="@item.Methode"
+                                           data-isactive="@(item.IsActive ? "Aktif" : "Pasif")">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a> *@
                                     </div>
                                 </td>
                             </tr>
@@ -125,7 +135,43 @@
                     </tbody>
                 </table>
             </div>
-
         </section>
     </div>
 </div>
+
+@* @await Html.PartialAsync("_DeletePolicyPartial")
+
+@section Scripts {
+    <script>
+        const modalElementId = "delete-policy-modal";
+        const inputElementIdList = [
+            "delete-policy-id",
+            "lbl-delete-endpoint",
+            "lbl-delete-methode",
+            "lbl-delete-status",
+        ];
+        const triggeredElementClass = ".btn-delete";
+        const cancelBtnId = "btn-cancel-delete";
+        document.addEventListener('click', function (e) {
+            const deleteBtn = e.target.closest(triggeredElementClass);
+            if (deleteBtn) {
+                console.log("deleteBtn: ", deleteBtn);
+                const modalOptions = {
+                    "modalElementId": modalElementId,
+                    "inputElementIdList": inputElementIdList,
+                    "triggeredElementClass": triggeredElementClass,
+                    "cancelBtnId": cancelBtnId,
+                    "releatedBtnData": {
+                        "delete-policy-id": deleteBtn.dataset.id,
+                        "lbl-delete-endpoint": deleteBtn.dataset.endpoint,
+                        "lbl-delete-methode": deleteBtn.dataset.methode,
+                        "lbl-delete-status": deleteBtn.dataset.isactive
+                    }
+                };
+                e.preventDefault();
+        
+                runModalWindow(modalOptions);
+            }
+        });
+    </script>
+} *@

@@ -1,0 +1,119 @@
+﻿@model ProcessDefinitionCreateModel
+
+@{
+    ViewData["Title"] = "Yeni Süreç Ekleme";
+    string processEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:ProcessDefinition"];
+}
+
+@* <div class="row justify-content-center">
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-header">Yeni Süreç Ekleme</div>
+            <div class="card-body">
+                <div class="card-title">
+                    <h3 class="text-center title-2">Süreç Bilgileri</h3>
+                </div>
+                <hr>
+                <form id="add-new-process" asp-controller="Process" asp-action="Create" method="post">
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label asp-for="@Model.ModelData.ProcessName" class="control-label mb-1">Yeni Süreç Adı</label>
+                            <div class="col-12">
+                                <input asp-for="@Model.ModelData.ProcessName" type="text" class="form-control" aria-required="true" placeholder="Süreç Adı">
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-control-label">Durum</label>
+                            <div class="col-12">
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="process-status-active" asp-for="@Model.ModelData.IsActive" value="true" class="form-check-input">
+                                    <label for="process-status-active" class="form-check-label">Aktif</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input type="radio" id="process-status-pasive" asp-for="@Model.ModelData.IsActive" value="false" class="form-check-input">
+                                    <label for="process-status-pasive" class="form-check-label">Pasif</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center gap-3 mt-5">
+                        <button id="add-new-process-cancel-btn"
+                                type="button"
+                                onclick="Swal.close()"
+                                class="btn btn-outline-secondary px-4 py-2">
+                            <i class="fa-regular fa-circle-xmark me-1"></i>
+                            <span>Vazgeç</span>
+                        </button>
+
+                        <button id="add-new-process-submit"
+                                type="submit"
+                                class="btn btn-info px-4 py-2">
+                            <i class="fa-regular fa-floppy-disk me-1"></i>
+                            <span id="api-policy-submit-amount">Kaydet</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> *@
+
+<div class="p-3 p-md-4 text-start">
+    <!-- Üst Başlık ve Açıklama -->
+    <div class="d-flex justify-content-between align-items-start mb-4 pb-3 border-bottom">
+        <div>
+            <h4 class="fw-bold text-dark mb-1">Yeni Süreç Ekle</h4>
+            <p class="text-muted small mb-0">Sisteme tanımlanacak yeni sürecin adını ve durumunu belirleyin.</p>
+        </div>
+    </div>
+
+    <form id="add-new-process" asp-controller="Process" asp-action="Create" method="post">
+        <div class="row g-4 align-items-center">
+            <!-- Süreç Adı -->
+            <div class="col-md-8">
+                <label asp-for="@Model.ModelData.ProcessName" class="form-label fw-semibold text-secondary small text-uppercase">
+                    Süreç Adı
+                </label>
+                <div class="input-group">
+                    <input asp-for="@Model.ModelData.ProcessName"
+                           type="text"
+                           class="form-control border-start-0 ps-0"
+                           aria-required="true"
+                           placeholder="Örn: Müşteri Onay Süreci" />
+                </div>
+            </div>
+
+            <!-- Kompakt Durum Seçici -->
+            <div class="col-md-4">
+                <label class="form-label fw-semibold text-secondary small text-uppercase d-block">
+                    Durum
+                </label>
+                <div class="capsule-switch">
+                    <input type="radio" id="process-status-active" asp-for="@Model.ModelData.IsActive" value="true" checked>
+                    <label for="process-status-active"><i class="fa-solid fa-check"></i> Aktif</label>
+
+                    <input type="radio" id="process-status-pasive" asp-for="@Model.ModelData.IsActive" value="false">
+                    <label for="process-status-pasive"><i class="fa-solid fa-cancel"></i> Pasif</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alt Aksiyon Butonları -->
+        <div class="d-flex justify-content-end align-items-center gap-2 mt-5 pt-3 border-top">
+            <button id="add-new-process-cancel-btn"
+                    type="button"
+                    onclick="Swal.close()"
+                    class="btn btn-light text-secondary fw-medium px-4 py-2">
+                Vazgeç
+            </button>
+
+            <button id="add-new-process-submit"
+                    type="submit"
+                    class="btn btn-primary fw-medium px-4 py-2 shadow-sm">
+                <i class="fa-regular fa-floppy-disk me-1"></i>
+                <span id="api-policy-submit-amount">Süreci Kaydet</span>
+            </button>
+        </div>
+    </form>
+</div>

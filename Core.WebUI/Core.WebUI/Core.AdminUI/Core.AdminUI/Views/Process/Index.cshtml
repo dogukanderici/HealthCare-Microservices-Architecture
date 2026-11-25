@@ -8,10 +8,10 @@
 
 <div class="row row-tight" style="margin-top: 16px;">
     <div class="col-md-12">
-        <section class="m-card" aria-labelledby="dynamicpolicy-title">
+        <section class="m-card" aria-labelledby="process-definition-title">
             <header class="m-card__header">
                 <div>
-                    <h2 class="m-card__title" id="dynamicpolicy-title">Süreç Tanımları</h2>
+                    <h2 class="m-card__title" id="process-definition-title">Süreç Tanımları</h2>
                     <p class="m-card__subtitle">Süreç isimlerini ve süreçlere ait diğer tanımlar</p>
                 </div>
             </header>
@@ -43,9 +43,12 @@
                     </div>
                 </form>
                 <div class="table-data__tool-right">
-                    <a href="@processEndpoint/create" class="au-btn au-btn--green au-btn--small">
+                    <button type="button"
+                            class="au-btn au-btn--green au-btn--small"
+                            onclick="confirmWindowAsync('@Url.Action("Create", "Process")','create')"
+                            title="Ekle">
                         <i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni Süreç Ekle
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -82,8 +85,34 @@
                                 <td>
                                     <div class="table-data-feature">
                                         <a href="@processEndpoint/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Yeni Süreç Adımı Ekle"><i class="fa-solid fa-square-plus"></i></a>
-                                        <a href="@processEndpoint/update?id=@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Güncelle"><i class="fa-solid fa-pen-to-square"></i></a>
-                                        <a href="@processEndpoint/delete?id=@item.Id" class="item btn-delete" type="button" data-bs-toggle="tooltip" title="Sil"><i class="fa-solid fa-trash"></i></a>
+                                        @* <a href="@processEndpoint/update/@item.Id"
+                                           class="item btn-update"
+                                           type="button"
+                                           data-bs-toggle="tooltip"
+                                           title="Güncelle">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a> *@
+                                        <button class="item btn-update"
+                                                type="button"
+                                                onclick="confirmWindowAsync('@Url.Action("UpdatePartial", "Process", new { id = item.Id })','update')"
+                                                data-bs-toggle="tooltip"
+                                                title="Güncelle">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        @* <a href="@processEndpoint/delete/@item.Id"
+                                           class="item btn-delete"
+                                           type="button"
+                                           data-bs-toggle="tooltip"
+                                           title="Sil">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a> *@
+                                        <button class="item btn-delete"
+                                                type="button"
+                                                onclick="confirmWindowAsync('@Url.Action("DeletePartial", "Process", new { id = item.Id })')"
+                                                data-bs-toggle="tooltip"
+                                                title="Sil">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>

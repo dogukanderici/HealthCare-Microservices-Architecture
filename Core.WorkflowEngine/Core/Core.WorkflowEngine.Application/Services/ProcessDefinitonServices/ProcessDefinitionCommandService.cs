@@ -26,7 +26,7 @@ namespace Core.WorkflowEngine.Application.Services.ProcessDefinitonServices
         {
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
             dBQueryOptions.filter = x => (
-                (x.Id == id) && (x.IsActive == true)
+                (x.Id == id)
             );
 
             ProcessDefinition result = await _repository.GetDataAsync(dBQueryOptions);

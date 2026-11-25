@@ -16,7 +16,7 @@ namespace Core.WebUI.Persistence.Commons.Extensions
             {
                 if (apiResponse.IsSuccess)
 
-                    return UIApiResponse<T>.Success(apiResponse.Data);
+                    return UIApiResponse<T>.Success(apiResponse.Data, apiResponse.PagingToken, apiResponse.IsLastPage);
                 else
 
                     return UIApiResponse<T>.Fail(apiResponse.Message);

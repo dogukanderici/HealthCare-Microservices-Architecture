@@ -1,0 +1,75 @@
+﻿@model ProcessDefinitionUpdateModel
+
+@{
+    ViewData["Title"] = "Süreç Bilgileri Güncelleme";
+    string processEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:ProcessDefinition"];
+}
+
+<div class="p-3 p-md-4 text-start">
+    <div class="d-flex justify-content-between align-items-start mb-4 pb-3 border-bottom">
+        <div>
+            <h4 class="fw-bold text-dark mb-1">Süreç Bilgileri Güncelleme</h4>
+            <p class="text-muted small mb-0">Sistemde tanımlı sürecin adını ve durumunu güncelleyin.</p>
+        </div>
+    </div>
+
+    <form id="update-process" asp-controller="Process" asp-action="Update" asp-route-id="@Model.ModelData.Id" method="post">
+
+        @Html.HiddenFor(x => Model.ModelData.Id)
+        @Html.HiddenFor(x => Model.ModelData.VersionNumber)
+
+        <div class="row g-4 align-items-center">
+            <div class="col-md-8">
+                <label asp-for="@Model.ModelData.ProcessName" class="form-label fw-semibold text-secondary small text-uppercase">
+                    Süreç Adı
+                </label>
+                <div class="input-group">
+                    <input asp-for="@Model.ModelData.ProcessName"
+                           type="text"
+                           class="form-control border-start-0 ps-0"
+                           aria-required="true"
+                           placeholder="Örn: Müşteri Onay Süreci" />
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label fw-semibold text-secondary small text-uppercase d-block">
+                    Durum
+                </label>
+                <div class="capsule-switch">
+                    <input type="radio" id="process-status-active" asp-for="@Model.ModelData.IsActive" value="true">
+                    <label for="process-status-active"><i class="fa-solid fa-check"></i> Aktif</label>
+
+                    <input type="radio" id="process-status-pasive" asp-for="@Model.ModelData.IsActive" value="false">
+                    <label for="process-status-pasive"><i class="fa-solid fa-cancel"></i> Pasif</label>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label class="form-label fw-semibold text-secondary small text-uppercase">
+                    Versiyon Numarası
+                </label>
+                <div class="input-group">
+                    <label class="form-label fw-semibold text-secondary small text-uppercase">
+                        @Model.ModelData.VersionNumber
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center gap-2 mt-5 pt-3 border-top">
+            <button id="add-new-process-cancel-btn"
+                    type="button"
+                    onclick="Swal.close()"
+                    class="btn btn-light text-secondary fw-medium px-4 py-2">
+                Vazgeç
+            </button>
+
+            <button id="add-new-process-submit"
+                    type="submit"
+                    class="btn btn-primary fw-medium px-4 py-2 shadow-sm">
+                <i class="fa-regular fa-floppy-disk me-1"></i>
+                <span id="api-policy-submit-amount">Güncelle</span>
+            </button>
+        </div>
+    </form>
+</div>

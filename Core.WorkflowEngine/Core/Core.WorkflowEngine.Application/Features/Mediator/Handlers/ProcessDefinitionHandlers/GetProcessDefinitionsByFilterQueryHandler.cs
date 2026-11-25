@@ -26,7 +26,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             DBQueryOptions<ProcessDefinition> dBQueryOptions = new DBQueryOptions<ProcessDefinition>();
 
             dBQueryOptions.filter = x => (
-                (!request.ProcessSpecId.HasValue || x.ProcessSpecId == request.ProcessSpecId) &&
                 (!request.IsActive.HasValue || x.IsActive == request.IsActive) &&
                 (string.IsNullOrEmpty(request.ProcessName) || x.ProcessName.Contains(request.ProcessName))
             );

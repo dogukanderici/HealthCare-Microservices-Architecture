@@ -18,6 +18,8 @@ namespace Core.WebUI.Application.Commons.Parameters
         public HttpStatusCode StatusCode { get; set; }
         public string Message { get; set; }
         public string RequestUri { get; set; }
+        public string PagingToken { get; set; }
+        public bool IsLastPage { get; set; }
 
         [JsonProperty]
         public T Data { get; set; }
@@ -29,14 +31,16 @@ namespace Core.WebUI.Application.Commons.Parameters
 
         }
 
-        public static UIApiResponse<T> Success(T data, string message = "Success")
+        public static UIApiResponse<T> Success(T data, string? pagingToken = null, bool isLastPage = true, string message = "Success")
         {
             return new UIApiResponse<T>
             {
                 Status = true,
                 StatusCode = HttpStatusCode.OK,
                 Message = message,
-                Data = data
+                Data = data,
+                PagingToken = pagingToken,
+                IsLastPage = isLastPage
             };
         }
 
@@ -73,7 +77,7 @@ namespace Core.WebUI.Application.Commons.Parameters
                 if (!string.IsNullOrWhiteSpace(problems?.Title))
                     return Fail(problems.Title);
             }
-            catch(JsonException)
+            catch (JsonException)
             {
 
             }

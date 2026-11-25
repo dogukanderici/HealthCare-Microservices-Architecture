@@ -28,7 +28,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessDefi
             ProcessDefinition dataFromDto = _mapper.Map<ProcessDefinition>(request);
 
             dataFromDto.Id = Guid.NewGuid();
-            dataFromDto.ProcessSpecId = Guid.NewGuid();
 
             InternalServiceResponse<Guid> serviceResponse = await _processDefinitionCommandService.CreateAsync(dataFromDto, cancellationToken);
 

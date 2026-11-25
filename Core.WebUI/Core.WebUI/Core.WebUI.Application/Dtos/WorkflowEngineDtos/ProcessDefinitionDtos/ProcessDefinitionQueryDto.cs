@@ -9,7 +9,6 @@ namespace Core.WebUI.Application.Dtos.WorkflowEngineDtos.ProcessDefinitionDtos
 {
     public class ProcessDefinitionQueryDto : IDto
     {
-        public Guid? ProcessSpecId { get; set; }
         public string? ProcessName { get; set; }
         public bool? IsActive { get; set; }
 
