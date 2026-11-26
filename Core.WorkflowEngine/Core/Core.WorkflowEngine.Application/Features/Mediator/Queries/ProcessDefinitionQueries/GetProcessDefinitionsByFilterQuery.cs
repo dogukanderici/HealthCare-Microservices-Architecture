@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries
 {
-    public class GetProcessDefinitionsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>>, ICacheableQuery
+    public class GetProcessDefinitionsByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsByFilterQueryResult>>>//, ICacheableQuery
     {
         public string? ProcessName { get; set; }
         public bool? IsActive { get; set; }

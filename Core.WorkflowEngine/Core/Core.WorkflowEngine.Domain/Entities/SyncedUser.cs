@@ -19,5 +19,8 @@ namespace Core.WorkflowEngine.Domain.Entities
         public Guid CreatedBy { get; set; }
         public DateTimeOffset UpdatedAt { get; set; }
         public Guid UpdatedBy { get; set; }
+
+        // Relations
+        public IReadOnlyCollection<ProcessTask> ProcessTasks { get; set; }
     }
 }

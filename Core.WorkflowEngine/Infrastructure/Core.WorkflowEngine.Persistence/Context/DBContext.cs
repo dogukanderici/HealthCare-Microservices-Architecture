@@ -53,6 +53,13 @@ namespace Core.WorkflowEngine.Persistence.Context
         {
             base.OnModelCreating(modelBuilder);
 
+            // ProcessTask AssignedUserId -> SyncedUser
+            modelBuilder.Entity<ProcessTask>()
+                .HasOne(x => x.User)
+                .WithMany(x => x.ProcessTasks)
+                .HasForeignKey(x => x.AssignedUser)
+                .IsRequired(false); // EF LEFT JOIN üretmesi için.
+
             // ProcessTaskId -> ProcessTask
             modelBuilder.Entity<ProcessTaskTransition>()
             .HasOne(ptt => ptt.ProcessTask)

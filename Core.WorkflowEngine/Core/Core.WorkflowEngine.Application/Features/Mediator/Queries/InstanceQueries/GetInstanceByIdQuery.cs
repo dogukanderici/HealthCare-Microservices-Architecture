@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries
 {
-    public class GetInstanceByIdQuery : IRequest<InternalHandlerResponse<GetInstanceByIdQueryResult>>, ICacheableQuery
+    public class GetInstanceByIdQuery : IRequest<InternalHandlerResponse<GetInstanceByIdQueryResult>>//, ICacheableQuery
     {
         public Guid Id { get; set; }
 

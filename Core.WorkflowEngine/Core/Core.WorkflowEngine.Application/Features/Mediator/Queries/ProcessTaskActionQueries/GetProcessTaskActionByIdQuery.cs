@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskActionQueries
 {
-    public class GetProcessTaskActionByIdQuery : IRequest<InternalHandlerResponse<GetProcessTaskActionByIdQueryResult>>, ICacheableQuery
+    public class GetProcessTaskActionByIdQuery : IRequest<InternalHandlerResponse<GetProcessTaskActionByIdQueryResult>>//, ICacheableQuery
     {
         public Guid Id { get; set; }
 

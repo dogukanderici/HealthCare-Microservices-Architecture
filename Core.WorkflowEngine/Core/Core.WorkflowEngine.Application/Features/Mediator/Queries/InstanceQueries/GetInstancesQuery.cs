@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries
 {
-    public class GetInstancesQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>>, ICacheableQuery
+    public class GetInstancesQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetInstancesQueryResult>>>//, ICacheableQuery
     {
         public string Token { get; set; }
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey(nameof(GetInstancesQuery));

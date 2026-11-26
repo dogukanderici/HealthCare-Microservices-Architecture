@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskActionQueries
 {
-    public class GetProcessTaskActionsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>>, ICacheableQuery
+    public class GetProcessTaskActionsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>>//, ICacheableQuery
     {
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey(typeof(GetProcessTaskActionsQuery).Name);
 

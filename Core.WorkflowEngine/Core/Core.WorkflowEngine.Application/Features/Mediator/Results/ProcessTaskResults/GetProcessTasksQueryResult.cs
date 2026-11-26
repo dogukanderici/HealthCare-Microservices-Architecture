@@ -1,4 +1,5 @@
 ﻿using Core.WorkflowEngine.Application.Features.Mediator.Results.GenericResults;
+using Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessDefinitionResults.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,6 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Results.ProcessTaskR
         public bool IsStartStep { get; set; }
         public bool IsActive { get; set; }
 
-        public GetProcessTaskWithProcessResult Process { get; set; }
+        public SharedProcessQueryResult Process { get; set; }
     }
 }

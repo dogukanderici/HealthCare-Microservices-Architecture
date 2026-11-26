@@ -7,7 +7,7 @@ using System.Text.Json.Serialization;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.InstanceQueries
 {
-    public class GetInstanceByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>>, ICacheableQuery
+    public class GetInstanceByFilterQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetInstancesByFilterQueryResult>>>//, ICacheableQuery
     {
         public string Token { get; set; }
         public int? Number { get; set; }

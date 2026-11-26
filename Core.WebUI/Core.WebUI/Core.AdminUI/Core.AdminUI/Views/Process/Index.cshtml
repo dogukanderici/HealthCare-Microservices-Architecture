@@ -4,6 +4,7 @@
     ViewData["Title"] = "Süreç Tanımları";
     Layout = "~/Views/UILayout/Index.cshtml";
     string processEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:ProcessDefinition"];
+    string processTaskEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:ProcessTask"];
 }
 
 <div class="row row-tight" style="margin-top: 16px;">
@@ -84,7 +85,7 @@
                                 }
                                 <td>
                                     <div class="table-data-feature">
-                                        <a href="@processEndpoint/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Yeni Süreç Adımı Ekle"><i class="fa-solid fa-square-plus"></i></a>
+                                        <a href="@processTaskEndpoint/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Yeni Süreç Adımı Ekle"><i class="fa-solid fa-square-plus"></i></a>
                                         @* <a href="@processEndpoint/update/@item.Id"
                                            class="item btn-update"
                                            type="button"

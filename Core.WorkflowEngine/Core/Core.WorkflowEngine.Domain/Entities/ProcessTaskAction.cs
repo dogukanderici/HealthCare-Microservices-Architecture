@@ -26,7 +26,10 @@ namespace Core.WorkflowEngine.Domain.Entities
         public DateTimeOffset UpdatedAt { get; set; }
         public Guid UpdatedBy { get; set; }
 
+        // Relations
+        [ForeignKey(nameof(ProcessTaskId))]
         public ProcessTask ProcessTask { get; set; }
+
         public ICollection<ProcessTaskTransition> ProcessTaskTransitions { get; set; } = new List<ProcessTaskTransition>();
     }
 }

@@ -24,7 +24,8 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
             dBQueryOptions.filter = x => x.ProcessId == request.ProcessId;
             dBQueryOptions.includes = [
-                    x=>x.ProcessDefinition
+                    x=>x.ProcessDefinition,
+                    x=>x.User
                 ];
 
             InternalServiceResponse<IReadOnlyCollection<GetProcessTasksQueryResult>> serviceResponse =

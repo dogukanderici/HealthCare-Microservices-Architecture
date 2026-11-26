@@ -6,9 +6,9 @@ using MediatR;
 
 namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessDefinitionQueries
 {
-    public class GetProcessDefinitionsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>>
+    public class GetProcessDefinitionsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessDefinitionsQueryResult>>>//,ICacheableQuery
     {
-        //ICacheableQuery
+        
         public string? Token { get; set; }
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey(typeof(GetProcessDefinitionsQuery).Name);
 

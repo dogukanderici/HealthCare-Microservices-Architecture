@@ -29,6 +29,9 @@ namespace Core.WorkflowEngine.Domain.Entities
         [ForeignKey("ProcessId")]
         public ProcessDefinition ProcessDefinition { get; set; }
 
+        [ForeignKey(nameof(AssignedUser))]
+        public SyncedUser? User { get; set; }
+
         public ICollection<ProcessTaskAction> ProcessTaskActions { get; set; } = new List<ProcessTaskAction>();
         public ICollection<Instance> Instances { get; set; } = new List<Instance>();
         public ICollection<ProcessTaskTransition> ProcessTaskTransitions { get; set; } = new List<ProcessTaskTransition>();

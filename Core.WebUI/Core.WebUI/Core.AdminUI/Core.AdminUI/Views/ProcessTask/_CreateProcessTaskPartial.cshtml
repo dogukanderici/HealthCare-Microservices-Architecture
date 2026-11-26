@@ -1,0 +1,86 @@
+﻿@model ProcessTaskCreateModel
+
+@{
+    ViewData["Title"] = "Yeni Süreç Adımı Ekleme";
+    string processTaskEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:ProcessTask"];
+}
+
+<div class="p-3 p-md-4 text-start">
+    <div class="d-flex justify-content-between align-items-start mb-4 pb-3 border-bottom">
+        <div>
+            <h4 class="fw-bold text-dark mb-1">Yeni Süreç Adımı Ekle</h4>
+            <p class="text-muted small mb-0">Sürece ait yeni adımın adını, atanacak kullanıcısını ve durumu belirleyin.</p>
+        </div>
+    </div>
+
+    <form id="add-new-process-task" asp-controller="ProcessTask" asp-action="Create" asp-route-processId="@Model.ModelData.ProcessId" method="post">
+
+        @Html.HiddenFor(x => Model.ModelData.ProcessId)
+
+        <div class="row g-4 align-items-center">
+            <div class="col-md-6">
+                <label asp-for="@Model.ModelData.StepName" class="form-label fw-semibold text-secondary small text-uppercase">
+                    Adım Adı
+                </label>
+                <div class="input-group">
+                    <input asp-for="@Model.ModelData.StepName"
+                           type="text"
+                           class="form-control border-start-0 ps-0"
+                           aria-required="true"
+                           placeholder="Örn: Talep Oluştur" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="@Model.ModelData.AssignedUser" class="form-label fw-semibold text-secondary small text-uppercase">
+                    Atanacak Kullanıcı
+                </label>
+                <div class="input-group">
+                    <input asp-for="@Model.ModelData.AssignedUser"
+                           type="text"
+                           class="form-control border-start-0 ps-0"
+                           aria-required="true" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold text-secondary small text-uppercase d-block">
+                    Durum
+                </label>
+                <div class="capsule-switch">
+                    <input type="radio" id="task-startstep-active" asp-for="@Model.ModelData.IsStartStep" value="true">
+                    <label for="task-startstep-active"><i class="fa-solid fa-play"></i> Evet</label>
+
+                    <input type="radio" id="task-startstep-pasive" asp-for="@Model.ModelData.IsStartStep" value="false">
+                    <label for="task-startstep-pasive"><i class="fa-solid fa-gear"></i> Hayır</label>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label fw-semibold text-secondary small text-uppercase d-block">
+                    Durum
+                </label>
+                <div class="capsule-switch">
+                    <input type="radio" id="task-status-active" asp-for="@Model.ModelData.IsActive" value="true">
+                    <label for="task-status-active"><i class="fa-solid fa-check"></i> Aktif</label>
+
+                    <input type="radio" id="task-status-pasive" asp-for="@Model.ModelData.IsActive" value="false">
+                    <label for="task-status-pasive"><i class="fa-solid fa-cancel"></i> Pasif</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-end align-items-center gap-2 mt-5 pt-3 border-top">
+            <button id="add-new-task-startstep-cancel-btn"
+                    type="button"
+                    onclick="Swal.close()"
+                    class="btn btn-light text-secondary fw-medium px-4 py-2">
+                Vazgeç
+            </button>
+
+            <button id="add-new-task-startstep-submit"
+                    type="submit"
+                    class="btn btn-primary fw-medium px-4 py-2 shadow-sm">
+                <i class="fa-regular fa-floppy-disk me-1"></i>
+                <span id="api-task-startstep-submit">Kaydet</span>
+            </button>
+        </div>
+    </form>
+</div>
