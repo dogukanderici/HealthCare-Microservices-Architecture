@@ -27,7 +27,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses
 
         }
 
-        public static InternalHandlerResponse<T> Success(T data, string internalMessage = "Success", string pagingToken = "", bool isLastPage = false)
+        public static InternalHandlerResponse<T> Success(T data, string internalMessage = "Success", string pagingToken = "", bool isLastPage = true)
         {
             return new InternalHandlerResponse<T>
             {

@@ -43,13 +43,13 @@
             </div>
             <div class="col-md-4">
                 <label class="form-label fw-semibold text-secondary small text-uppercase d-block">
-                    Durum
+                    Başlangıç Adımı Mı?
                 </label>
                 <div class="capsule-switch">
                     <input type="radio" id="task-startstep-active" asp-for="@Model.ModelData.IsStartStep" value="true">
                     <label for="task-startstep-active"><i class="fa-solid fa-play"></i> Evet</label>
 
-                    <input type="radio" id="task-startstep-pasive" asp-for="@Model.ModelData.IsStartStep" value="false">
+                    <input type="radio" id="task-startstep-pasive" asp-for="@Model.ModelData.IsStartStep" value="false" checked>
                     <label for="task-startstep-pasive"><i class="fa-solid fa-gear"></i> Hayır</label>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                     Durum
                 </label>
                 <div class="capsule-switch">
-                    <input type="radio" id="task-status-active" asp-for="@Model.ModelData.IsActive" value="true">
+                    <input type="radio" id="task-status-active" asp-for="@Model.ModelData.IsActive" value="true" checked>
                     <label for="task-status-active"><i class="fa-solid fa-check"></i> Aktif</label>
 
                     <input type="radio" id="task-status-pasive" asp-for="@Model.ModelData.IsActive" value="false">

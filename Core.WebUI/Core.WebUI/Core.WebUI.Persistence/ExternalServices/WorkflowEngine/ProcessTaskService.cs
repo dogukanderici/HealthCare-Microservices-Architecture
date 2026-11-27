@@ -73,7 +73,7 @@ namespace Core.WebUI.Persistence.ExternalServices.WorkflowEngine
         {
             HttpClient client = _httpClientFactory.CreateClient(HttpClientName);
 
-            HttpResponseMessage response = await client.DeleteAsync($"{Endpoint}?id={id}");
+            HttpResponseMessage response = await client.DeleteAsync($"{Endpoint}/{id}");
 
             return await response.ReturnServiceResultAsync<bool>();
         }

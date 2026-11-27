@@ -8,14 +8,14 @@ namespace Core.WorkflowEngine.WebAPI.Wrappers
         public string Message { get; private set; }
         public DateTimeOffset TimeStamp { get; private set; }
         public T Data { get; private set; }
-        public List<string>? ValidationErrors { get; set; }
-        public List<string>? BusinessRuleErrors { get; set; }
+        public IReadOnlyCollection<string>? ValidationErrors { get; set; }
+        public IReadOnlyCollection<string>? BusinessRuleErrors { get; set; }
 
         public string PagingToken { get; set; }
-        public bool? IsLastPage { get; set; }
+        public bool IsLastPage { get; set; }
 
 
-        public static GenericAPIResponse<T> SuccessAPIResponse(T data, string? pagingToken = null, bool? isLastPage = true)
+        public static GenericAPIResponse<T> SuccessAPIResponse(T data, string? pagingToken = null, bool isLastPage = true)
         {
             return new GenericAPIResponse<T>
             {
@@ -30,8 +30,8 @@ namespace Core.WorkflowEngine.WebAPI.Wrappers
 
         public static GenericAPIResponse<T> ErrorAPIResponse(
             string message = APIConstants.Error,
-            List<string>? validationErrors = null,
-            List<string>? businessRuleErrors = null)
+            IReadOnlyCollection<string>? validationErrors = null,
+            IReadOnlyCollection<string>? businessRuleErrors = null)
         {
             return new GenericAPIResponse<T>
             {

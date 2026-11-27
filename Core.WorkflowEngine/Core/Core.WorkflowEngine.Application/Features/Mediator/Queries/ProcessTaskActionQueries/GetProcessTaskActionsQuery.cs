@@ -8,8 +8,14 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Queries.ProcessTaskA
 {
     public class GetProcessTaskActionsQuery : IRequest<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>>//, ICacheableQuery
     {
+        public Guid ProcessTaskId { get; set; }
         public string CacheKey => CacheKeyGenerator.GenerateCacheKey(typeof(GetProcessTaskActionsQuery).Name);
 
         public TimeSpan ExpirationTime => TimeSpan.FromHours(1);
+
+        public GetProcessTaskActionsQuery(Guid processTaskId)
+        {
+            ProcessTaskId = processTaskId;
+        }
     }
 }

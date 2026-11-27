@@ -22,11 +22,11 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
             _controllerReponseHelper = controllerReponseHelper;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetTaskActions()
+        [HttpGet("task/{id:guid}")]
+        public async Task<IActionResult> GetTaskActions(Guid id)
         {
             return await _controllerReponseHelper.ExecuteAsync(
-                () => _mediator.Send(new GetProcessTaskActionsQuery()),
+                () => _mediator.Send(new GetProcessTaskActionsQuery(id)),
                 nameof(GetTaskActions),
                 SuccessMessage.CallingSuccess,
                 ErrorMessage.CallingFail
@@ -47,16 +47,8 @@ namespace Core.WorkflowEngine.WebAPI.Controllers
         [HttpPost("filtered")]
         public async Task<IActionResult> GetTaskActionsByFilter(GetProcessTaskActionsByFilterQuery query)
         {
-            GetProcessTaskActionsByFilterQuery filter = GetProcessTaskActionsByFilterQuery.Filter(
-                    query.ProcessTaskId,
-                    query.ActionId,
-                    query.ActionName,
-                    query.ActionType,
-                    query.IsActive
-                    );
-
             return await _controllerReponseHelper.ExecuteAsync(
-                () => _mediator.Send(filter),
+                () => _mediator.Send(query),
                 nameof(GetTaskActionsByFilter),
                 SuccessMessage.CallingSuccess,
                 ErrorMessage.CallingFail

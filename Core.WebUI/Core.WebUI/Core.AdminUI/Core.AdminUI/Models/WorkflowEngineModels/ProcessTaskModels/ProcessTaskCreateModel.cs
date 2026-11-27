@@ -4,6 +4,6 @@ namespace Core.AdminUI.Models.WorkflowEngineModels.ProcessTaskModels
 {
     public class ProcessTaskCreateModel
     {
-        public ProcessTaskCreateDto ModelData { get; set; }
+        public ProcessTaskCreateDto ModelData { get; set; } = new ProcessTaskCreateDto();
     }
 }

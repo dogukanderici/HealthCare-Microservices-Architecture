@@ -1,10 +1,11 @@
-﻿using Core.WorkflowEngine.WebAPI.Helpers.ValidationHelpers;
+﻿using Core.WorkflowEngine.Application.Commons.CustomExceptions;
+using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
+using Core.WorkflowEngine.WebAPI.Constants;
+using Core.WorkflowEngine.WebAPI.Helpers.ValidationHelpers;
 using Core.WorkflowEngine.WebAPI.Wrappers;
 using Microsoft.AspNetCore.Mvc;
-
-using static Core.WorkflowEngine.WebAPI.Constants.LogConstants;
 using static Core.WorkflowEngine.WebAPI.Constants.APIConstants;
-using Core.WorkflowEngine.Application.Features.Mediator.Wrappers.Responses;
+using static Core.WorkflowEngine.WebAPI.Constants.LogConstants;
 
 namespace Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers
 {
@@ -57,7 +58,17 @@ namespace Core.WorkflowEngine.WebAPI.Helpers.ControllerResponseHelpers
                                     actionName,
                                     $"{ErrorMessage.CallingFail} - {ex}");
 
-                return new BadRequestObjectResult(GenericAPIResponse<bool>.ErrorAPIResponse(APIErrorMessage.CallingFail));
+                switch (ex)
+                {
+                    case ValidationRuleException validatorEx:
+                        return new BadRequestObjectResult(GenericAPIResponse<bool>.ErrorAPIResponse(APIConstants.Error, [ex.Message], []));
+
+                    case BusinessRuleException businessEx:
+                        return new BadRequestObjectResult(GenericAPIResponse<bool>.ErrorAPIResponse(APIConstants.Error, [], [ex.Message]));
+
+                    default:
+                        return new BadRequestObjectResult(GenericAPIResponse<bool>.ErrorAPIResponse(ex.Message));
+                }
             }
         }
     }

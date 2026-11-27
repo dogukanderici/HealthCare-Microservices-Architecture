@@ -20,11 +20,11 @@ namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskPoli
         protected override async Task<InternalPolicyResponse> CountExistingDataAsync(ProcessTask entity)
         {
             DBQueryOptions<ProcessTask> dBQueryOptions = new DBQueryOptions<ProcessTask>();
-            dBQueryOptions.filter = x => (x.Id != entity.Id);
+            dBQueryOptions.filter = x => ((x.Id != entity.Id) && (x.ProcessId == entity.ProcessId));
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCount(dBQueryOptions);
 
-            return serviceResponse.ExecuteServiceWithPolicy(x => x > 1, "Adım tanımları tekil olmalıdır!");
+            return serviceResponse.ExecuteServiceWithPolicy(x => x > 0, "Adım tanımları tekil olmalıdır!");
         }
 
         public override async Task<InternalPolicyResponse> ExecuteAllRuleAsync(ProcessTask entity)

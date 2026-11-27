@@ -98,7 +98,7 @@
                                 }
                                 <td>
                                     <div class="table-data-feature">
-                                        <a href="@processTaskActionEndpoint/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Yeni Aksiyon Ekle"><i class="fa-solid fa-square-plus"></i></a>
+                                        <a href="@processTaskActionEndpoint/task/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Yeni Aksiyon Ekle"><i class="fa-solid fa-square-plus"></i></a>
                                         <button class="item btn-update"
                                                 type="button"
                                                 onclick="confirmWindowAsync('@Url.Action("UpdatePartial", "ProcessTask", new { id = item.Id })','update')"

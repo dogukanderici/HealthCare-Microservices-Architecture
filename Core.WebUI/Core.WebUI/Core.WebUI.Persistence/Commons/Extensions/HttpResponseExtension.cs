@@ -12,12 +12,10 @@ namespace Core.WebUI.Persistence.Commons.Extensions
     {
         public static async Task<UIApiResponse<T>> ReturnServiceResultAsync<T>(this HttpResponseMessage response)
         {
+            ApiServiceResponse<T> apiServiceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<T>>();
+
             if (response.IsSuccessStatusCode)
             {
-                string jsonData = await response.Content.ReadAsStringAsync();
-
-                ApiServiceResponse<T> apiServiceResponse = await response.Content.ReadFromJsonAsync<ApiServiceResponse<T>>();
-
                 return await apiServiceResponse.ReturnApiResponseAsync(response);
             }
 

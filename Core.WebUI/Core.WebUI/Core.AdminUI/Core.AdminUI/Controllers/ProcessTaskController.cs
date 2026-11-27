@@ -91,8 +91,9 @@ namespace Core.AdminUI.Controllers
         public IActionResult DeletePartial(Guid processId, Guid id)
         {
             ViewBag.Id = id;
+            ViewBag.ProcessId = processId;
 
-            return PartialView("_DeleteProcessTaskPartial", processId);
+            return PartialView("_DeleteProcessTaskPartial");
         }
 
         [HttpPost("Delete/{processId:guid}")]

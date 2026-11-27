@@ -1,6 +1,4 @@
-﻿@model Guid
-
-<form id="delete-process-task" asp-controller="ProcessTask" asp-action="Delete" asp-route-id="@Model" method="post">
+﻿<form id="delete-process-task" asp-controller="ProcessTask" asp-action="Delete" asp-route-processId="@ViewBag.ProcessId" method="post">
 
     <input type="hidden" name="id" value="@ViewBag.Id" />
 

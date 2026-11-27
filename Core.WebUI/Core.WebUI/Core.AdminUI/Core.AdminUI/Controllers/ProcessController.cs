@@ -71,7 +71,7 @@ namespace Core.AdminUI.Controllers
 
             TempData.SetNotification(serviceResponse, UINotificaitonEnums.NotificationType.Error, "Bir hata oluştu!");
 
-            return Redirect("Index");
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost("Update/{id:guid}")]

@@ -26,7 +26,7 @@ namespace Core.WorkflowEngine.Application.Features.BusinessRules.ProcessTaskActi
 
             InternalServiceResponse<int> serviceResponse = await _queryService.GetDataCount(dBQueryOptions);
 
-            return serviceResponse.ExecuteServiceWithPolicy(x => x > 0, "Data not found!");
+            return serviceResponse.ExecuteServiceWithPolicy(x => x < 1, "Data not found!");
         }
 
         public override async Task<InternalPolicyResponse> ExecuteAllRuleAsync(ProcessTaskAction entity)

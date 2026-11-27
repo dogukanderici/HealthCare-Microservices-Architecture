@@ -28,6 +28,7 @@ namespace Core.WebUI.Configuration.Extensions
             services.AddScoped<IDynamicPolicyService, DynamicPolicyService>();
             services.AddScoped<IDynamicRoleService, DynamicRoleService>();
             services.AddScoped<IProcessTaskService, ProcessTaskService>();
+            services.AddScoped<IProcessTaskActionService, ProcessTaskActionService>();
 
             return services;
         }

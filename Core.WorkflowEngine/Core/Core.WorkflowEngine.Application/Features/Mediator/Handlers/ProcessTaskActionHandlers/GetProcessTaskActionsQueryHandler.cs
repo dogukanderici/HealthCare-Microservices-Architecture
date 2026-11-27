@@ -22,6 +22,7 @@ namespace Core.WorkflowEngine.Application.Features.Mediator.Handlers.ProcessTask
         public async Task<InternalHandlerResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>>> Handle(GetProcessTaskActionsQuery request, CancellationToken cancellationToken)
         {
             DBQueryOptions<ProcessTaskAction> dBQueryOptions = new DBQueryOptions<ProcessTaskAction>();
+            dBQueryOptions.filter = x => x.ProcessTaskId == request.ProcessTaskId;
 
             InternalServiceResponse<IReadOnlyCollection<GetProcessTaskActionsQueryResult>> serviceResponse =
                 await _queryService.GetDatasAsync<GetProcessTaskActionsQueryResult>(dBQueryOptions);

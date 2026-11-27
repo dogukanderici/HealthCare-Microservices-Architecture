@@ -1,0 +1,109 @@
+﻿@model ProcessTaskActionResultModel<IReadOnlyCollection<ProcessTaskActionResultDto>>
+
+@{
+    ViewData["Title"] = "Süreç Adımına Ait Aksiyon Tanımları";
+    Layout = "~/Views/UILayout/Index.cshtml";
+    string processTaskActionEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:ProcessTaskAction"];
+    string actionTransitionEndpoint = Configuration["ApiSetting:WorkflowEngine:UIUrl:ProcessTaskActionTransition"];
+}
+
+<div class="row row-tight" style="margin-top: 16px;">
+    <div class="col-md-12">
+        <section class="m-card" aria-labelledby="process-definition-title">
+            <header class="m-card__header">
+                <div>
+                    <h2 class="m-card__title" id="process-definition-title">Süreç Adımına Ait Aksiyon Tanımları</h2>
+                    <p class="m-card__subtitle">Süreç adımlarına ait aksiyonların isim ve durum tanımı.</p>
+                </div>
+            </header>
+            
+            <div class="table-data__tool justify-content-end">
+                <!-- Filtre Alanı -->
+                @* <form id="process-task-action-query-filter" asp-controller="ProcessTaskAction" asp-action="Index" method="post">
+                    <div class="table-data__tool-left">
+                        <div class="select-wrapper">
+                            <select class="form-select" aria-label="Filter properties">
+                                <option selected>- Seçiniz -</option>
+                            </select>
+                        </div>
+                        <div class="select-wrapper">
+                            <select class="form-select" aria-label="İstek Tipi">
+                                <option value="" selected>- Seçiniz -</option>
+                            </select>
+                        </div>
+                        <button class="au-btn-filter" type="submit">
+                            <i class="fa-solid fa-filter" aria-hidden="true"></i> Ara
+                        </button>
+                    </div>
+                </form> *@
+                <div class="table-data__tool-right">
+                    <button type="button"
+                            class="au-btn au-btn--green au-btn--small"
+                            onclick="confirmWindowAsync('@Url.Action("CreatePartial", "ProcessTaskAction", new { processTaskId = Model.ProcessTaskId })','create')"
+                            title="Ekle">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i> Yeni Aksiyon Ekle
+                    </button>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-data2">
+                    <thead>
+                        <tr>
+                            <th>Süreç Adı</th>
+                            <th>Adım Adı</th>
+                            <th>Aksiyon Adı</th>
+                            <th>Durum</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ModelData)
+                        {
+                            <tr>
+                                <td>@item.ProcessTaskId</td>
+                                <td>@item.ProcessTaskId</td>
+                                <td>@item.ActionName</td>
+                                @if (@item.IsActive)
+                                {
+                                    <td>
+                                        <section class="notice-card--success">
+                                            <span class="notice-card__icon"><i class="fa-solid fa-circle-check"></i></span>
+                                        </section>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <section class="notice-card--danger">
+                                            <span class="notice-card__icon"><i class="fa-solid fa-circle-xmark"></i></span>
+                                        </section>
+                                    </td>
+                                }
+                                <td>
+                                    <div class="table-data-feature">
+                                        <a href="@actionTransitionEndpoint/@item.Id" class="item btn-update" type="button" data-bs-toggle="tooltip" title="Yeni Yönlendirme Ekle"><i class="fa-solid fa-square-plus"></i></a>
+                                        <button class="item btn-update"
+                                                type="button"
+                                                onclick="confirmWindowAsync('@Url.Action("UpdatePartial", "ProcessTaskAction", new { id = item.Id })','update')"
+                                                data-bs-toggle="tooltip"
+                                                title="Güncelle">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button class="item btn-delete"
+                                                type="button"
+                                                onclick="confirmWindowAsync('@Url.Action("DeletePartial", "ProcessTaskAction", new { processTaskId = item.ProcessTaskId, id = item.Id })')"
+                                                data-bs-toggle="tooltip"
+                                                title="Sil">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</div>
